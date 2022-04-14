@@ -39,17 +39,48 @@ COLBY = col.Style.BRIGHT + col.Fore.YELLOW
 # --------------------------------------------------------------------------------------------------------------
 
 class CSourceParser():
+   """
+Class: CSourceParser
+====================
 
-   def __init__(self):
-
-      sMethod = "CSourceParser.__init__"
-
-
-   def __del__(self):
-      pass
+The ``CSourceParser`` class provides a method to parse the functions, classes and their methods
+together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.
+   """
 
    def ParseSourceFile(self, sFile=None):
-      """ParseSourceFile
+      """
+Method: ParseSourceFile
+-----------------------
+
+The method ``ParseSourceFile`` parses the content of a Python module.
+
+**Arguments:**
+
+* ``sFile``
+
+  / *Condition*: required / *Type*: str /
+
+  Path and name of a single Python module.
+
+**Returns:**
+
+* ``dictContent``
+
+  / *Type*: dict /
+
+  A dictionary containing all the information parsed out of ``sFile``.
+
+* ``bSuccess``
+
+  / *Type*: bool /
+
+  Indicates if the computation of the method ``sMethod`` was successful or not.
+
+* ``sResult``
+
+  / *Type*: str /
+
+  The result of the computation of the method ``sMethod``.
       """
 
       sMethod = "ParseSourceFile"

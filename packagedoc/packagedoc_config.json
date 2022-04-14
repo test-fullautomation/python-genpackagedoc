@@ -5,10 +5,10 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# Updated 13.04.2022
+# Updated 14.04.2022
 #
 # **************************************************************************************************************
-# Format: json with lines commented out by '#' at the beginning
+# Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
 # All fixed terms (keys) have to be written in capital letters, all user defined keys in small letters.
 # Paths to files and folders within this file must be relative (except "TEX"). The reference for relative paths
 # is the position of this file.
@@ -25,27 +25,37 @@
 # Class and function definitions within a Python module are subchapters. Methods of classes are subsubchapters.
 # In this section every additional rst file is represented by a short name (key) and a path incl. file name (key value).
 # This is completely under the responsibility of the user and therefore the names have to be written in small letters only.
-# The key "INTERFACE" points to a folder containing Python modules that have to be documented.
-# The key "CHAPTERS" contains a list of all defined keys in the order of their desired appearances within the resulting PDF document.
+# The keys with name starting with "INTERFACE" points to folder containing Python modules that have to be documented.
+# In case of a repository contains several separate folder with Python modules, it is possible to use more than one
+# key starting with "INTERFACE", e.g. "INTERFACE_part1" and "INTERFACE_part2".
+# The key "DOCUMENTPARTS" contains a list of all defined keys in the order of their desired appearances within the resulting PDF document.
 # It is strongly recommended to place all additional rst files flat into one single folder (and not in any further sub folder).
 # Reason is that currently the tex files generated out of the rst files are also placed flat into only one single output folder
 # (see section "OUTPUT") and the relative paths to possibly imported pictures (see section "PICTURES") must be kept valid!
 
    "TOC" : {
-            "introduction" : "./additional_docs/Introduction.rst",
-            "description"  : "./additional_docs/Description.rst",
-            "INTERFACE"    : "../additions/PythonExtensionsCollection",
-            "appendix"     : "./additional_docs/Appendix.rst",
-            "CHAPTERS"     : ["introduction","description","INTERFACE","appendix"]
+            "introduction"    : "./additional_docs/Introduction.rst",
+            "description"     : "./additional_docs/Description.rst",
+            # -- a) single root folder version
+            "INTERFACE"       : "../###PACKAGENAME###",
+            "appendix"        : "./additional_docs/Appendix.rst",
+            "outlook"         : "./additional_docs/Outlook.rst",
+            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","outlook","appendix"]
+            # -- b) multiple root folder version (example)
+            # "INTERFACE_part1" : "../additions/PythonExtensionsCollection/File",
+            # "INTERFACE_part2" : "../additions/PythonExtensionsCollection/Dummy",
+            # "appendix"        : "./additional_docs/Appendix.rst",
+            # "DOCUMENTPARTS"   : ["introduction","description","INTERFACE_part1","INTERFACE_part2","outlook","appendix"]
            },
 
 # Section "PARAMS":
 # -----------------
-# In this section a user has the ability to define own values, that are accessible within the doctrings of involved Python modules
+# In this section a user has the ability to define own runtime variables, that are accessible within the doctrings of involved Python modules
 # and also within separate rst files. Key names have to be written in small letters to indicate that they are user defined.
 # Values can be either hard coded or taken over from the repository configuration (see config/repository_config.json).
 # In second case the key name has to be encaplulated within three hashes '#'. The same notation can be used in rst files and doctrings
 # of Python modules (for example adding an additional hint within a doctring of a class: ###additional_hint###).
+# This mechanism is limited to strings!
 
    "PARAMS" : {
                  "additional_hint" : "An additional hint is given ###NOW###",
@@ -57,9 +67,10 @@
 # -------------------
 # This section contains basic details about the output document. Like in the previous section, values can be defined
 # either hard coded or taken over from the repository configuration (with '#' notation).
+# The keys in this section also are runtime variables.
 
    "DOCUMENT" : {
-                 "OUTPUTFILENAME" : "PythonExtensionsCollection.tex",
+                 "OUTPUTFILENAME" : "###PACKAGENAME###.tex",
                  "AUTHOR"         : "###AUTHOR###",
                  "TITLE"          : "###REPOSITORYNAME###",
                  "DATE"           : "###PACKAGEDATE###",

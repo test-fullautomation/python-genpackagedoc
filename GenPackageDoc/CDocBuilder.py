@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 13.04.2022
+# 14.04.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -47,8 +47,37 @@ ERROR   = 1
 # --------------------------------------------------------------------------------------------------------------
 
 class CDocBuilder():
+   """
+Class: CDocBuilder
+==================
+
+Main class to build tex sources out of docstrings of Python modules and separate text files in rst format.
+
+Depends on a json configuration file, provided by a ``oRepositoryConfig`` object.
+
+Method to execute: ``Build()``
+   """
 
    def __init__(self, oRepositoryConfig=None):
+      """
+Method: __init__
+----------------
+
+Constructor of class ``CDocBuilder``.
+
+Rsponsible for:
+
+* Take over the repository configuration
+* Read the packagedoc configuration from json file
+* Resolve placeholders used in packagedoc configuration
+* Prepare runtime variables
+
+* ``oRepositoryConfig``
+
+  / *Condition*: required / *Type*: CRepositoryConfig() /
+
+  Repository configuration containing static and dynamic configuration values.
+      """
 
       sMethod = "CDocBuilder.__init__"
 
@@ -150,12 +179,12 @@ class CDocBuilder():
 
       # -- convert relative paths to absolute paths
 
-      listChapters = self.__dictConfig['TOC']['CHAPTERS']
+      listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
       # expected: relative paths only; reference is 'PACKAGEDOC'
       sReferencePathAbs = self.__dictConfig['PACKAGEDOC']
-      for sChapter in listChapters:
+      for sDocumentPart in listDocumentParts:
          # TODO: how to enable absolute paths also?
-         self.__dictConfig['TOC'][sChapter] = CString.NormalizePath(self.__dictConfig['TOC'][sChapter], sReferencePathAbs=sReferencePathAbs)
+         self.__dictConfig['TOC'][sDocumentPart] = CString.NormalizePath(self.__dictConfig['TOC'][sDocumentPart], sReferencePathAbs=sReferencePathAbs)
 
       self.__dictConfig['PICTURES'] = CString.NormalizePath(self.__dictConfig['PICTURES'], sReferencePathAbs=sReferencePathAbs)
       self.__dictConfig['OUTPUT'] = CString.NormalizePath(self.__dictConfig['OUTPUT'], sReferencePathAbs=sReferencePathAbs)
@@ -184,24 +213,29 @@ class CDocBuilder():
 
       # PrettyPrint(self.__dictRuntimeVariables, sPrefix="Runtime")
 
-      self.__listModules = []
+      # # # self.__listModules = []
 
    def __del__(self):
       pass
 
    # --------------------------------------------------------------------------------------------------------------
-   def __GetModulesList(self):
-      """__GetModulesList
+   def __GetModulesList(self, sRootPath=None):
+      """Computes a list of all Python modules found recursively within ``sRootPath``.
       """
 
       sMethod = "__GetModulesList"
+
+      # TODO: error if sRootPath=None
 
       tupleSubfoldersToExclude = (".git", "__pycache__") # TODO: make this a configuration parameter
 
       bSuccess = None
       sResult  = None
 
-      sRootPath = self.__dictConfig['TOC']['INTERFACE']
+      listModules = []
+
+      # print(f"========== sRootPath : '{sRootPath}'")
+
       for sLocalRootPath, listFolderNames, listFileNames in os.walk(sRootPath):
          # print(f"========== sLocalRootPath : '{sLocalRootPath}'")
          sFolderName = os.path.basename(sLocalRootPath)
@@ -209,22 +243,22 @@ class CDocBuilder():
             for sFileName in listFileNames:
                if sFileName.lower().endswith('.py'):
                   sFile = CString.NormalizePath(os.path.join(sLocalRootPath, sFileName))
-                  self.__listModules.append(sFile)
+                  listModules.append(sFile)
       # eof for sLocalRootPath, listFolderNames, listFileNames in os.walk(sRootPath):
 
-      self.__listModules.sort()
-      nNrOfModules = len(self.__listModules)
+      listModules.sort()
+      nNrOfModules = len(listModules)
 
       bSuccess = True
       sResult  = f"Found {nNrOfModules} Python modules within '{sRootPath}'"
 
-      return bSuccess, sResult
+      return listModules, bSuccess, sResult
 
-   # eof def __GetModulesList(self):
+   # eof __GetModulesList(self, sRootPath=None):
 
    # --------------------------------------------------------------------------------------------------------------
    def __ResolvePlaceholders(self, listLines=[]):
-      """__ResolvePlaceholders
+      """Resolves placeholders used in packagedoc configuration (json file)
       """
 
       sMethod = "__ResolvePlaceholders"
@@ -251,7 +285,8 @@ class CDocBuilder():
 
    # --------------------------------------------------------------------------------------------------------------
    def __CleanBuildFolder(self):
-      """__CleanBuildFolder
+      """Cleans the build folder (to a avoid a mixture of current and previous results).
+The meaning of clean is: *delete*, followed by *create*.
       """
 
       sMethod = "__CleanBuildFolder"
@@ -288,7 +323,7 @@ class CDocBuilder():
 
    # --------------------------------------------------------------------------------------------------------------
    def __CopyPictures(self):
-      """__CopyPictures
+      """Copies the pictures folder to the output folder (required to keep relative paths valid also in created tex files)
       """
 
       sMethod = "__CopyPictures"
@@ -333,7 +368,7 @@ class CDocBuilder():
 
    # --------------------------------------------------------------------------------------------------------------
    def __GenDocPDF(self):
-      """__GenDocPDF
+      """Executes the LaTeX compiler to create the PDF file out of the generated source tex files
       """
 
       sMethod = "__GenDocPDF"
@@ -410,7 +445,27 @@ class CDocBuilder():
 
    # --------------------------------------------------------------------------------------------------------------
    def Build(self):
-      """Build
+      """
+Method: Build
+-------------
+
+**Arguments:**
+
+(*no arguments*)
+
+**Returns:**
+
+* ``bSuccess``
+
+  / *Type*: bool /
+
+  Indicates if the computation of the method ``sMethod`` was successful or not.
+
+* ``sResult``
+
+  / *Type*: str /
+
+  The result of the computation of the method ``sMethod``.
       """
 
       sMethod = "Build"
@@ -423,51 +478,61 @@ class CDocBuilder():
       if bSuccess is not True:
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-
       sBuildDir = self.__dictConfig['OUTPUT']
 
-      listChapters = self.__dictConfig['TOC']['CHAPTERS']
-      # PrettyPrint(listChapters, sPrefix = "listChapters")
-
-      # 1. check existence
-
-      for sChapter in listChapters:
-         sPath = self.__dictConfig['TOC'][sChapter]
-         if sChapter == "INTERFACE":
-            if os.path.isdir(sPath) is False:
-               bSuccess = False
-               sResult  = f"Interface folder '{sPath}' does not exist."
-               return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-         else:
-            if os.path.isfile(sPath) is False:
-               bSuccess = False
-               sResult  = f"File '{sPath}' does not exist."
-               return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-
-      # 2. execution
+      oSourceParser = CSourceParser()
 
       listoftuplesChaptersInfo = [] # needed for TOC of main TeX file
 
-      for sChapter in listChapters:
+      # -- resolve placeholders, check existence and execute
 
-         print(f"+ Chapter : '{sChapter}'")
+      listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
+      for sDocumentPart in listDocumentParts:
+         sDocumentPartPath = self.__dictConfig['TOC'][sDocumentPart]
 
-         if sChapter == "INTERFACE":          # TODO: maybe sChapter.startswith("INTERFACE") => it would be possible to consider multiple interfaces INTERFACE_1, INTERFACE_2, ...
-            bSuccess, sResult = self.__GetModulesList()
+         # -- resolve placeholders
+         listLinesResolved, bSuccess, sResult = self.__ResolvePlaceholders([sDocumentPartPath,])
+         if bSuccess is not True:
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+         if len(listLinesResolved) > 0:
+            sDocumentPartPath = listLinesResolved[0]
+         else:
+            bSuccess = None
+            sResult  = "INTERNAL ERROR"
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+         # -- check existence
+         if sDocumentPart.startswith("INTERFACE"):
+            if os.path.isdir(sDocumentPartPath) is False:
+               bSuccess = False
+               sResult  = f"Interface folder '{sDocumentPartPath}' does not exist."
+               return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+         else:
+            if os.path.isfile(sDocumentPartPath) is False:
+               bSuccess = False
+               sResult  = f"File '{sDocumentPartPath}' does not exist."
+               return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+         # -- execute
+         print(f"* Document part : '{sDocumentPart}' : '{sDocumentPartPath}'")
+
+         if sDocumentPart.startswith("INTERFACE"):
+
+            sRootPath = sDocumentPartPath
+
+            listModules, bSuccess, sResult = self.__GetModulesList(sRootPath)
             if bSuccess is not True:
                return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-            oSourceParser = CSourceParser()
+            print(sResult)
 
-            for sModule in self.__listModules:
+            for sModule in listModules:
 
                print(f"  * Module : '{sModule}'")
 
                listLinesRST = [] # the module/chapter specific subset
 
                # -- get informations about the source file and derive further information
-
-               sRootPath = self.__dictConfig['TOC']['INTERFACE']
 
                oModule = CFile(sModule)
                dModuleFileInfo = oModule.GetFileInfo()
@@ -502,7 +567,7 @@ class CDocBuilder():
                   return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
                if dictContent is None:
-                  print("(nothing relevant inside)")
+                  print("    (nothing relevant inside)")
                   continue
 
                listofdictFunctions = dictContent['listofdictFunctions']
@@ -626,15 +691,14 @@ class CDocBuilder():
                sModuleName = dModuleFileInfo['sFileName']
                listoftuplesChaptersInfo.append((sModuleName, sModuleTeXFileName))
 
-            # eof for sModule in self.__listModules:
+            # eof for sModule in listModules:
 
-         # eof if sChapter == "INTERFACE":
+         # eof if sDocumentPart.startswith("INTERFACE"):
 
          else:
 
             # all other separate rst files
-
-            sRSTFile = self.__dictConfig['TOC'][sChapter]
+            sRSTFile = sDocumentPartPath
             oRSTFile = CFile(sRSTFile)
             listLinesRST, bSuccess, sResult = oRSTFile.ReadLines()
             if bSuccess is not True:
@@ -660,9 +724,16 @@ class CDocBuilder():
                                          format='rst')
             # ensure proper line endings
             listLinesTEX = sTEX.splitlines()
-            sTEX = "\n".join(listLinesTEX)
-
             # TODO: sTEX post processing -> CPostProcessor()
+
+            # --- experimental syntax extension (currently hard coded here and therefore active only within rst files but not within docstrings)
+            # TODO: Move this to a common tex PostProcessing function
+            listLinesTEXResolved = []
+            for sLine in listLinesTEX:
+               sLine = sLine.replace("//nl", r"\newline")
+               sLine = sLine.replace("//np", r"\newpage")
+               listLinesTEXResolved.append(sLine)
+            sTEX = "\n".join(listLinesTEXResolved)
 
             # -- create the corresponding tex file for the current source file
 
@@ -675,9 +746,9 @@ class CDocBuilder():
             # -- save some infos needed for TOC of main TeX file
             listoftuplesChaptersInfo.append((sRSTFileNameOnly, f"{sRSTFileNameOnly}.tex"))
 
-         # eof else - if sChapter == "INTERFACE":
+         # eof else - if sDocumentPart.startswith("INTERFACE"):
 
-      # eof for sChapter in listChapters:
+      # eof for sDocumentPart in listDocumentParts:
 
 
       # -- finally create the main TeX file and the PDF
