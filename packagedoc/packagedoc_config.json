@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# Updated 14.04.2022
+# Updated 05.05.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -34,12 +34,12 @@
 # (see section "OUTPUT") and the relative paths to possibly imported pictures (see section "PICTURES") must be kept valid!
 
    "TOC" : {
-            "introduction"    : "./additional_docs/Introduction.rst",
-            "description"     : "./additional_docs/Description.rst",
+            "introduction"  : "./additional_docs/Introduction.rst",
+            "description"   : "./additional_docs/Description.rst",
             # -- a) single root folder version
-            "INTERFACE"       : "../###PACKAGENAME###",
-            "appendix"        : "./additional_docs/Appendix.rst",
-            "outlook"         : "./additional_docs/Outlook.rst",
+            "INTERFACE"     : "../###PACKAGENAME###",
+            "appendix"      : "./additional_docs/Appendix.rst",
+            "outlook"       : "./additional_docs/Outlook.rst",
             "DOCUMENTPARTS" : ["introduction","description","INTERFACE","outlook","appendix"]
             # -- b) multiple root folder version (example)
             # "INTERFACE_part1" : "../additions/PythonExtensionsCollection/File",

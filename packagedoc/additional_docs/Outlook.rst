@@ -46,6 +46,8 @@
   Explore further rst syntax elements like the code directive. Some of them produces LaTeX code that requires the include of additional
   LaTeX packages. Sometimes this causes errors that have to be fixed.
 
+  05.05.2022: Python syntax highlighting realized
+
 * [09]
 
   The documentation has to be extended by a set of rst examples (rst best practices).
@@ -87,3 +89,8 @@
 * [16]
 
   History
+
+* [17]
+
+  Debug switch to enable additional output
+
