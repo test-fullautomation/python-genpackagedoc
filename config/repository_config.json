@@ -1,0 +1,20 @@
+{
+   "PACKAGENAME" : "GenPackageDoc",
+   "PACKAGEVERSION" : "0.2.0",
+   "PACKAGEDATE" : "05.05.2022",
+   "AUTHOR" : "Holger Queckenstedt",
+   "AUTHOREMAIL" : "Holger.Queckenstedt@de.bosch.com",
+   "DESCRIPTION" : "This package provides a documentation builder for Python packages",
+   "LONGDESCRIPTIONCONTENTTYPE" : "text/markdown",
+   "URL" : "https://github.com/test-fullautomation/python-genpackagedoc",
+   "PROGRAMMINGLANGUAGE" : "Programming Language :: Python :: 3",
+   "LICENCE" : "License :: OSI Approved :: Apache Software License",
+   "OPERATINGSYSTEM" : "Operating System :: OS Independent",
+   "PYTHONREQUIRES" : ">=3.0",
+   "DEVELOPMENTSTATUS" : "Development Status :: 3 - Alpha",
+   "INTENDEDAUDIENCE" : "Intended Audience :: Developers",
+   "TOPIC" : "Topic :: Software Development",
+   "INSTALLREQUIRES" : ["pypandoc","colorama"],
+   "REPOSITORYNAME" : "python-genpackagedoc",
+   "PACKAGEDOC" : "./packagedoc"
+}
