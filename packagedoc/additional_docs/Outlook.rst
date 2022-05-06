@@ -65,6 +65,8 @@
   Maybe it is not necessary to maintain these headings manually. It has to be investigated, if these headings can be added automatically
   by ``GenPackageDoc``. 
 
+  06.05.2022: Headings are added automatically.
+
 * [12]
 
   Currently the documentation of a single Python module starts at *function* or *class* level. This means it is not possible to provide common information

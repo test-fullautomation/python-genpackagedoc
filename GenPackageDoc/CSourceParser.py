@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 13.04.2022
+# 05.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -40,18 +40,12 @@ COLBY = col.Style.BRIGHT + col.Fore.YELLOW
 
 class CSourceParser():
    """
-Class: CSourceParser
-====================
-
 The ``CSourceParser`` class provides a method to parse the functions, classes and their methods
 together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.
    """
 
    def ParseSourceFile(self, sFile=None):
       """
-Method: ParseSourceFile
------------------------
-
 The method ``ParseSourceFile`` parses the content of a Python module.
 
 **Arguments:**
