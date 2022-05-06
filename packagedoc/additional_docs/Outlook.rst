@@ -72,6 +72,8 @@
   Currently the documentation of a single Python module starts at *function* or *class* level. This means it is not possible to provide common information
   about the Python module itself (placed **before** the content of the first function or class of the module). A way have to be found to add such content.
 
+  06.05.2022: Implemented in version 0.4.0
+
 * [13]
 
   The error handling needs to be extended!
@@ -95,4 +97,10 @@
 * [17]
 
   Debug switch to enable additional output
+
+* [18]
+
+  Parse decorators to identify Robot Framework keyword definitions
+
+
 

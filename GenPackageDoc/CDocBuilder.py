@@ -20,8 +20,14 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 05.05.2022
+# 06.05.2022
 #
+# --------------------------------------------------------------------------------------------------------------
+
+"""
+Python module containing all methods to generate tex sources.
+"""
+
 # --------------------------------------------------------------------------------------------------------------
 
 import os, sys, time, json, shlex, subprocess, platform, shutil
@@ -562,7 +568,13 @@ The meaning of clean is: *delete*, followed by *create*.
                   continue
 
                listofdictFunctions = dictContent['listofdictFunctions']
-               listofdictClasses = dictContent['listofdictClasses']
+               listofdictClasses   = dictContent['listofdictClasses']
+               sFileDescription    = dictContent['sFileDescription']
+
+               # -- file description
+               if sFileDescription is not None:
+                  print("file description found")
+                  listLinesRST.append(sFileDescription)
 
                # -- rst content of all functions
 
