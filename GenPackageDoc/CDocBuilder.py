@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 14.04.2022
+# 05.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -48,9 +48,6 @@ ERROR   = 1
 
 class CDocBuilder():
    """
-Class: CDocBuilder
-==================
-
 Main class to build tex sources out of docstrings of Python modules and separate text files in rst format.
 
 Depends on a json configuration file, provided by a ``oRepositoryConfig`` object.
@@ -60,9 +57,6 @@ Method to execute: ``Build()``
 
    def __init__(self, oRepositoryConfig=None):
       """
-Method: __init__
-----------------
-
 Constructor of class ``CDocBuilder``.
 
 Rsponsible for:
@@ -446,9 +440,6 @@ The meaning of clean is: *delete*, followed by *create*.
    # --------------------------------------------------------------------------------------------------------------
    def Build(self):
       """
-Method: Build
--------------
-
 **Arguments:**
 
 (*no arguments*)
@@ -581,16 +572,17 @@ Method: Build
 
                   print(f"    > Function : '{sFunctionName}'")
 
+                  sFunctionHeadline1 = f"Function: {sFunctionName}"
+                  listLinesRST.append(sFunctionHeadline1)
+                  sFunctionHeadline2 = len(sFunctionHeadline1)*"="
+                  listLinesRST.append(sFunctionHeadline2)
+                  listLinesRST.append("")
                   if sFunctionDocString is None:
-                     sFunctionHeadline1 = f"Function: {sFunctionName}"
-                     listLinesRST.append(sFunctionHeadline1)
-                     sFunctionHeadline2 = len(sFunctionHeadline1)*"="
-                     listLinesRST.append(sFunctionHeadline2)
-                     listLinesRST.append("")
                      listLinesRST.append("*docstring not available*")
                      listLinesRST.append("")
                   else:
                      listLinesRST.append(sFunctionDocString)
+
                # eof for dictFunction in listofdictFunctions:
 
 
@@ -603,36 +595,39 @@ Method: Build
 
                   print(f"    > Class : '{sClassName}'")
 
+                  sClassHeadline1 = f"Class: {sClassName}"
+                  listLinesRST.append(sClassHeadline1)
+                  sClassHeadline2 = len(sClassHeadline1)*"="
+                  listLinesRST.append(sClassHeadline2)
+                  listLinesRST.append("")
+                  listLinesRST.append(f"**Import:** ``{sPythonModuleImport}``")
+                  listLinesRST.append("")
                   if sClassDocString is None:
-                     sClassHeadline1 = f"Class: {sClassName}"
-                     listLinesRST.append(sClassHeadline1)
-                     sClassHeadline2 = len(sClassHeadline1)*"="
-                     listLinesRST.append(sClassHeadline2)
-                     listLinesRST.append("")
-                     listLinesRST.append(f"**Import:** ``{sPythonModuleImport}``")
-                     listLinesRST.append("")
                      listLinesRST.append("*docstring not available*")
                      listLinesRST.append("")
                   else:
-                     listDocStringLinesNew = []
-                     listDocStringLines = sClassDocString.splitlines()
+                     listLinesRST.append(sClassDocString)
 
-                     sKeyword   = "Class:"
-                     sUnderline = ""
-                     for sDocStringLine in listDocStringLines:
-                        listDocStringLinesNew.append(sDocStringLine)
-                        if ( (len(sDocStringLine) > 0) and (sDocStringLine == sUnderline) ):
-                           listDocStringLinesNew.append("")
-                           listDocStringLinesNew.append(f"**Import:** ``{sPythonModuleImport}``")
-                           listDocStringLinesNew.append("")
-                           sUnderline = ""
-                        elif sKeyword in sDocStringLine:
-                           nLineLength = len(sDocStringLine)
-                           sUnderline = nLineLength*"=" # indicates a class headline/section
-                     # eof for sDocStringLine in listDocStringLines:
+                     # # # # listDocStringLinesNew = []
+                     # # # # listDocStringLines = sClassDocString.splitlines()
 
-                     sClassDocStringNew = "\n".join(listDocStringLinesNew)
-                     listLinesRST.append(sClassDocStringNew)
+                     # # # # sKeyword   = "Class:"
+                     # # # # sUnderline = ""
+                     # # # # for sDocStringLine in listDocStringLines:
+                        # # # # listDocStringLinesNew.append(sDocStringLine)
+                        # # # # if ( (len(sDocStringLine) > 0) and (sDocStringLine == sUnderline) ):
+                           # # # # listDocStringLinesNew.append("")
+                           # # # # listDocStringLinesNew.append(f"**Import:** ``{sPythonModuleImport}``")
+                           # # # # listDocStringLinesNew.append("")
+                           # # # # sUnderline = ""
+                        # # # # elif sKeyword in sDocStringLine:
+                           # # # # nLineLength = len(sDocStringLine)
+                           # # # # sUnderline = nLineLength*"=" # indicates a class headline/section
+                     # # # # # eof for sDocStringLine in listDocStringLines:
+
+                     # # # # sClassDocStringNew = "\n".join(listDocStringLinesNew)
+                     # # # # listLinesRST.append(sClassDocStringNew)
+
 
                   for dictMethod in listofdictMethods:
                      sMethodName = dictMethod['sMethodName']
@@ -640,16 +635,17 @@ Method: Build
 
                      print(f"      - Method : '{sMethodName}'")
 
+                     sMethodHeadline1 = f"Method: {sMethodName}"
+                     listLinesRST.append(sMethodHeadline1)
+                     sMethodHeadline2 = len(sMethodHeadline1)*"-"
+                     listLinesRST.append(sMethodHeadline2)
+                     listLinesRST.append("")
                      if sMethodDocString is None:
-                        sMethodHeadline1 = f"Method: {sMethodName}"
-                        listLinesRST.append(sMethodHeadline1)
-                        sMethodHeadline2 = len(sMethodHeadline1)*"-"
-                        listLinesRST.append(sMethodHeadline2)
-                        listLinesRST.append("")
                         listLinesRST.append("*docstring not available*")
                         listLinesRST.append("")
                      else:
                         listLinesRST.append(sMethodDocString)
+
                # eof for dictClass in listofdictClasses:
 
 

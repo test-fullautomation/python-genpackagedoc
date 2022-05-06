@@ -11,7 +11,7 @@ The documentation is generated in two steps:
 2. The LaTeX sources are converted into a PDF document. This requires a separately installed LaTeX distribution (recommended: MiKTeX),
    that is **not** part of ``GenPackageDoc``.
 
-The sources of ``GenPackageDoc`` are available in the following GitHub repository (*soon*):
+The sources of ``GenPackageDoc`` are available in the following GitHub repository:
 
    https://github.com/test-fullautomation/python-genpackagedoc
 

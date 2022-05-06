@@ -46,6 +46,8 @@
   Explore further rst syntax elements like the code directive. Some of them produces LaTeX code that requires the include of additional
   LaTeX packages. Sometimes this causes errors that have to be fixed.
 
+  05.05.2022: Python syntax highlighting realized
+
 * [09]
 
   The documentation has to be extended by a set of rst examples (rst best practices).
@@ -62,6 +64,8 @@
   Currently the docstrings of Python modules have to contain a heading for functions, classes and methods. The developer is responsible for that.
   Maybe it is not necessary to maintain these headings manually. It has to be investigated, if these headings can be added automatically
   by ``GenPackageDoc``. 
+
+  06.05.2022: Headings are added automatically.
 
 * [12]
 
@@ -87,3 +91,8 @@
 * [16]
 
   History
+
+* [17]
+
+  Debug switch to enable additional output
+
