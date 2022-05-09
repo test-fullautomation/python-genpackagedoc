@@ -21,8 +21,11 @@
 # Contains parameter to control the application behavior in general.
 
    "CONTROL" : {
-                # if true: private methodes are included in PDF, otherwise not
-                "INCLUDEPRIVATE" : false
+                # if false: private methods are skipped, otherwise they are included in documentation
+                "INCLUDEPRIVATE"      : false,
+                # if true: also classes and methods without docstring are listed in the documentation (together with a hint
+                # that information is not available), otherwise they are skipped
+                "INCLUDEUNDOCUMENTED" : true
                },
 
 # Section "TOC":
