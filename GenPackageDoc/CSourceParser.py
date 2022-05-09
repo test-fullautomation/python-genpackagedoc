@@ -50,7 +50,7 @@ The ``CSourceParser`` class provides a method to parse the functions, classes an
 together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.
    """
 
-   def ParseSourceFile(self, sFile=None, bIncludePrivate=False):
+   def ParseSourceFile(self, sFile=None, bIncludePrivate=False, bIncludeUndocumented=True):
       """
 The method ``ParseSourceFile`` parses the content of a Python module.
 
@@ -66,7 +66,14 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
   / *Condition*: optional / *Type*: bool / *Default*: False /
 
-  If True, also private methods are listed in PDF output, otherwise not.
+  If ``False``: private methods are skipped, otherwise they are included in documentation.
+
+* ``bIncludeUndocumented``
+
+  / *Condition*: optional / *Type*: bool / *Default*: True /
+
+  If ``True``: also classes and methods without docstring are listed in the documentation (together with a hint that information is not available),
+  otherwise they are skipped.
 
 **Returns:**
 
@@ -121,27 +128,34 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
          if isinstance(node, ast.FunctionDef):
             sFunctionName = f"{node.name}"
+            sFunctionDocString = ast.get_docstring(node)
             # print(f"* function : '{sFunctionName}'")
             bTakeIt = True
             if bIncludePrivate is False:
-               # no private
                if sFunctionName.startswith('_'):
+                  # is private
                   bTakeIt = False
+            # eof if bIncludePrivate is False:
+            if bIncludeUndocumented is False:
+               if sFunctionDocString is None:
+                  # is undocumented
+                  bTakeIt = False
+            # eof if bIncludeUndocumented is False:
             if bTakeIt is True:
                dictFunction = {}
                dictFunction['sFunctionName'] = sFunctionName
-               sFunctionDocString = ast.get_docstring(node)
                dictFunction['sFunctionDocString'] = sFunctionDocString
                listofdictFunctions.append(dictFunction)
             # eof if bTakeIt is True:
          # eof if isinstance(node, ast.FunctionDef):
 
          if isinstance(node, ast.ClassDef):
+            # is class => bIncludeUndocumented has no relevance
             sClassName = f"{node.name}"
+            sClassDocString = ast.get_docstring(node)
             # print(f"* class : '{sClassName}'")
             dictClass = {}
             dictClass['sClassName'] = sClassName
-            sClassDocString = ast.get_docstring(node)
             dictClass['sClassDocString'] = sClassDocString
 
             listofdictMethods = []
@@ -149,16 +163,22 @@ The method ``ParseSourceFile`` parses the content of a Python module.
             for subnode in node.body:
                if isinstance(subnode, ast.FunctionDef):
                   sMethodName = f"{subnode.name}"
+                  sMethodDocString = ast.get_docstring(subnode)
                   # print(f"* method : '{sMethodName}'")
                   bTakeIt = True
                   if bIncludePrivate is False:
-                     # no private
                      if sMethodName.startswith('_'):
+                        # is private
                         bTakeIt = False
+                  # eof if bIncludePrivate is False:
+                  if bIncludeUndocumented is False:
+                     if sMethodDocString is None:
+                        # is undocumented
+                        bTakeIt = False
+                  # eof if bIncludeUndocumented is False:
                   if bTakeIt is True:
                      dictMethod = {}
                      dictMethod['sMethodName'] = sMethodName
-                     sMethodDocString = ast.get_docstring(subnode)
                      dictMethod['sMethodDocString'] = sMethodDocString
                      listofdictMethods.append(dictMethod)
                   # eof if bTakeIt is True
@@ -184,7 +204,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
       return dictContent, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-   # eof def ParseSourceFile(self, sFile=None):
+   # eof def ParseSourceFile(self, sFile=None, bIncludePrivate=False, bIncludeUndocumented=True):
 
 # eof class CSourceParser():
 

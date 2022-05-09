@@ -3,7 +3,7 @@
 * [01]
 
   Introduce ``setup.py`` including the execution of ``genpackagedoc.py`` and adding the generated PDF document to the installation.//nl
-  Introduce README.rst and RAEDME.md.
+  Introduce README.rst and README.md.
 
 * [02]
 
@@ -16,7 +16,9 @@
 
   Currently it is implemented that also functions, classes and methods without docstrings are part of the resulting PDF document.
   They are listed together with the hint, that a docstring is not available.//nl
-  A configuration switch might be useful to give the user the ability to control this behavior (``includeempty=True|False``).
+  A configuration switch might be useful to give the user the ability to control this behavior.
+
+  09.05.2022: Parameter 'INCLUDEUNDOCUMENTED' added
 
 * [04]
 

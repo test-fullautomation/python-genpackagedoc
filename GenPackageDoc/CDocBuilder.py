@@ -559,7 +559,9 @@ The meaning of clean is: *delete*, followed by *create*.
                   sPythonModuleImport = f"{sSourceFilesRootFolderName}.{sModuleFileSubPath}.{sModuleFileNameOnly}"
 
                # -- get all informations out of the source file
-               dictContent, bSuccess, sResult = oSourceParser.ParseSourceFile(sModule, self.__dictConfig['CONTROL']['INCLUDEPRIVATE'])
+               dictContent, bSuccess, sResult = oSourceParser.ParseSourceFile(sModule,
+                                                                              self.__dictConfig['CONTROL']['INCLUDEPRIVATE'],
+                                                                              self.__dictConfig['CONTROL']['INCLUDEUNDOCUMENTED'])
                if bSuccess is not True:
                   return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
@@ -619,26 +621,6 @@ The meaning of clean is: *delete*, followed by *create*.
                      listLinesRST.append("")
                   else:
                      listLinesRST.append(sClassDocString)
-
-                     # # # # listDocStringLinesNew = []
-                     # # # # listDocStringLines = sClassDocString.splitlines()
-
-                     # # # # sKeyword   = "Class:"
-                     # # # # sUnderline = ""
-                     # # # # for sDocStringLine in listDocStringLines:
-                        # # # # listDocStringLinesNew.append(sDocStringLine)
-                        # # # # if ( (len(sDocStringLine) > 0) and (sDocStringLine == sUnderline) ):
-                           # # # # listDocStringLinesNew.append("")
-                           # # # # listDocStringLinesNew.append(f"**Import:** ``{sPythonModuleImport}``")
-                           # # # # listDocStringLinesNew.append("")
-                           # # # # sUnderline = ""
-                        # # # # elif sKeyword in sDocStringLine:
-                           # # # # nLineLength = len(sDocStringLine)
-                           # # # # sUnderline = nLineLength*"=" # indicates a class headline/section
-                     # # # # # eof for sDocStringLine in listDocStringLines:
-
-                     # # # # sClassDocStringNew = "\n".join(listDocStringLinesNew)
-                     # # # # listLinesRST.append(sClassDocStringNew)
 
 
                   for dictMethod in listofdictMethods:
