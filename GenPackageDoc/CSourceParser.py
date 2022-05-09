@@ -20,8 +20,14 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 13.04.2022
+# 06.05.2022
 #
+# --------------------------------------------------------------------------------------------------------------
+
+"""
+Python module containing all methods to parse the documentation content of Python source files.
+"""
+
 # --------------------------------------------------------------------------------------------------------------
 
 import os, sys, shlex, subprocess
@@ -40,18 +46,12 @@ COLBY = col.Style.BRIGHT + col.Fore.YELLOW
 
 class CSourceParser():
    """
-Class: CSourceParser
-====================
-
 The ``CSourceParser`` class provides a method to parse the functions, classes and their methods
 together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.
    """
 
    def ParseSourceFile(self, sFile=None):
       """
-Method: ParseSourceFile
------------------------
-
 The method ``ParseSourceFile`` parses the content of a Python module.
 
 **Arguments:**
@@ -96,13 +96,22 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
       dictContent = {}
       listofdictFunctions = []
-      listofdictClasses = []
+      listofdictClasses   = []
+      sFileDescription    = None
 
       # print(f"================= sMethod : {sMethod}")
 
+      bIsFirstExpressionConstant = True
+
       for node in astModule.body:
 
-         # print("================= node")
+         if isinstance(node, ast.Expr):
+            if bIsFirstExpressionConstant is True:
+               oExpression = node.value
+               if isinstance(oExpression, ast.Constant):
+                  bIsFirstExpressionConstant = False
+                  sFileDescription = oExpression.value
+                  # print(f"==================== sFileDescription : '{sFileDescription}'")
 
          if isinstance(node, ast.FunctionDef):
             dictFunction = {}
@@ -145,11 +154,12 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
       # eof for node in astModule.body:
 
-      if ( (len(listofdictFunctions) == 0) and (len(listofdictClasses) == 0) ):
+      if ( (len(listofdictFunctions) == 0) and (len(listofdictClasses) == 0) and (sFileDescription is None) ):
          dictContent = None # nothing relevant found inside this file
       else:
          dictContent['listofdictFunctions'] = listofdictFunctions
-         dictContent['listofdictClasses'] = listofdictClasses
+         dictContent['listofdictClasses']   = listofdictClasses
+         dictContent['sFileDescription']    = sFileDescription
 
       bSuccess = True
       sResult  = "Done"

@@ -120,16 +120,14 @@ A *chapter* is the top level within the PDF document; a *section* is the level b
   - A line underlined with "``=``" characters is a section
   - A line underlined with "``-``" characters is a subsection
 
-* Within the docstrings of Python modules the same rst syntax elements for headings can be used to add functions, classes and methods to the table of content:
+* Within the docstrings of Python modules the headings are added automatically (for functions, classes and methods)
 
-  - A line underlined with "``=``" characters is a section and should be used for classes and functions//nl
+  - Classes and functions are listed at section level//nl
     (both classes and functions are assumed to be at the same level).
 
-  - A line underlined with "``-``" characters is a subsection and should be used for methods of a class.
+  - Class methods are listed at subesction level.
 
-  The rst syntax provides more types of headings than "``=``" and "``-``" - but ``GenPackageDoc`` does not consider them for the table of content.
-
-  This means: **Further nestings of headings are not supported** (because we do not want to overload the table of content).
+  **Further nestings of headings are not supported** (because we do not want to overload the table of content).
 
 
 Examples
@@ -173,38 +171,14 @@ The outcome is the following part of the table of content:
 Example 2: Python module
 ------------------------
 
-Part of this documentation is a Python module with name ``CDocBuilder.py``.
+Part of this documentation is a Python module with name ``CDocBuilder.py`` (listed in table of content at *chapter* level).
+This module contains a class with name ``CDocBuilder`` (listed in table of content at *section* level).
+The class ``CDocBuilder`` contains a method with name ``Build`` (listed in table of content at *subsection* level).
 
-Because of the content of every module is a chapter, this module causes the follwing entry in the table of content:
+This causes the following entry within the table of contents:
 
 .. image:: ./pictures/TOC02.png
 
-The module ``CDocBuilder.py`` contains a class with name ``CDocBuilder`` (listed in table of content at *section* level).
-
-The class ``CDocBuilder`` contains a method with name ``Build`` (listed in table of content at *subsection* level).
-
-To create these entries within the table of content the docstring of the class contains the following heading (lines 51 and 52):
-
-.. image:: ./pictures/DS01.png
-
-And the docstring of the method contains this heading (lines 449 and 450):
-
-.. image:: ./pictures/DS02.png
-
-Here within the docstrings the same rst syntax ("``=``" for headings of sections, "``-``" for headings of subsections) have to be used like in rst files.
-
-It is also possible that a Python module does not only contain classes together with their methods, but functions also. A function is something
-different than a class, but it is assumed that within the code they are placed at the same level (section). The outcome is that within the docstring
-a function name has to be underlined with "``=``" (same as for classes).
-
-Example: Docstring of a function ``PrettyPrint`` within Python module ``CUtils``:
-
-.. image:: ./pictures/DS03.png
-
-Please keep in mind: The headings ("``=``" and "``-``") do not indicate directly a function, a class or a method.
-They indicate a level within the PDF document structure.
-
-The author of the documentation has to decide which part of the code belongs to which level.
 
 Interface descriptions
 ======================
@@ -216,19 +190,6 @@ To have a unique look and feel of all interface descriptions the following style
 **Example**
 
 .. image:: ./pictures/Interface01.png
-
-The interface description consists of the following parts:
-
-* Line 11: Keyword "``Function:``" followed by the name of the function.
-* Line 12: Underlines "=" indicating a headline at *section* level.
-* *Alternatively* in case of a class method in lines 14 and 15 the keyword "``Method:``" followed by the name of the method.
-* Following line(s): common description of the function or method.
-* Line 19: Keyword "``Arguments:``" indicating that in next lines all input parameters are described (in case of there are ones).
-* Line 21: The name of an input parameter.
-* Line 23: Some details of the input parameter.
-* Following line(s): common description of the input parameter.
-* Line 27: Keyword "``Returns:``"  indicating that in next lines all return parameters are described (in case of there are ones).
-* Following lines: same structure like in "``Arguments:``".
 
 Some of the special characters used within the interface description, are part of the rst syntax. They will be explained within the next section.//nl
 
@@ -242,31 +203,6 @@ Some of the special characters used within the interface description, are part o
 * In rst also blank lines are part of the syntax!
 
 *Please be attentive while typing your documentation in rst format!*//nl
-
-**Also relevant:**
-
-To have keywords like ``Function:``, ``Class:`` or ``Method:`` available as part of a headline makes the content of a PDF document
-easy to capture for a reader:
-
-.. image:: ./pictures/Bookmarks01.png
-
-But they are not required, **except the keyword** "``Class:``"**!** This keyword is required!
-
-The reason is that ``GenPackageDoc`` needs to identify the position between the headline and the following description - to have a chance
-to add automatically generated content at exactly this position. In case of classes this mechanism is used to add the import path for this class.
-And this automatism prevents the developer from maintaining this information manually for every class.
-
-**Example:**
-
-This is the docstring (extract):
-
-.. image:: ./pictures/DS04.png
-
-And this is the corresponding PDF document content:
-
-.. image:: ./pictures/DC01.png
-
-The "``Import:``" line is added automatically.//np
 
 
 Runtime variables

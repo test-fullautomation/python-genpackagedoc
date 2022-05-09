@@ -20,8 +20,14 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 05.05.2022
+# 06.05.2022
 #
+# --------------------------------------------------------------------------------------------------------------
+
+"""
+Python module containing source patterns used to generate the tex file output.
+"""
+
 # --------------------------------------------------------------------------------------------------------------
 
 import os, sys
@@ -30,9 +36,6 @@ import os, sys
 
 class CPatterns():
    """
-Class: CPatterns
-================
-
 The ``CPatterns`` class provides a set of LaTeX source patterns used to generate the tex file output.
 
 All source patterns are accessible by corresponding ``Get`` methods. Some source patterns contain placeholder
@@ -41,9 +44,6 @@ that will be replaced by input parameter of the ``Get`` method.
 
    def GetHeader(self, sAuthor="", sTitle="", sDate=""):
       """
-Method: GetHeader
------------------
-
 Defines the header of the main tex file.
 
 **Arguments:**
@@ -164,9 +164,6 @@ Defines the header of the main tex file.
 
    def GetChapter(self, sHeadline="", sDocumentName=""):
       """
-Method: GetChapter
-------------------
-
 Defines single chapter of the main tex file.
 
 A single chapter is equivalent to an additionally imported text file in rst format or equivalent to a single Python module
@@ -210,9 +207,6 @@ within a Python package.
 
    def GetFooter(self):
       """
-Method: GetFooter
------------------
-
 Defines the footer of the main tex file.
 
 **Arguments:**
