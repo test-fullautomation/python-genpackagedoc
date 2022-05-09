@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 06.05.2022
+# 09.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ Method to execute: ``Build()``
       """
 Constructor of class ``CDocBuilder``.
 
-Rsponsible for:
+Responsible for:
 
 * Take over the repository configuration
 * Read the packagedoc configuration from json file
@@ -141,6 +141,7 @@ Rsponsible for:
 
       # get keys and values from documentation build configuration (for values without placeholder)
       # TODO: if key in dict / otherwise error / or make optional?
+      self.__dictConfig['CONTROL']  = dictDocConfig['CONTROL']
       self.__dictConfig['TOC']      = dictDocConfig['TOC']
       self.__dictConfig['OUTPUT']   = dictDocConfig['OUTPUT']
       self.__dictConfig['PICTURES'] = dictDocConfig['PICTURES']
@@ -558,8 +559,7 @@ The meaning of clean is: *delete*, followed by *create*.
                   sPythonModuleImport = f"{sSourceFilesRootFolderName}.{sModuleFileSubPath}.{sModuleFileNameOnly}"
 
                # -- get all informations out of the source file
-
-               dictContent, bSuccess, sResult = oSourceParser.ParseSourceFile(sModule)
+               dictContent, bSuccess, sResult = oSourceParser.ParseSourceFile(sModule, self.__dictConfig['CONTROL']['INCLUDEPRIVATE'])
                if bSuccess is not True:
                   return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
