@@ -8,7 +8,9 @@
 * [02]
 
   Currently it is hard coded, that private functions and methods are skipped. Therefore they are not part of the resulting PDF document.//nl
-  A configuration switch might be useful to give the user the ability to control this behavior (``skipprivate=True|False``).
+  A configuration switch might be useful to give the user the ability to control this behavior.
+
+  09.05.2022: Parameter 'INCLUDEPRIVATE' added
 
 * [03]
 

@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 06.05.2022
+# 09.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ The ``CSourceParser`` class provides a method to parse the functions, classes an
 together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.
    """
 
-   def ParseSourceFile(self, sFile=None):
+   def ParseSourceFile(self, sFile=None, bIncludePrivate=False):
       """
 The method ``ParseSourceFile`` parses the content of a Python module.
 
@@ -61,6 +61,12 @@ The method ``ParseSourceFile`` parses the content of a Python module.
   / *Condition*: required / *Type*: str /
 
   Path and name of a single Python module.
+
+* ``bIncludePrivate``
+
+  / *Condition*: optional / *Type*: bool / *Default*: False /
+
+  If True, also private methods are listed in PDF output, otherwise not.
 
 **Returns:**
 
@@ -114,19 +120,26 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                   # print(f"==================== sFileDescription : '{sFileDescription}'")
 
          if isinstance(node, ast.FunctionDef):
-            dictFunction = {}
             sFunctionName = f"{node.name}"
             # print(f"* function : '{sFunctionName}'")
-            dictFunction['sFunctionName'] = sFunctionName
-            sFunctionDocString = ast.get_docstring(node)
-            dictFunction['sFunctionDocString'] = sFunctionDocString
-            listofdictFunctions.append(dictFunction)
+            bTakeIt = True
+            if bIncludePrivate is False:
+               # no private
+               if sFunctionName.startswith('_'):
+                  bTakeIt = False
+            if bTakeIt is True:
+               dictFunction = {}
+               dictFunction['sFunctionName'] = sFunctionName
+               sFunctionDocString = ast.get_docstring(node)
+               dictFunction['sFunctionDocString'] = sFunctionDocString
+               listofdictFunctions.append(dictFunction)
+            # eof if bTakeIt is True:
          # eof if isinstance(node, ast.FunctionDef):
 
          if isinstance(node, ast.ClassDef):
-            dictClass = {}
             sClassName = f"{node.name}"
             # print(f"* class : '{sClassName}'")
+            dictClass = {}
             dictClass['sClassName'] = sClassName
             sClassDocString = ast.get_docstring(node)
             dictClass['sClassDocString'] = sClassDocString
@@ -136,14 +149,19 @@ The method ``ParseSourceFile`` parses the content of a Python module.
             for subnode in node.body:
                if isinstance(subnode, ast.FunctionDef):
                   sMethodName = f"{subnode.name}"
-                  if not sMethodName.startswith('_'):           # currently no private methods; TODO: make this a configuration or command line parameter
+                  # print(f"* method : '{sMethodName}'")
+                  bTakeIt = True
+                  if bIncludePrivate is False:
+                     # no private
+                     if sMethodName.startswith('_'):
+                        bTakeIt = False
+                  if bTakeIt is True:
                      dictMethod = {}
-                     # print(f"* method : '{sMethodName}'")
                      dictMethod['sMethodName'] = sMethodName
                      sMethodDocString = ast.get_docstring(subnode)
                      dictMethod['sMethodDocString'] = sMethodDocString
                      listofdictMethods.append(dictMethod)
-                  # eof if not sMethodName.startswith('_'):
+                  # eof if bTakeIt is True
                # eof if isinstance(subnode, ast.FunctionDef):
             # eof for subnode in node.body:
 
