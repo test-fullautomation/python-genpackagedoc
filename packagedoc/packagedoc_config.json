@@ -103,6 +103,13 @@
 
    "OUTPUT" : "./build",
 
+# Section "PDFDEST":
+# -----------------
+# Defines the path to a folder in which the PDF file will be copied after creation
+# (the "OUTPUT" folder in which the LaTeX compiler creates the PDF file, is not really a proper destination finally)
+
+   "PDFDEST" : "../###PACKAGENAME###",
+
 # Section "TEX":
 # -----------------
 # Converting the generated text source files to a PDF document requires a LaTeX distribution.

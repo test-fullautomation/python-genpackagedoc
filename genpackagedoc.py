@@ -65,7 +65,7 @@ except Exception as ex:
     print()
     sys.exit(ERROR)
 
-
+# -- setting up and calling the doc builder
 try:
     oDocBuilder = CDocBuilder(oRepositoryConfig)
 except Exception as ex:
