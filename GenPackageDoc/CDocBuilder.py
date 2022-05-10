@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 09.05.2022
+# 10.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -139,16 +139,25 @@ Responsible for:
       # add current timestamp
       self.__dictConfig['NOW'] = time.strftime('%d.%m.%Y - %H:%M:%S')
 
-      # get keys and values from documentation build configuration (for values without placeholder)
+      # get some basic keys and values from documentation build configuration
       # TODO: if key in dict / otherwise error / or make optional?
       self.__dictConfig['CONTROL']  = dictDocConfig['CONTROL']
-      self.__dictConfig['TOC']      = dictDocConfig['TOC']
-      self.__dictConfig['OUTPUT']   = dictDocConfig['OUTPUT']
       self.__dictConfig['PICTURES'] = dictDocConfig['PICTURES']
+      self.__dictConfig['OUTPUT']   = dictDocConfig['OUTPUT']
+      self.__dictConfig['PDFDEST']  = dictDocConfig['PDFDEST']
       self.__dictConfig['TEX']      = dictDocConfig['TEX']
 
-      # get keys and values from documentation build configuration for values with placeholder (in "PARAMS" and "DOCUMENT")
-      # and resolve possible placeholder
+      # get keys and values from documentation build configuration for values with placeholder (in "TOC", "PARAMS" and "DOCUMENT")
+      # and resolve placeholder (possible placeholder are the keys from repository configuration)
+
+      self.__dictConfig['TOC'] = dictDocConfig['TOC']
+      listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
+      for sDocumentPart in listDocumentParts:
+         sDocumentPartPath = self.__dictConfig['TOC'][sDocumentPart]
+         for repo_key, repo_value in dictRepositoryConfig.items():
+            if type(repo_value) == str:
+               sDocumentPartPath = sDocumentPartPath.replace(f"###{repo_key}###", repo_value)
+         self.__dictConfig['TOC'][sDocumentPart] = sDocumentPartPath
 
       self.__dictConfig['PARAMS'] = {}
       if 'PARAMS' in dictDocConfig: # option
@@ -178,21 +187,33 @@ Responsible for:
                   sResolvedValue = sResolvedValue.replace(f"###{repo_key}###", repo_value)
             self.__dictConfig['DOCUMENT'][doc_key] = sResolvedValue
 
-      # -- convert relative paths to absolute paths
-
-      listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
-      # expected: relative paths only; reference is 'PACKAGEDOC'
+      # -- the absolute path that is reference for all relative paths
       sReferencePathAbs = self.__dictConfig['PACKAGEDOC']
-      for sDocumentPart in listDocumentParts:
-         # TODO: how to enable absolute paths also?
-         self.__dictConfig['TOC'][sDocumentPart] = CString.NormalizePath(self.__dictConfig['TOC'][sDocumentPart], sReferencePathAbs=sReferencePathAbs)
 
-      self.__dictConfig['PICTURES'] = CString.NormalizePath(self.__dictConfig['PICTURES'], sReferencePathAbs=sReferencePathAbs)
-      self.__dictConfig['OUTPUT'] = CString.NormalizePath(self.__dictConfig['OUTPUT'], sReferencePathAbs=sReferencePathAbs)
+      # -- convert relative paths to absolute paths in 'DOCUMENTPARTS' section
+      listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
+      for sDocumentPart in listDocumentParts:
+         self.__dictConfig['TOC'][sDocumentPart] = CString.NormalizePath(f"{sReferencePathAbs}/{self.__dictConfig['TOC'][sDocumentPart]}")
+
+      # -- set further config keys
+      tupleFurtherConfigKeys = ("PICTURES", "OUTPUT", "PDFDEST")
+
+      # -- resolve placeholder in further config keys (possible placeholder are the keys from repository configuration)
+      for sConfigKey in tupleFurtherConfigKeys:
+         sPackageDocValue = self.__dictConfig[sConfigKey]
+         for repo_key, repo_value in dictRepositoryConfig.items():
+            if type(repo_value) == str:
+               sPackageDocValue = sPackageDocValue.replace(f"###{repo_key}###", repo_value)
+         self.__dictConfig[sConfigKey] = sPackageDocValue
+
+      # -- convert relative paths to absolute paths in further config keys
+      for sConfigKey in tupleFurtherConfigKeys:
+         self.__dictConfig[sConfigKey] = CString.NormalizePath(f"{sReferencePathAbs}/{self.__dictConfig[sConfigKey]}")
 
       # PrettyPrint(self.__dictConfig, sPrefix="Config")
 
-      # -- prepare dictionary with all parameter that shall have runtime character (flat list instead of nested dict like in packagedoc configuration)
+      # ---- prepare dictionary with all parameter that shall have runtime character (flat list instead of nested dict like in packagedoc configuration)
+
       self.__dictRuntimeVariables = None
 
       # -- 1. from repository configuration
@@ -210,11 +231,10 @@ Responsible for:
       if 'DOCUMENT' in self.__dictConfig: # required
          for key, value in self.__dictConfig['DOCUMENT'].items():
             self.__dictRuntimeVariables[key] = value
+
       # TODO: else: error
 
       # PrettyPrint(self.__dictRuntimeVariables, sPrefix="Runtime")
-
-      # # # self.__listModules = []
 
    def __del__(self):
       pass
@@ -433,8 +453,15 @@ The meaning of clean is: *delete*, followed by *create*.
       # -- verify the outcome
       sPDFFileExpected = self.__dictConfig['sPDFFileExpected']
       if os.path.isfile(sPDFFileExpected) is True:
-         bSuccess = True
-         sResult  = f"* PDF file '{sPDFFileExpected}'"
+         sDestinationPDFFile = f"{self.__dictConfig['PDFDEST']}/{self.__dictConfig['sPDFFileName']}"
+         oPDFFile = CFile(sPDFFileExpected)
+         bSuccess, sResult = oPDFFile.CopyTo(sDestinationPDFFile, bOverwrite=True)
+         del oPDFFile
+         if bSuccess is True:
+            # replacement for sResult without debug info
+            sResult = f"File '{sPDFFileExpected}'\ncopied to\n{sDestinationPDFFile}"
+         else:
+            sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
       else:
          bSuccess = False
          sResult  = f"Expected PDF file '{sPDFFileExpected}' not generated"
@@ -482,24 +509,14 @@ The meaning of clean is: *delete*, followed by *create*.
 
       listoftuplesChaptersInfo = [] # needed for TOC of main TeX file
 
-      # -- resolve placeholders, check existence and execute
+      # -- check existence of document parts and parse the content
 
       listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
       for sDocumentPart in listDocumentParts:
          sDocumentPartPath = self.__dictConfig['TOC'][sDocumentPart]
 
-         # -- resolve placeholders
-         listLinesResolved, bSuccess, sResult = self.__ResolvePlaceholders([sDocumentPartPath,])
-         if bSuccess is not True:
-            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-         if len(listLinesResolved) > 0:
-            sDocumentPartPath = listLinesResolved[0]
-         else:
-            bSuccess = None
-            sResult  = "INTERNAL ERROR"
-            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-
          # -- check existence
+
          if sDocumentPart.startswith("INTERFACE"):
             if os.path.isdir(sDocumentPartPath) is False:
                bSuccess = False
@@ -511,7 +528,8 @@ The meaning of clean is: *delete*, followed by *create*.
                sResult  = f"File '{sDocumentPartPath}' does not exist."
                return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-         # -- execute
+         # -- parse the content
+
          print(f"* Document part : '{sDocumentPart}' : '{sDocumentPartPath}'")
 
          if sDocumentPart.startswith("INTERFACE"):
@@ -753,7 +771,9 @@ The meaning of clean is: *delete*, followed by *create*.
       oMainTexFile = CFile(sMainTexFile)
       dMainTexFileInfo = oMainTexFile.GetFileInfo()
       sMainTexFileNameOnly = dMainTexFileInfo['sFileNameOnly']
-      sPDFFileExpected = f"{sBuildDir}/{sMainTexFileNameOnly}.pdf"
+      sPDFFileName = f"{sMainTexFileNameOnly}.pdf"
+      sPDFFileExpected = f"{sBuildDir}/{sPDFFileName}"
+      self.__dictConfig['sPDFFileName']     = sPDFFileName # used later to copy the file to another location
       self.__dictConfig['sPDFFileExpected'] = sPDFFileExpected # used later to verify the build
       sHeader = oPatterns.GetHeader(sAuthor=self.__dictConfig['DOCUMENT']['AUTHOR'], sTitle=self.__dictConfig['DOCUMENT']['TITLE'], sDate=self.__dictConfig['DOCUMENT']['DATE'])
       oMainTexFile.Write(sHeader)

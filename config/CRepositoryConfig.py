@@ -29,7 +29,7 @@
 # 
 # --------------------------------------------------------------------------------------------------------------
 #
-# Initial version 04/2022
+# 09.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -65,13 +65,13 @@ class CRepositoryConfig():
         self.__dictRepositoryConfig = None # initialized below by json.load()
 
         # load static configuration values (name of json file is fix)
-        sRepositoryConfigurationFile = CString.NormalizePath("./config/repository_config.json", sReferencePathAbs=self.__sReferencePath)
+        sRepositoryConfigurationFile = CString.NormalizePath(f"{self.__sReferencePath}/config/repository_config.json")
         hRepositoryConfigurationFile = open(sRepositoryConfigurationFile)
         self.__dictRepositoryConfig = json.load(hRepositoryConfigurationFile)
         hRepositoryConfigurationFile.close()
 
         # make absolute path
-        self.__dictRepositoryConfig['PACKAGEDOC'] = CString.NormalizePath(self.__dictRepositoryConfig['PACKAGEDOC'], sReferencePathAbs=self.__sReferencePath)
+        self.__dictRepositoryConfig['PACKAGEDOC'] = CString.NormalizePath(f"{self.__sReferencePath}/{self.__dictRepositoryConfig['PACKAGEDOC']}")
 
         # add further infos
         # (to have the possibility to print out all values with help of 'PrintConfig()')
@@ -125,27 +125,26 @@ class CRepositoryConfig():
 
         # ---- paths relative to repository root folder (where the srcipts are located that use this module)
 
-
         # ====== 1. documentation
-
-        # This doesn't matter in case of the documentation builder itself is using this CRepositoryConfig.
-        # But if the documentation builder is called by other apps like setup_ext.py, they need to know where to find.
-        self.__dictRepositoryConfig['DOCUMENTATIONBUILDER'] = CString.NormalizePath(f"{self.__sReferencePath}/genpackagedoc.py")
-
-        # - documentation project source dir (relative to reference path (= position of executing script)
-        self.__dictRepositoryConfig['SOURCEDIR'] = CString.NormalizePath(self.__sReferencePath + "/doc")
 
         # - README
         self.__dictRepositoryConfig['README_RST'] = CString.NormalizePath(f"{self.__sReferencePath}/README.rst")
         self.__dictRepositoryConfig['README_MD']  = CString.NormalizePath(f"{self.__sReferencePath}/README.md")
 
+        # The following key doesn't matter in case of the documentation builder itself is using this CRepositoryConfig.
+        # But if the documentation builder is called by other apps like setup_ext.py, they need to know where to find.
+        self.__dictRepositoryConfig['DOCUMENTATIONBUILDER'] = CString.NormalizePath(f"{self.__sReferencePath}/genpackagedoc.py")
+
+        # - folder containing the package source files (will also contain the PDF documentation)
+        self.__dictRepositoryConfig['PACKAGESOURCEFOLDER'] = CString.NormalizePath(f"{self.__sReferencePath}/{self.__dictRepositoryConfig['PACKAGENAME']}")
 
         # ====== 2. setuptools
 
-        self.__dictRepositoryConfig['SETUPBUILDFOLDER']    = CString.NormalizePath(self.__sReferencePath + "/build")
-        self.__dictRepositoryConfig['SETUPBUILDLIBFOLDER'] = CString.NormalizePath(self.__sReferencePath + "/build/lib")
-        self.__dictRepositoryConfig['SETUPDISTFOLDER']     = CString.NormalizePath(self.__sReferencePath + "/dist")
-        self.__dictRepositoryConfig['EGGINFOFOLDER']       = CString.NormalizePath(self.__sReferencePath + "/" + self.__dictRepositoryConfig['PACKAGENAME'] + ".egg-info")
+        self.__dictRepositoryConfig['SETUPBUILDFOLDER']           = CString.NormalizePath(f"{self.__sReferencePath}/build")
+        self.__dictRepositoryConfig['SETUPBUILDLIBFOLDER']        = CString.NormalizePath(f"{self.__sReferencePath}/build/lib")
+        self.__dictRepositoryConfig['SETUPBUILDLIBPACKAGEFOLDER'] = CString.NormalizePath(f"{self.__sReferencePath}/build/lib/{self.__dictRepositoryConfig['PACKAGENAME']}")
+        self.__dictRepositoryConfig['SETUPDISTFOLDER']            = CString.NormalizePath(f"{self.__sReferencePath}/dist")
+        self.__dictRepositoryConfig['EGGINFOFOLDER']              = CString.NormalizePath(f"{self.__sReferencePath}/{self.__dictRepositoryConfig['PACKAGENAME']}.egg-info")
 
         print()
         print(f"Running under {sPlatformSystem} ({sOSName})")

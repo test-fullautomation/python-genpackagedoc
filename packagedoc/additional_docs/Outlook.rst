@@ -5,6 +5,8 @@
   Introduce ``setup.py`` including the execution of ``genpackagedoc.py`` and adding the generated PDF document to the installation.//nl
   Introduce README.rst and README.md.
 
+  10.05.2022: Setup process introduced and README.rst added
+
 * [02]
 
   Currently it is hard coded, that private functions and methods are skipped. Therefore they are not part of the resulting PDF document.//nl
@@ -105,6 +107,11 @@
 * [18]
 
   Parse decorators to identify Robot Framework keyword definitions
+
+* [19]
+
+  Selftest
+
 
 
 
