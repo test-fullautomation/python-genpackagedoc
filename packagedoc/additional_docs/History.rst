@@ -16,11 +16,11 @@ Possibility to describe complete Python modules added
 
 **0.5.0** (*09.05.2022*)
 
-Parameter 'INCLUDEPRIVATE' added
+Parameter ``INCLUDEPRIVATE`` added
 
 **0.6.0** (*09.05.2022*)
 
-Parameter 'INCLUDEUNDOCUMENTED' added
+Parameter ``INCLUDEUNDOCUMENTED`` added
 
 **0.7.0** (*10.05.2022*)
 
@@ -30,9 +30,13 @@ Setup process introduced and README.rst added; code maintenance
 
 Bugfixes and code maintenance; history added
 
+**0.9.0** (*10.05.2022*)
 
------
+Layout maintenance and syntax extensions for ``newline``, ``newpage`` and ``vspace`` reworked
+
+//
+
+------------------------------------------------------------
 
 This PDF has been created at ###NOW###
 
------
