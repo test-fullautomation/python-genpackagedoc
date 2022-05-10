@@ -632,7 +632,9 @@ The meaning of clean is: *delete*, followed by *create*.
                   sClassHeadline2 = len(sClassHeadline1)*"="
                   listLinesRST.append(sClassHeadline2)
                   listLinesRST.append("")
-                  listLinesRST.append(f"**Import:** ``{sPythonModuleImport}``")
+                  listLinesRST.append(".. code::python")
+                  listLinesRST.append("")
+                  listLinesRST.append(f"   {sPythonModuleImport}")
                   listLinesRST.append("")
                   if sClassDocString is None:
                      listLinesRST.append("*docstring not available*")

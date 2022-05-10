@@ -1,6 +1,6 @@
 {
    "PACKAGENAME" : "GenPackageDoc",
-   "PACKAGEVERSION" : "0.7.0",
+   "PACKAGEVERSION" : "0.8.0",
    "PACKAGEDATE" : "10.05.2022",
    "AUTHOR" : "Holger Queckenstedt",
    "AUTHOREMAIL" : "Holger.Queckenstedt@de.bosch.com",
@@ -14,7 +14,7 @@
    "DEVELOPMENTSTATUS" : "Development Status :: 3 - Alpha",
    "INTENDEDAUDIENCE" : "Intended Audience :: Developers",
    "TOPIC" : "Topic :: Software Development",
-   "INSTALLREQUIRES" : ["pypandoc","colorama","PythonExtensionsCollection"],
+   "INSTALLREQUIRES" : ["pypandoc","colorama"],
    "REPOSITORYNAME" : "python-genpackagedoc",
    "PACKAGEDOC" : "./packagedoc"
 }

@@ -56,9 +56,3 @@ Package topic
 
    ###TOPIC###
 
------
-
-This PDF has been created at ###NOW###
-
------
-
