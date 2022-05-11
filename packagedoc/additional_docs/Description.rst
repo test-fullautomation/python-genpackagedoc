@@ -5,24 +5,25 @@ Repository content
 
 * Folder ``GenPackageDoc``
 
-  Contains the package code (currently active at this position, later will be installed)
+  Contains the package code.
 
   *This folder is specific for the package.*
 
 * Folder ``config``
 
-  Contains the repository configuration (e.g. the name of the package, the name of the repository, the author, and more ...)
+  Contains the repository configuration (e.g. the name of the package, the name of the repository, the author, and more ...).
 
   *This folder is specific for the repository.*
 
 * Folder ``additions``
 
-  Contains additionally needed sources like setup related class definitions and sources, that are imported from other repositories - to make this
-  repository stand alone.
+  Contains additionally needed sources like setup related class definitions and sources, that are imported
+  from other repositories - to make this repository stand alone
 
 * Folder ``packagedoc``
 
-  Contains all package documentation related files, e.g. the ``GenPackageDoc`` configuration, additional input files and the generated documentation itself.
+  Contains all package documentation related files, e.g. the ``GenPackageDoc`` configuration, additional input files
+  and the generated documentation itself.
 
   *This folder is specific for the documentation.*
 
@@ -32,10 +33,16 @@ Repository content
 
     Python script to start the documentation build
 
+  - ``setup.py``
+
+    Python script to install the package sources. This includes the execution of ``genpackagedoc.py``.
+    Therefore building the documentation is part of the installation process.
+
   - ``dump_repository_config.py``
 
     Little helper to dump the repository configuration to console
 
+//
 
 Documentation build process
 ===========================
@@ -53,7 +60,7 @@ Documentation build process
      ``config/repository_config.json``
 
 * The repository configuration object adds dynamic values (like operating system specific settings and paths) to the repository configuration.
-  Not all of them are required for the documentation build process, but the repository configuration also will support the setup process later.
+  Not all of them are required for the documentation build process, but the repository configuration also supports the setup process.
 
   There is one certain setting in the repository configuration file
 
@@ -88,10 +95,18 @@ Documentation build process
   **will be deleted** at the beginning of the documentation build process! Make sure that you do not have any files
   inside this folder opened when you start the process.
 
-  Further details are explained within the json file itself.
+  **Further details are explained within the json file itself.**
 
-Now all required input and output parameter are known. After the execution of ``genpackagedoc.py`` the resulting PDF document
-can be found under the specified name within the specified output folder.
+After the execution of ``genpackagedoc.py`` the resulting PDF document can be found under the specified name
+within the specified output folder (``"OUTPUT"``). This folder also contains all temporary files generated during the
+documentation build process. 
+
+Because the output folder is a temporary one, the PDF document is copied to the folder containing the package sources
+and therefore is included in the package installation. This is defined in the ``GenPackageDoc`` configuration, section ``"PDFDEST"``.
+
+After the installation is finished, the output folder can be deleted.
+
+//
 
 PDF document structure
 ======================
@@ -127,6 +142,7 @@ A *chapter* is the top level within the PDF document; a *section* is the level b
 
   **Further nestings of headings are not supported** (because we do not want to overload the table of content).
 
+//
 
 Examples
 ========
@@ -177,31 +193,30 @@ This causes the following entry within the table of contents:
 
 .. image:: ./pictures/TOC02.png
 
+//
 
-Interface descriptions
-======================
+Interface and module descriptions
+=================================
 
-*How to describe an interface of a function or a method?*
+*How to describe an interface of a function or a method? How to describe a Python module?*
 
-To have a unique look and feel of all interface descriptions the following style is recommended:
+To have a unique look and feel of all interface descriptions, the following style is recommended:
 
 **Example**
 
 .. image:: ./pictures/Interface01.png
 
-Some of the special characters used within the interface description, are part of the rst syntax. They will be explained within the next section./
+Some of the special characters used within the interface description, are part of the rst syntax. They will be explained in one of the next sections.
 
-**Important to know about Python and rst is:**
+The docstrings containing the description, have to be placed directly in the next line after the ``def`` or ``class`` statement.
 
-* In both Python and rst the indentation of text is part of the syntax!
-* The indentation of the triple quotes indicating the beginning and the end of a docstring has to follow the Python syntax rules.
-* The indentation of the content of the docstring (= the interface description in rst format) has to follow the rst syntax rules.
-  To avoid a needless indentation of the text within the resulting PDF document it is recommended to start the docstring text
-  within the first column (or rather use the first column as reference for further indentations of rst text).
-* In rst also blank lines are part of the syntax!
+It is also possible to place a docstring at the top of a Python module. The exact position doesn't matter - but it has to be the
+first constant expression within the code. Within the documentation the content of this docstring is placed before the interface description
+and should contain general information belonging to the entire module.
 
-*Please be attentive while typing your documentation in rst format!*/
+The usage of such a docstring is an option.
 
+//
 
 Runtime variables
 =================
@@ -249,9 +264,25 @@ With this mechanism it is e.g. possible to give the output PDF document automati
 
 .. image:: ./pictures/RST02.png
 
+//
+
+Syntax aspects
+==============
+
+**Important to know about the syntax of Python and rst is:**
+
+* In both Python and rst the indentation of text is part of the syntax!
+* The indentation of the triple quotes indicating the beginning and the end of a docstring has to follow the Python syntax rules.
+* The indentation of the content of the docstring (= the interface description in rst format) has to follow the rst syntax rules.
+  To avoid a needless indentation of the text within the resulting PDF document it is recommended to start the docstring text
+  within the first column (or rather use the first column as reference for further indentations of rst text).
+* In rst also blank lines are part of the syntax!
+
+*Please be attentive while typing your documentation in rst format!*/
+
 
 Syntax extensions
-=================
+-----------------
 
 This feature is in an experimental phase currently! And is only available in rst files but not in docstrings.
 
@@ -274,13 +305,9 @@ The syntax extensions cover the following topics:
   A newpage (page break) is realized by a double slash ('``//``'). These two slashes must be the only characters in line!/
   Internally this double slash is mapped to the LaTeX command ``\newpage``.
 
-RST syntax
-==========
 
-*What is rst and how to use the rst syntax elements within rst files and doctrings of Python modules?*
+Examples
+--------
 
 *(to be continued)*
-
-
-
 

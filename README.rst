@@ -31,7 +31,9 @@ How to install
 
 Firstly clone the **python-genpackagedoc** repository to your machine.
 
-`GenPackageDoc <https://github.com/test-fullautomation/python-genpackagedoc>`_
+.. code-block::
+
+   git clone https://github.com/test-fullautomation/python-genpackagedoc.git
 
 Use the following command to install this package:
 
