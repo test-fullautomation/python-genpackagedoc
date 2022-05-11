@@ -20,8 +20,14 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 05.05.2022
+# 09.05.2022
 #
+# --------------------------------------------------------------------------------------------------------------
+
+"""
+Python module containing all methods to parse the documentation content of Python source files.
+"""
+
 # --------------------------------------------------------------------------------------------------------------
 
 import os, sys, shlex, subprocess
@@ -44,7 +50,7 @@ The ``CSourceParser`` class provides a method to parse the functions, classes an
 together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.
    """
 
-   def ParseSourceFile(self, sFile=None):
+   def ParseSourceFile(self, sFile=None, bIncludePrivate=False, bIncludeUndocumented=True):
       """
 The method ``ParseSourceFile`` parses the content of a Python module.
 
@@ -55,6 +61,19 @@ The method ``ParseSourceFile`` parses the content of a Python module.
   / *Condition*: required / *Type*: str /
 
   Path and name of a single Python module.
+
+* ``bIncludePrivate``
+
+  / *Condition*: optional / *Type*: bool / *Default*: False /
+
+  If ``False``: private methods are skipped, otherwise they are included in documentation.
+
+* ``bIncludeUndocumented``
+
+  / *Condition*: optional / *Type*: bool / *Default*: True /
+
+  If ``True``: also classes and methods without docstring are listed in the documentation (together with a hint that information is not available),
+  otherwise they are skipped.
 
 **Returns:**
 
@@ -90,30 +109,53 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
       dictContent = {}
       listofdictFunctions = []
-      listofdictClasses = []
+      listofdictClasses   = []
+      sFileDescription    = None
 
       # print(f"================= sMethod : {sMethod}")
 
+      bIsFirstExpressionConstant = True
+
       for node in astModule.body:
 
-         # print("================= node")
+         if isinstance(node, ast.Expr):
+            if bIsFirstExpressionConstant is True:
+               oExpression = node.value
+               if isinstance(oExpression, ast.Constant):
+                  bIsFirstExpressionConstant = False
+                  sFileDescription = oExpression.value
+                  # print(f"==================== sFileDescription : '{sFileDescription}'")
 
          if isinstance(node, ast.FunctionDef):
-            dictFunction = {}
             sFunctionName = f"{node.name}"
-            # print(f"* function : '{sFunctionName}'")
-            dictFunction['sFunctionName'] = sFunctionName
             sFunctionDocString = ast.get_docstring(node)
-            dictFunction['sFunctionDocString'] = sFunctionDocString
-            listofdictFunctions.append(dictFunction)
+            # print(f"* function : '{sFunctionName}'")
+            bTakeIt = True
+            if bIncludePrivate is False:
+               if sFunctionName.startswith('_'):
+                  # is private
+                  bTakeIt = False
+            # eof if bIncludePrivate is False:
+            if bIncludeUndocumented is False:
+               if sFunctionDocString is None:
+                  # is undocumented
+                  bTakeIt = False
+            # eof if bIncludeUndocumented is False:
+            if bTakeIt is True:
+               dictFunction = {}
+               dictFunction['sFunctionName'] = sFunctionName
+               dictFunction['sFunctionDocString'] = sFunctionDocString
+               listofdictFunctions.append(dictFunction)
+            # eof if bTakeIt is True:
          # eof if isinstance(node, ast.FunctionDef):
 
          if isinstance(node, ast.ClassDef):
-            dictClass = {}
+            # is class => bIncludeUndocumented has no relevance
             sClassName = f"{node.name}"
-            # print(f"* class : '{sClassName}'")
-            dictClass['sClassName'] = sClassName
             sClassDocString = ast.get_docstring(node)
+            # print(f"* class : '{sClassName}'")
+            dictClass = {}
+            dictClass['sClassName'] = sClassName
             dictClass['sClassDocString'] = sClassDocString
 
             listofdictMethods = []
@@ -121,14 +163,25 @@ The method ``ParseSourceFile`` parses the content of a Python module.
             for subnode in node.body:
                if isinstance(subnode, ast.FunctionDef):
                   sMethodName = f"{subnode.name}"
-                  if not sMethodName.startswith('_'):           # currently no private methods; TODO: make this a configuration or command line parameter
+                  sMethodDocString = ast.get_docstring(subnode)
+                  # print(f"* method : '{sMethodName}'")
+                  bTakeIt = True
+                  if bIncludePrivate is False:
+                     if sMethodName.startswith('_'):
+                        # is private
+                        bTakeIt = False
+                  # eof if bIncludePrivate is False:
+                  if bIncludeUndocumented is False:
+                     if sMethodDocString is None:
+                        # is undocumented
+                        bTakeIt = False
+                  # eof if bIncludeUndocumented is False:
+                  if bTakeIt is True:
                      dictMethod = {}
-                     # print(f"* method : '{sMethodName}'")
                      dictMethod['sMethodName'] = sMethodName
-                     sMethodDocString = ast.get_docstring(subnode)
                      dictMethod['sMethodDocString'] = sMethodDocString
                      listofdictMethods.append(dictMethod)
-                  # eof if not sMethodName.startswith('_'):
+                  # eof if bTakeIt is True
                # eof if isinstance(subnode, ast.FunctionDef):
             # eof for subnode in node.body:
 
@@ -139,18 +192,19 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
       # eof for node in astModule.body:
 
-      if ( (len(listofdictFunctions) == 0) and (len(listofdictClasses) == 0) ):
+      if ( (len(listofdictFunctions) == 0) and (len(listofdictClasses) == 0) and (sFileDescription is None) ):
          dictContent = None # nothing relevant found inside this file
       else:
          dictContent['listofdictFunctions'] = listofdictFunctions
-         dictContent['listofdictClasses'] = listofdictClasses
+         dictContent['listofdictClasses']   = listofdictClasses
+         dictContent['sFileDescription']    = sFileDescription
 
       bSuccess = True
       sResult  = "Done"
 
       return dictContent, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-   # eof def ParseSourceFile(self, sFile=None):
+   # eof def ParseSourceFile(self, sFile=None, bIncludePrivate=False, bIncludeUndocumented=True):
 
 # eof class CSourceParser():
 

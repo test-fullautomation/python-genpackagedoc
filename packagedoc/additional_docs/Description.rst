@@ -64,7 +64,7 @@ Documentation build process
      ``"PACKAGEDOC" : "./packagedoc"``
 
   This is the path to a folder, in which all further documentation related files are placed. The path has to be relative! Reference is the position of
-  ``genpackagedoc.py``. This is hard coded internally. The relative path itself can be any one.//nl
+  ``genpackagedoc.py``. This is hard coded internally. The relative path itself can be any one./
   But it is required that within this folder the configuration file for the documentation build process
 
      ``packagedoc_config.json``
@@ -78,7 +78,7 @@ Documentation build process
   * Path and name of output folder (tex files and output PDF file)
   * User defined parameter (that can be defined here as global runtime variables and can be used in any rst code)
   * Basic settings related to the output PDF file (like document name, name of author, ...)
-  * Path to LaTeX compiler//nl
+  * Path to LaTeX compiler/
     (*a LaTeX distribution is not part of* ``GenPackageDoc``)
 
   Be aware of that the within ``packagedoc_config.json`` specified output folder
@@ -107,12 +107,12 @@ A *chapter* is the top level within the PDF document; a *section* is the level b
 * The content of every additionally included separate rst file is a *chapter*.
 
   - In case of you want to add another chapter to your documentation, you have to include another rst file.
-  - The headline of the chapter is the name of the rst file (automatically).//nl
+  - The headline of the chapter is the name of the rst file (automatically)./
     *Therefore the heading within an rst file has to start at section level!*
 
 * The content of every included Python module is also a *chapter*.
 
-  - The headline of the chapter is the name of the Python module (automatically).//nl
+  - The headline of the chapter is the name of the Python module (automatically)./
     This means also that within the PDF document structure every Python module is at the same level as additionally included rst files.
 
 * Within additionally included separate rst files sections and subsections can be defined by the following rst syntax elements for headings:
@@ -122,9 +122,7 @@ A *chapter* is the top level within the PDF document; a *section* is the level b
 
 * Within the docstrings of Python modules the headings are added automatically (for functions, classes and methods)
 
-  - Classes and functions are listed at section level//nl
-    (both classes and functions are assumed to be at the same level).
-
+  - Classes and functions are listed at section level (both classes and functions are assumed to be at the same level).
   - Class methods are listed at subesction level.
 
   **Further nestings of headings are not supported** (because we do not want to overload the table of content).
@@ -191,7 +189,7 @@ To have a unique look and feel of all interface descriptions the following style
 
 .. image:: ./pictures/Interface01.png
 
-Some of the special characters used within the interface description, are part of the rst syntax. They will be explained within the next section.//nl
+Some of the special characters used within the interface description, are part of the rst syntax. They will be explained within the next section./
 
 **Important to know about Python and rst is:**
 
@@ -202,7 +200,7 @@ Some of the special characters used within the interface description, are part o
   within the first column (or rather use the first column as reference for further indentations of rst text).
 * In rst also blank lines are part of the syntax!
 
-*Please be attentive while typing your documentation in rst format!*//nl
+*Please be attentive while typing your documentation in rst format!*/
 
 
 Runtime variables
@@ -257,9 +255,24 @@ Syntax extensions
 
 This feature is in an experimental phase currently! And is only available in rst files but not in docstrings.
 
-The question is how to use rst to cause a line break or a page break in the corresponding PDF document?
+The syntax extensions cover the following topics:
 
-.. image:: ./pictures/RST03.png
+* *newline*
+
+  A newline (line break) is realized by a slash ('``/``') at the end of a line containing any other rst text
+  (this means: the slash must **not** be the only character in line)./
+  Internally this slash is mapped to the LaTeX command ``\newline``.
+
+* *vspace*
+
+  An additional vertical space (size: the height of the '``x``' character - depending on the current type and size of font)
+  is realized by a single slash ('``/``'). This slash must be the only character in line!/
+  Internally this slash is mapped to the LaTeX command ``\vspace{1ex}``.
+
+* *newpage*
+
+  A newpage (page break) is realized by a double slash ('``//``'). These two slashes must be the only characters in line!/
+  Internally this double slash is mapped to the LaTeX command ``\newpage``.
 
 RST syntax
 ==========
