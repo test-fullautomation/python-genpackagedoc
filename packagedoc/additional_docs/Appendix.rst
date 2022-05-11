@@ -1,64 +1,24 @@
-**About this package:**//nl//nl
+**About this package:**
 
-Package name:
+.. table:: Package setup
+   :widths: auto
 
-   ###PACKAGENAME###
-
-Package version
-
-   ###PACKAGEVERSION###
-
-Package date
-
-   ###PACKAGEDATE###
-
-Package description
-
-   ###DESCRIPTION###
-
-Package URL on GitHub
-
-   ###URL###
-
-Author of package
-
-   ###AUTHOR###
-
-Email of author
-
-   ###AUTHOREMAIL###
-
-Package programming language
-
-   ###PROGRAMMINGLANGUAGE###
-
-Package license
-
-   ###LICENCE###
-
-Supported operating systems
-
-   ###OPERATINGSYSTEM###
-
-Python required
-
-   ###PYTHONREQUIRES###
-
-Development status
-
-   ###DEVELOPMENTSTATUS###
-
-Intended audience
-
-   ###INTENDEDAUDIENCE###
-
-Package topic
-
-   ###TOPIC###
-
------
-
-This PDF has been created at ###NOW###
-
------
+   ==================  =========================
+   Setup parameter               Value
+   ==================  =========================
+   Name                ###PACKAGENAME###
+   Version             ###PACKAGEVERSION###
+   Date                ###PACKAGEDATE###
+   Description         ###DESCRIPTION###
+   Package URL         ###URL###
+   Author              ###AUTHOR###
+   Email               ###AUTHOREMAIL###
+   Language            ###PROGRAMMINGLANGUAGE###
+   License             ###LICENCE###
+   OS                  ###OPERATINGSYSTEM###
+   Python required     ###PYTHONREQUIRES###
+   Development status  ###DEVELOPMENTSTATUS###
+   Intended audience   ###INTENDEDAUDIENCE###
+   Topic               ###TOPIC###
+   ==================  =========================
 

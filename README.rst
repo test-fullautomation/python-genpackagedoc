@@ -43,7 +43,7 @@ Package Documentation
 ---------------------
 
 A detailed documentation of the GenPackageDoc package can be found here:
-`GenPackageDoc.pdf <https://github.com/test-fullautomation/python-genpackagedoc/blob/default/GenPackageDoc/GenPackageDoc.pdf>`_
+`GenPackageDoc.pdf <https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/GenPackageDoc/GenPackageDoc.pdf>`_
 
 Feedback
 --------

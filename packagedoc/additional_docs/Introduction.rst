@@ -18,10 +18,7 @@ The sources of ``GenPackageDoc`` are available in the following GitHub repositor
 The repository ``python-genpackagedoc`` uses it's own functionality to document itself and the contained Python package ``GenPackageDoc``.
 Therefore the complete repository can be used as an example to learn how to write a documentation.
 
-Currently no ``setup.py`` is available. Later this setup script will install some libraries of ``GenPackageDoc``. As long as there are no libraries installed,
-the local version within this repository are used for documentation build.
-
-But independend from such installations it has to be considered, that the main goal of ``GenPackageDoc`` is to document Python sources that are stored
+It has to be considered, that the main goal of ``GenPackageDoc`` is to document Python sources that are stored
 within a repository, and therefore we have dependencies to the structure of the repository. For example: Configuration files with values
 that are specific for a repository, should not be installed. Such a specific configuration value is e.g. the name of the package or the name of the PDF document.
 

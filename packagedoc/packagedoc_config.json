@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# Updated 09.05.2022
+# 10.05.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -52,12 +52,12 @@
             "INTERFACE"     : "../###PACKAGENAME###",
             "appendix"      : "./additional_docs/Appendix.rst",
             "outlook"       : "./additional_docs/Outlook.rst",
-            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","outlook","appendix"]
+            "history"       : "./additional_docs/History.rst",
+            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","outlook","appendix","history"]
             # -- b) multiple root folder version (example)
             # "INTERFACE_part1" : "../additions/PythonExtensionsCollection/File",
             # "INTERFACE_part2" : "../additions/PythonExtensionsCollection/Dummy",
-            # "appendix"        : "./additional_docs/Appendix.rst",
-            # "DOCUMENTPARTS"   : ["introduction","description","INTERFACE_part1","INTERFACE_part2","outlook","appendix"]
+            # "DOCUMENTPARTS"   : ["introduction","description","INTERFACE_part1","INTERFACE_part2","outlook","appendix","history"]
            },
 
 # Section "PARAMS":
@@ -84,7 +84,7 @@
    "DOCUMENT" : {
                  "OUTPUTFILENAME" : "###PACKAGENAME###.tex",
                  "AUTHOR"         : "###AUTHOR###",
-                 "TITLE"          : "###REPOSITORYNAME###",
+                 "TITLE"          : "###PACKAGENAME### - v. ###PACKAGEVERSION###",
                  "DATE"           : "###PACKAGEDATE###",
                  "VERSION"        : "###PACKAGEVERSION###"
                 },

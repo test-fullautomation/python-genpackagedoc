@@ -632,7 +632,9 @@ The meaning of clean is: *delete*, followed by *create*.
                   sClassHeadline2 = len(sClassHeadline1)*"="
                   listLinesRST.append(sClassHeadline2)
                   listLinesRST.append("")
-                  listLinesRST.append(f"**Import:** ``{sPythonModuleImport}``")
+                  listLinesRST.append(".. code::python")
+                  listLinesRST.append("")
+                  listLinesRST.append(f"   {sPythonModuleImport}")
                   listLinesRST.append("")
                   if sClassDocString is None:
                      listLinesRST.append("*docstring not available*")
@@ -722,7 +724,24 @@ The meaning of clean is: *delete*, followed by *create*.
             if bSuccess is not True:
                return listLinesResolved, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-            sRSTCode = "\n".join(listLinesResolved)
+            # --- EXPERIMENTAL SYNTAX EXTENSION (currently hard coded here and therefore active only within rst files but not within docstrings)
+            # TODO: sTEX post processing -> CPostProcessor()
+            # TODO: Move this to a common tex PostProcessing function ; consider also blanks in line ; find better replacement strings
+            #       (replacement strings must NOT contain any character that is part of rst or tex syntax!)
+            # PART 1: Mask syntax extensions within rst code
+            #TM***
+            listLinesExtendedSyntax = []
+            for sLine in listLinesResolved:
+               if sLine == "/":
+                  sLine = "!V!S!P!A!C!E!"
+               elif sLine == "//":
+                  # print("---------- LINE: '" + sLine + "'")
+                  sLine = "!N!E!W!P!A!G!E!"
+               elif ( (len(sLine) > 1) and sLine.endswith('/') and not sLine.endswith('//') ):
+                  # print("---------- LINE: '" + sLine + "'")
+                  sLine = sLine[:-1] + "!N!E!W!L!I!N!E!"
+               listLinesExtendedSyntax.append(sLine)
+            sRSTCode = "\n".join(listLinesExtendedSyntax)
             # print(f"========== sRSTCode  : '{sRSTCode}'")
 
             # -- convert the complete rst content of the current source file to tex format
@@ -730,16 +749,20 @@ The meaning of clean is: *delete*, followed by *create*.
             sTEX = pypandoc.convert_text(sRSTCode,
                                          'tex',
                                          format='rst')
-            # ensure proper line endings
-            listLinesTEX = sTEX.splitlines()
-            # TODO: sTEX post processing -> CPostProcessor()
 
-            # --- experimental syntax extension (currently hard coded here and therefore active only within rst files but not within docstrings)
-            # TODO: Move this to a common tex PostProcessing function
+            # --- EXPERIMENTAL SYNTAX EXTENSION (currently hard coded here and therefore active only within rst files but not within docstrings)
+            # TODO: sTEX post processing -> CPostProcessor()
+            # TODO: Move this to a common tex PostProcessing function ; consider also blanks in line ; find better replacement strings
+            #       (replacement strings must NOT contain any character that is part of rst or tex syntax!)
+            # PART 2: replace the masked syntax exrtionsions by the corresponding tex commands
+            #TM***
+            listLinesTEX = sTEX.splitlines()
             listLinesTEXResolved = []
             for sLine in listLinesTEX:
-               sLine = sLine.replace("//nl", r"\newline")
-               sLine = sLine.replace("//np", r"\newpage")
+               # print("---------- LINE in listLinesTEX: '" + sLine + "'")
+               sLine = sLine.replace("!V!S!P!A!C!E!", r"\vspace{1ex}")
+               sLine = sLine.replace("!N!E!W!P!A!G!E!", r"\newpage")
+               sLine = sLine.replace("!N!E!W!L!I!N!E!", r"\newline")
                listLinesTEXResolved.append(sLine)
             sTEX = "\n".join(listLinesTEXResolved)
 
