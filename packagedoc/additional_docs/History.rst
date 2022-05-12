@@ -34,6 +34,10 @@ Bugfixes and code maintenance; history added
 
 Layout maintenance and syntax extensions for ``newline``, ``newpage`` and ``vspace`` reworked
 
+**0.9.1** (*11.05.2022*)
+
+Documentation maintenance
+
 //
 
 ------------------------------------------------------------
