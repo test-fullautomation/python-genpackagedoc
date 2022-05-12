@@ -1,7 +1,7 @@
 {
    "PACKAGENAME" : "GenPackageDoc",
-   "PACKAGEVERSION" : "0.9.0",
-   "PACKAGEDATE" : "10.05.2022",
+   "PACKAGEVERSION" : "0.9.1",
+   "PACKAGEDATE" : "11.05.2022",
    "AUTHOR" : "Holger Queckenstedt",
    "AUTHOREMAIL" : "Holger.Queckenstedt@de.bosch.com",
    "DESCRIPTION" : "Documentation builder for Python packages",

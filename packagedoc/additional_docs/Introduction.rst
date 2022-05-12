@@ -16,14 +16,15 @@ The sources of ``GenPackageDoc`` are available in the following GitHub repositor
    https://github.com/test-fullautomation/python-genpackagedoc
 
 The repository ``python-genpackagedoc`` uses it's own functionality to document itself and the contained Python package ``GenPackageDoc``.
-Therefore the complete repository can be used as an example to learn how to write a documentation.
+
+**Therefore the complete repository can be used as an example about writing a package documentation.**
 
 It has to be considered, that the main goal of ``GenPackageDoc`` is to document Python sources that are stored
 within a repository, and therefore we have dependencies to the structure of the repository. For example: Configuration files with values
 that are specific for a repository, should not be installed. Such a specific configuration value is e.g. the name of the package or the name of the PDF document.
 
 The impact is: There is a deep relationship between the repository containing the sources to be documented, and the sources and the configuration
-of ``GenPackageDoc`` itself. Therefore some manual preparations are necessary to use ``GenPackageDoc`` also in every other repository.
+of ``GenPackageDoc`` itself. Therefore some manual preparations are necessary to use ``GenPackageDoc`` also in other repositories.
 
 How to do this is explained in detail in the next chapters.
 
