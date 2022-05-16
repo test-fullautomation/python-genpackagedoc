@@ -44,7 +44,7 @@
 # The usual
 #    packages = setuptools.find_packages(),
 # is replaced by
-#    packages = [str(oRepositoryConfig.Get('sPackageName')), ],
+#    packages = [str(oRepositoryConfig.Get('PACKAGENAME')), ],
 # to avoid that also config.CRepositoryConfig() and additions.CExtendedSetup() are part of the distribution.
 # CRepositoryConfig and CExtendedSetup() are only repository internal helper.
 #

@@ -38,9 +38,14 @@ Layout maintenance and syntax extensions for ``newline``, ``newpage`` and ``vspa
 
 Documentation maintenance
 
+**0.9.2** (*16.05.2022*)
+
+Fix: automated line breaks within code blocks
+
+
 //
 
-------------------------------------------------------------
+--------------------------------------
 
 This PDF has been created at ###NOW###
 
