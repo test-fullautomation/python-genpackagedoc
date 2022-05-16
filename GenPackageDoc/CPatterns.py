@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 06.05.2022
+# 16.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -93,6 +93,7 @@ Defines the header of the main tex file.
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{framed}
+\usepackage{fvextra}
 
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1ex}
@@ -106,7 +107,7 @@ Defines the header of the main tex file.
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
 \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 % Add ',fontsize=\small' for more characters per line
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
