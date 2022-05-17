@@ -23,8 +23,8 @@
    "CONTROL" : {
                 # if false: private methods are skipped, otherwise they are included in documentation
                 "INCLUDEPRIVATE"      : false,
-                # if true: also classes and methods without docstring are listed in the documentation (together with a hint
-                # that information is not available), otherwise they are skipped
+                # if true: also classes and methods without docstring are listed in the documentation,
+                #          otherwise they are skipped
                 "INCLUDEUNDOCUMENTED" : true
                },
 
@@ -71,7 +71,7 @@
 
    "PARAMS" : {
                  "additional_hint" : "An additional hint is given ###NOW###",
-                 "the_name"        : "Karl Otto",
+                 "the_name"        : "###AUTHOR###",
                  "the_url"         : "###URL###"
               },
 

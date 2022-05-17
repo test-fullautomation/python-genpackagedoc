@@ -42,6 +42,9 @@ Documentation maintenance
 
 Fix: automated line breaks within code blocks
 
+**0.10.0** (*17.05.2022*)
+
+Postprocessing for rst and tex sources added; "multiply-defined labels" fix.
 
 //
 

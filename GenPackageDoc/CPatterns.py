@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 16.05.2022
+# 17.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ Defines the header of the main tex file.
       sHeader = r"""
 \documentclass[a4paper,10pt]{report}
 
-\usepackage[bookmarksopen, bookmarksdepth=subsubchapter]{hyperref}
+\usepackage[bookmarksopen, bookmarksnumbered, bookmarksdepth=3]{hyperref}
 \hypersetup{
     colorlinks,
     citecolor=blue,
