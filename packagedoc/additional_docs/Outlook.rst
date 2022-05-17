@@ -67,6 +67,8 @@
 
   10.05.2022: Experimental syntax extensions for ``newline``, ``newpage`` and ``vspace``
 
+  17.05.2022: Postprocessing for rst and tex sources added; "multiply-defined labels" fix.
+
 * [11]
 
   Currently the docstrings of Python modules have to contain a heading for functions, classes and methods. The developer is responsible for that.

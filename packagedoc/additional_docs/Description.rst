@@ -284,9 +284,7 @@ Syntax aspects
 Syntax extensions
 -----------------
 
-This feature is in an experimental phase currently! And is only available in rst files but not in docstrings.
-
-The syntax extensions cover the following topics:
+``GenPackageDoc`` extends the rst syntax by the following topics:
 
 * *newline*
 
@@ -304,6 +302,8 @@ The syntax extensions cover the following topics:
 
   A newpage (page break) is realized by a double slash ('``//``'). These two slashes must be the only characters in line!/
   Internally this double slash is mapped to the LaTeX command ``\newpage``.
+
+These syntax extensions can currently be used in separate rst files only and are not available within docstrings of Python modules.
 
 
 Examples
