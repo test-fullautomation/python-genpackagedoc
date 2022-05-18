@@ -21,4 +21,3 @@
    Intended audience   ###INTENDEDAUDIENCE###
    Topic               ###TOPIC###
    ==================  =========================
-

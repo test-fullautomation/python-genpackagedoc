@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.05.2022
+# 18.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -94,6 +94,7 @@ Defines the header of the main tex file.
 \usepackage{booktabs}
 \usepackage{framed}
 \usepackage{fvextra}
+\usepackage{courier}
 
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1ex}
@@ -143,6 +144,12 @@ Defines the header of the main tex file.
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
+
+% some table layout adaptions
+\setlength{\arrayrulewidth}{0.3mm}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.3}
+
 
 \begin{document}
 

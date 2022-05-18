@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 10.05.2022
+# 18.05.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -33,6 +33,8 @@
 # Defines the content of the PDF document (= the order of the chapters).
 # A chapter can be represented by an additional text file in rst format. Every rst file is a separate chapter
 # within the resulting PDF document.
+# A chapter can also be represented by an additional tex file. Every tex file is a separate chapter
+# within the resulting PDF document.
 # In case of Python modules are involved, every Python module is a chapter.
 # Class and function definitions within a Python module are subchapters. Methods of classes are subsubchapters.
 # In this section every additional rst file is represented by a short name (key) and a path incl. file name (key value).
@@ -52,7 +54,7 @@
             "INTERFACE"     : "../###PACKAGENAME###",
             "appendix"      : "./additional_docs/Appendix.rst",
             "outlook"       : "./additional_docs/Outlook.rst",
-            "history"       : "./additional_docs/History.rst",
+            "history"       : "./additional_docs/History.tex",
             "DOCUMENTPARTS" : ["introduction","description","INTERFACE","outlook","appendix","history"]
             # -- b) multiple root folder version (example)
             # "INTERFACE_part1" : "../additions/PythonExtensionsCollection/File",
@@ -65,7 +67,7 @@
 # In this section a user has the ability to define own runtime variables, that are accessible within the doctrings of involved Python modules
 # and also within separate rst files. Key names have to be written in small letters to indicate that they are user defined.
 # Values can be either hard coded or taken over from the repository configuration (see config/repository_config.json).
-# In second case the key name has to be encaplulated within three hashes '#'. The same notation can be used in rst files and doctrings
+# In second case the key name has to be encapsulated within three hashes '#'. The same notation can be used in rst files and doctrings
 # of Python modules (for example adding an additional hint within a doctring of a class: ###additional_hint###).
 # This mechanism is limited to strings!
 

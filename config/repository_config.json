@@ -1,8 +1,8 @@
 {
    "REPOSITORYNAME" : "python-genpackagedoc",
    "PACKAGENAME" : "GenPackageDoc",
-   "PACKAGEVERSION" : "0.10.0",
-   "PACKAGEDATE" : "17.05.2022",
+   "PACKAGEVERSION" : "0.11.0",
+   "PACKAGEDATE" : "18.05.2022",
    "AUTHOR" : "Holger Queckenstedt",
    "AUTHOREMAIL" : "Holger.Queckenstedt@de.bosch.com",
    "DESCRIPTION" : "Documentation builder for Python packages",

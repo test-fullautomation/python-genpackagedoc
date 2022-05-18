@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.05.2022
+# 18.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -680,11 +680,13 @@ The meaning of clean is: *delete*, followed by *create*.
             if bSuccess is not True:
                return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
+            print()
             print(sResult)
+            print()
 
             for sModule in listModules:
 
-               print(f"  * Module : '{sModule}'")
+               print(f"* Module : '{sModule}'")
 
                listLinesRST = [] # the module/chapter specific subset
 
@@ -724,7 +726,8 @@ The meaning of clean is: *delete*, followed by *create*.
                   return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
                if dictContent is None:
-                  print("    (nothing relevant inside)")
+                  print("  nothing relevant inside")
+                  print()
                   continue
 
                listofdictFunctions = dictContent['listofdictFunctions']
@@ -733,7 +736,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
                # -- file description
                if sFileDescription is not None:
-                  print("file description found")
+                  print("  file description found")
                   listLinesRST.append(sFileDescription)
 
                # -- rst content of all functions
@@ -762,7 +765,7 @@ The meaning of clean is: *delete*, followed by *create*.
                   sClassDocString   = dictClass['sClassDocString']
                   listofdictMethods = dictClass['listofdictMethods']
 
-                  print(f"    > Class : '{sClassName}'")
+                  print(f"  > Class : '{sClassName}'")
 
                   sClassHeadline1 = f"Class: {sClassName}"
                   listLinesRST.append(sClassHeadline1)
@@ -781,7 +784,7 @@ The meaning of clean is: *delete*, followed by *create*.
                      sMethodName = dictMethod['sMethodName']
                      sMethodDocString = dictMethod['sMethodDocString']
 
-                     print(f"      - Method : '{sMethodName}'")
+                     print(f"    - Method : '{sMethodName}'")
 
                      sMethodHeadline1 = f"Method: {sMethodName}"
                      listLinesRST.append(sMethodHeadline1)
@@ -793,6 +796,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
                # eof for dictClass in listofdictClasses:
 
+               print()
 
                listLinesResolved, bSuccess, sResult = self.__ResolvePlaceholders(listLinesRST)
                if bSuccess is not True:
@@ -841,55 +845,78 @@ The meaning of clean is: *delete*, followed by *create*.
 
          else:
 
-            # all other separate rst files
-            sRSTFile = sDocumentPartPath
-            oRSTFile = CFile(sRSTFile)
-            listLinesRST, bSuccess, sResult = oRSTFile.ReadLines()
-            if bSuccess is not True:
+            # all other separate files (rst or tex)
+
+            if sDocumentPartPath.lower().endswith('rst'):
+               sRSTFile = sDocumentPartPath
+               oRSTFile = CFile(sRSTFile)
+               listLinesRST, bSuccess, sResult = oRSTFile.ReadLines()
+               if bSuccess is not True:
+                  del oRSTFile
+                  return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+               dRSTFileInfo = oRSTFile.GetFileInfo()
+               sRSTFileNameOnly = dRSTFileInfo['sFileNameOnly']
                del oRSTFile
-               return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+               sChaptername = sRSTFileNameOnly
+               sRSTFileNameOnly = sRSTFileNameOnly.replace(" ", "_")
+               sTeXFile = f"{sBuildDir}/{sRSTFileNameOnly}.tex"
 
-            dRSTFileInfo = oRSTFile.GetFileInfo()
-            sRSTFileNameOnly = dRSTFileInfo['sFileNameOnly']
-            del oRSTFile
-            sTeXFile = f"{sBuildDir}/{sRSTFileNameOnly}.tex"
+               listLinesResolved, bSuccess, sResult = self.__ResolvePlaceholders(listLinesRST)
+               if bSuccess is not True:
+                  return listLinesResolved, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-            listLinesResolved, bSuccess, sResult = self.__ResolvePlaceholders(listLinesRST)
-            if bSuccess is not True:
-               return listLinesResolved, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+               # -- rst postprocessing (extended syntax)
+               listLinesProcessed = self.__PostprocessRST(listLinesResolved)
 
-            # -- rst postprocessing (extended syntax)
-            listLinesProcessed = self.__PostprocessRST(listLinesResolved)
+               sRSTCode = "\n".join(listLinesProcessed)
+               # print(f"========== sRSTCode  : '{sRSTCode}'")
 
-            sRSTCode = "\n".join(listLinesProcessed)
-            # print(f"========== sRSTCode  : '{sRSTCode}'")
+               # -- convert the complete rst content of the current source file to tex format
 
-            # -- convert the complete rst content of the current source file to tex format
+               sTEX = pypandoc.convert_text(sRSTCode,
+                                            'tex',
+                                            format='rst')
 
-            sTEX = pypandoc.convert_text(sRSTCode,
-                                         'tex',
-                                         format='rst')
+               listLinesTEX = sTEX.splitlines() # ensure proper line endings
 
-            listLinesTEX = sTEX.splitlines() # ensure proper line endings
+               # -- tex postprocessing (extended syntax and multiply-defined labels)
+               listLinesProcessed = self.__PostprocessTEX(listLinesTEX, sNamePrefix_1=sRSTFileNameOnly, bAddNameCounter=False)
 
-            # -- tex postprocessing (extended syntax and multiply-defined labels)
-            listLinesProcessed = self.__PostprocessTEX(listLinesTEX, sNamePrefix_1=sRSTFileNameOnly, bAddNameCounter=False)
+               sTEX = "\n".join(listLinesProcessed)
 
-            sTEX = "\n".join(listLinesProcessed)
+               # -- create the corresponding tex file for the current source file
 
-            # -- create the corresponding tex file for the current source file
+               oTeXFile = CFile(sTeXFile)
+               oTeXFile.Write(f"% {sTeXFile}")
+               # TODO: generated at ... by ....
+               oTeXFile.Append(sTEX)
+               del oTeXFile
 
-            oTeXFile = CFile(sTeXFile)
-            oTeXFile.Write(f"% {sTeXFile}")
-            # TODO: generated at ... by ....
-            oTeXFile.Append(sTEX)
-            del oTeXFile
+               # -- save some infos needed for TOC of main TeX file
+               listoftuplesChaptersInfo.append((sChaptername, f"{sRSTFileNameOnly}.tex"))
 
-            # -- save some infos needed for TOC of main TeX file
-            listoftuplesChaptersInfo.append((sRSTFileNameOnly, f"{sRSTFileNameOnly}.tex"))
+            # eof if sDocumentPartPath.lower().endswith('rst'):
 
+            elif sDocumentPartPath.lower().endswith('tex'):
+               # We keep the tex file untouched, but we have to copy this file to the output folder
+               # and we have to import the file into the main tex file.
+               sTEXFile = sDocumentPartPath
+               oTEXFile = CFile(sTEXFile)
+               dTEXFileInfo = oTEXFile.GetFileInfo()
+               sTEXFileNameOnly = dTEXFileInfo['sFileNameOnly']
+               sChaptername = sTEXFileNameOnly
+               sTEXFileNameOnly = sTEXFileNameOnly.replace(" ", "_")
+               sDestTeXFile = f"{sBuildDir}/{sTEXFileNameOnly}.tex"
+               bSucces, sResult = oTEXFile.CopyTo(sDestTeXFile, bOverwrite=True)
+               if bSuccess is not True:
+                  return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+               del oTEXFile
+               # -- save some infos needed for TOC of main tex file
+               listoftuplesChaptersInfo.append((sChaptername, f"{sTEXFileNameOnly}.tex"))
+
+            # eof else - if sDocumentPartPath.lower().endswith('rst'):
          # eof else - if sDocumentPart.startswith("INTERFACE"):
-
       # eof for sDocumentPart in listDocumentParts:
 
 
@@ -916,6 +943,15 @@ The meaning of clean is: *delete*, followed by *create*.
       for sHeadline, sTeXFileName in listoftuplesChaptersInfo:
          sChapter = oPatterns.GetChapter(sHeadline=sHeadline, sDocumentName=sTeXFileName)
          oMainTexFile.Write(sChapter)
+
+      # -- add creation date to main TeX file
+      oMainTexFile.Write(r"\vfill")
+      oMainTexFile.Write(r"\begin{center}")
+      oMainTexFile.Write(r"\begin{tabular}{m{18em}}\hline")
+      oMainTexFile.Write(r"   \textbf{" + f"{sPDFFileName}" + r"}\newline")
+      oMainTexFile.Write(r"   \textit{Date of creation: " + self.__dictConfig['NOW'] + r"}\\ \hline")
+      oMainTexFile.Write(r"\end{tabular}")
+      oMainTexFile.Write(r"\end{center}")
 
       sFooter = oPatterns.GetFooter()
       oMainTexFile.Write(sFooter)
