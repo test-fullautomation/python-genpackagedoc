@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 18.05.2022
+# 19.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -42,29 +42,35 @@ All source patterns are accessible by corresponding ``Get`` methods. Some source
 that will be replaced by input parameter of the ``Get`` method.
    """
 
-   def GetHeader(self, sAuthor="", sTitle="", sDate=""):
+   def GetHeader(self, sTitle="", sVersion="", sAuthor="", sDate=""):
       """
 Defines the header of the main tex file.
 
 **Arguments:**
 
-* ``sAuthor``
-
-  / *Condition*: required / *Type*: str /
-
-  The author of the package
-
 * ``sTitle``
 
   / *Condition*: required / *Type*: str /
 
-  The title of the output document
+  The title of the output document (name of the described package)
+
+* ``sVersion``
+
+  / *Condition*: required / *Type*: str /
+
+  The version of the output document (version of the described package)
+
+* ``sAuthor``
+
+  / *Condition*: required / *Type*: str /
+
+  The author of the output document (author of the described package)
 
 * ``sDate``
 
   / *Condition*: required / *Type*: str /
 
-  The date of the output document
+  The date of the output document (date of the described package)
 
 **Returns:**
 
@@ -95,6 +101,8 @@ Defines the header of the main tex file.
 \usepackage{framed}
 \usepackage{fvextra}
 \usepackage{courier}
+\usepackage{amssymb}
+\usepackage{xcolor}
 
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1ex}
@@ -150,23 +158,173 @@ Defines the header of the main tex file.
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.3}
 
+% --------------------------------------------------------------------------------------------------------------
+
+% admonitions
+
+% --------------------------------------------------------------------------------------------------------------
+
+\usepackage[breakable,skins]{tcolorbox}
+\tcbuselibrary{skins}
+\tcbuselibrary{breakable}
+\usepackage{wasysym} % to enable certain symbols in text mode
+
+\newtcolorbox{boxwarning_template}[1][]{
+  enhanced,
+  before skip=2mm,
+  after skip=3mm,
+  boxrule=2pt,
+  left=12mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm,
+  colback=red!10,
+  colframe=red!70!white,
+  underlay={%
+    \path[fill=red!70!white,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries \frownie} ([xshift=10mm]interior.north west);
+    },
+   , #1}
+
+\newenvironment{boxwarning}[1]
+{\begin{boxwarning_template}
+{\color{red} \textbf{#1}}
+\vspace{5pt}
+\\
+}{\end{boxwarning_template}}
+
+% --------------------------------------------------------------------------------------------------------------
+
+\newtcolorbox{boxerror_template}[1][]{
+  enhanced,
+  before skip=2mm,
+  after skip=3mm,
+  boxrule=2pt,
+  left=12mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm,
+  colback=red!30,
+  colframe=red!90!white,
+  underlay={%
+    \path[fill=red!90!white,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries \lightning} ([xshift=10mm]interior.north west);
+    },
+   , #1}
+
+\newenvironment{boxerror}[1]
+{\begin{boxerror_template}
+{\color{red} \textbf{#1}}
+\vspace{5pt}
+\\
+}{\end{boxerror_template}}
+
+% --------------------------------------------------------------------------------------------------------------
+
+\newtcolorbox{boxgoodpractice_template}[1][]{
+  enhanced,
+  before skip=2mm,
+  after skip=3mm,
+  boxrule=2pt,
+  left=12mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm,
+  colback=green!10,
+  colframe=green!60!black,
+  underlay={%
+    \path[fill=green!60!black,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries \checkmark} ([xshift=10mm]interior.north west);
+    },
+   , #1}
+
+\newenvironment{boxgoodpractice}[1]
+{\begin{boxgoodpractice_template}
+{\color{green!60!black} \textbf{#1}}
+\vspace{5pt}
+\\
+}{\end{boxgoodpractice_template}}
+
+% --------------------------------------------------------------------------------------------------------------
+
+\newtcolorbox{boxhint_template}[1][]{
+  enhanced,
+  before skip=2mm,
+  after skip=3mm,
+  boxrule=2pt,
+  left=12mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm,
+  colback=orange!10,
+  colframe=orange!80!white,
+  underlay={%
+    \path[fill=orange!80!white,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries !} ([xshift=10mm]interior.north west);
+    },
+   , #1}
+
+\newenvironment{boxhint}[1]
+{\begin{boxhint_template}
+{\color{orange!80!white} \textbf{#1}}
+\vspace{5pt}
+\\
+}{\end{boxhint_template}}
+
+% --------------------------------------------------------------------------------------------------------------
+
+\newtcolorbox{boxtip_template}[1][]{
+  enhanced,
+  before skip=2mm,
+  after skip=3mm,
+  boxrule=2pt,
+  left=12mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm,
+  colback=blue!10,
+  colframe=blue!70!white,
+  underlay={%
+    \path[fill=blue!70!white,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries \smiley} ([xshift=10mm]interior.north west);
+    },
+   , #1}
+
+\newenvironment{boxtip}[1]
+{\begin{boxtip_template}
+{\color{blue!70!white} \textbf{#1}}
+\vspace{5pt}
+\\
+}{\end{boxtip_template}}
+
+% --------------------------------------------------------------------------------------------------------------
+
+\title{\textbf{###TITLE###}\\
+\vspace{2ex}
+\textbf{v. ###VERSION###}}
+
+\author{###AUTHOR###}
+
+\date{###DATE###}
 
 \begin{document}
 
-\author{###AUTHOR###}
-\title{###TITLE###}
-\date{###DATE###}
+\hypersetup{pageanchor=false}
 
 \maketitle
 
+\clearpage
+\pagenumbering{Alph}
 \tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+\hypersetup{pageanchor=true}
+
       """
-      sReturn = sHeader.replace('###AUTHOR###', sAuthor)
-      sReturn = sReturn.replace('###TITLE###', sTitle)
-      sReturn = sReturn.replace('###DATE###', sDate)
+      sReturn = sHeader.replace('###TITLE###',   sTitle)
+      sReturn = sReturn.replace('###VERSION###', sVersion)
+      sReturn = sReturn.replace('###AUTHOR###',  sAuthor)
+      sReturn = sReturn.replace('###DATE###',    sDate)
       return sReturn
 
-   # eof def GetHeader(self, sAuthor="", sTitle="", sDate=""):
+   # eof def GetHeader(self, sTitle="", sVersion="", sAuthor="", sDate=""):
 
    # --------------------------------------------------------------------------------------------------------------
 

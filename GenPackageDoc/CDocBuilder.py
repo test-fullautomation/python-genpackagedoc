@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 18.05.2022
+# 19.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -936,7 +936,10 @@ The meaning of clean is: *delete*, followed by *create*.
       sPDFFileExpected = f"{sBuildDir}/{sPDFFileName}"
       self.__dictConfig['sPDFFileName']     = sPDFFileName # used later to copy the file to another location
       self.__dictConfig['sPDFFileExpected'] = sPDFFileExpected # used later to verify the build
-      sHeader = oPatterns.GetHeader(sAuthor=self.__dictConfig['DOCUMENT']['AUTHOR'], sTitle=self.__dictConfig['DOCUMENT']['TITLE'], sDate=self.__dictConfig['DOCUMENT']['DATE'])
+      sHeader = oPatterns.GetHeader(sTitle=self.__dictConfig['DOCUMENT']['TITLE'],
+                                    sVersion=self.__dictConfig['DOCUMENT']['VERSION'],
+                                    sAuthor=self.__dictConfig['DOCUMENT']['AUTHOR'],
+                                    sDate=self.__dictConfig['DOCUMENT']['DATE'])
       oMainTexFile.Write(sHeader)
 
       # -- add modules to main TeX file
