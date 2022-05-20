@@ -31,13 +31,13 @@ How to install
 
 Firstly clone the **python-genpackagedoc** repository to your machine.
 
-.. code-block::
+.. code::
 
    git clone https://github.com/test-fullautomation/python-genpackagedoc.git
 
 Use the following command to install this package:
 
-.. code-block::
+.. code::
 
     setup.py install
 
