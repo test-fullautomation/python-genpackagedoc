@@ -124,5 +124,5 @@
 
   Introduce a separate folder containing TeX styles - instead of having them hard coded within CPatterns.py.
 
-
+  24.05.2022: implemented in v. 0.13.0
 

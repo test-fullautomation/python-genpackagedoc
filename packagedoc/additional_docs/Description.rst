@@ -251,7 +251,8 @@ The name of the repository e.g. can be added to the documentation with the follo
 This document contains a chapter "Appendix" at the end. This chapter is used to make the repository configuration a part of this documentation
 and can be used as example.
 
-Additionally to the predefined runtime variables a user can add own ones. See ``"PARAMS"`` within ``packagedoc_config.json``.
+Additionally to the predefined runtime variables a user can add own ones./
+See ``"PARAMS"`` within ``packagedoc_config.json``.
 
 All predefined runtime variables are written in capital letters. To make it easier for a developer to distinguish between predefined
 and user defined runtime variables, all user defined runtime variables have to be written in small letters completely.

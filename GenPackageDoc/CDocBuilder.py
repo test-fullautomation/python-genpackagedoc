@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 19.05.2022
+# 24.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -36,6 +36,7 @@ import pypandoc
 
 from GenPackageDoc.CSourceParser import CSourceParser
 from GenPackageDoc.CPatterns import CPatterns
+from GenPackageDoc.version import VERSION
 
 from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
@@ -922,8 +923,31 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- finally create the main TeX file and the PDF
 
+      # 1. get additional stylesheets (search for it relative to the path to this file)
+      sThisFilePath = CString.NormalizePath(os.path.dirname(__file__))
+      sStylesFolder = f"{sThisFilePath}/styles"
+      # print(f"============================== sStylesFolder: '{sStylesFolder}'")
 
-      # 1. main text file
+      if os.path.isdir(sStylesFolder) is False:
+         bSuccess = False
+         sResult  = f"Missing stylesheet folder '{sStylesFolder}'"
+         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+      tupleStyleFileNames = ("admonitions.sty","robotframework.sty","pandoc.sty") # TODO: maybe later something like 'CopyFiles(*.sty)'
+      for sStyleFileName in tupleStyleFileNames:
+         sStyleFile = f"{sStylesFolder}/{sStyleFileName}"
+         if os.path.isfile(sStyleFile) is False:
+            bSuccess = False
+            sResult  = f"Missing LaTeX stylesheet '{sStyleFile}'"
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+         sStyleFile_dest = f"{sBuildDir}/{sStyleFileName}"
+         oStyleFile = CFile(sStyleFile)
+         bSuccess, sResult = oStyleFile.CopyTo(sStyleFile_dest)
+         if bSuccess is not True:
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+      # 2. main tex file
       oPatterns = CPatterns()
       sDocumentationTeXFileName = self.__dictConfig['DOCUMENT']['OUTPUTFILENAME']
       sMainTexFile = f"{sBuildDir}/{sDocumentationTeXFileName}"
@@ -950,9 +974,10 @@ The meaning of clean is: *delete*, followed by *create*.
       # -- add creation date to main TeX file
       oMainTexFile.Write(r"\vfill")
       oMainTexFile.Write(r"\begin{center}")
-      oMainTexFile.Write(r"\begin{tabular}{m{18em}}\hline")
-      oMainTexFile.Write(r"   \textbf{" + f"{sPDFFileName}" + r"}\newline")
-      oMainTexFile.Write(r"   \textit{Date of creation: " + self.__dictConfig['NOW'] + r"}\\ \hline")
+      oMainTexFile.Write(r"\begin{tabular}{m{16em}}\hline")
+      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textbf{" + f"{sPDFFileName}" + r"}}\\")
+      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{Created at " + self.__dictConfig['NOW'] + r"}}\\")
+      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{by GenPackageDoc v. " + VERSION + r"}}\\ \hline")
       oMainTexFile.Write(r"\end{tabular}")
       oMainTexFile.Write(r"\end{center}")
 
@@ -961,7 +986,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
       del oMainTexFile
 
-      # 2. PDF file
+      # 3. PDF file
       bSuccess, sResult = self.__GenDocPDF()
       if bSuccess is not True:
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
