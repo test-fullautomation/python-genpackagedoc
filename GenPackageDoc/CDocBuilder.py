@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 24.05.2022
+# 27.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -549,6 +549,21 @@ The meaning of clean is: *delete*, followed by *create*.
          bSuccess = False
          sResult  = f"Platform {sPlatformSystem} not supported."
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+      # -- consider strictness regarding availability of LaTeX compiler
+      if os.path.isfile(sLaTeXInterpreter) is False:
+         bStrict = self.__dictConfig['CONTROL']['STRICT']
+         print()
+         print(COLBR + f"Missing LaTeX compiler '{sLaTeXInterpreter}'!")
+         print()
+         if bStrict is True:
+            bSuccess = False
+            sResult  = f"Generating the documentation in PDF format not possible because of missing LaTeX compiler ('strict' mode)!"
+            sResult = CString.FormatResult(sMethod, bSuccess, sResult)
+         else:
+            bSuccess = True
+            sResult  = f"Generating the documentation in PDF format not possible because of missing LaTeX compiler ('non strict' mode)!"
+         return bSuccess, sResult
 
       sBuildDir = self.__dictConfig['OUTPUT']
       sMainTexFile = self.__dictConfig['sMainTexFile']
