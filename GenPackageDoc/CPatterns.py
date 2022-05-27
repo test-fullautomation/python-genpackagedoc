@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.05.2022
+# 24.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -42,29 +42,35 @@ All source patterns are accessible by corresponding ``Get`` methods. Some source
 that will be replaced by input parameter of the ``Get`` method.
    """
 
-   def GetHeader(self, sAuthor="", sTitle="", sDate=""):
+   def GetHeader(self, sTitle="", sVersion="", sAuthor="", sDate=""):
       """
 Defines the header of the main tex file.
 
 **Arguments:**
 
-* ``sAuthor``
-
-  / *Condition*: required / *Type*: str /
-
-  The author of the package
-
 * ``sTitle``
 
   / *Condition*: required / *Type*: str /
 
-  The title of the output document
+  The title of the output document (name of the described package)
+
+* ``sVersion``
+
+  / *Condition*: required / *Type*: str /
+
+  The version of the output document (version of the described package)
+
+* ``sAuthor``
+
+  / *Condition*: required / *Type*: str /
+
+  The author of the output document (author of the described package)
 
 * ``sDate``
 
   / *Condition*: required / *Type*: str /
 
-  The date of the output document
+  The date of the output document (date of the described package)
 
 **Returns:**
 
@@ -77,6 +83,12 @@ Defines the header of the main tex file.
 
       sHeader = r"""
 \documentclass[a4paper,10pt]{report}
+
+% \usepackage[left=2.5cm, right=2.5cm, top=2cm, bottom=2cm]{geometry}
+\usepackage[textheight=700pt, textwidth=460pt]{geometry}
+
+\pagestyle{headings} % Footer is blank, header displays information according to document class (e.g., section name) and page number top right. 
+
 
 \usepackage[bookmarksopen, bookmarksnumbered, bookmarksdepth=3]{hyperref}
 \hypersetup{
@@ -94,72 +106,59 @@ Defines the header of the main tex file.
 \usepackage{booktabs}
 \usepackage{framed}
 \usepackage{fvextra}
+\usepackage{courier}
+\usepackage{amssymb}
+\usepackage{xcolor}
+
+
+\usepackage{admonitions}
+\usepackage{pandoc}
+\usepackage{robotframework}
+
+
+% some table layout adaptions
+\setlength{\arrayrulewidth}{0.3mm}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.3}
+
+% further individual adaptions
 
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1ex}
 
-% see: https://tex.stackexchange.com/questions/257418/error-tightlist-converting-md-file-into-pdf-using-pandoc
-\def\tightlist{}
+% --------------------------------------------------------------------------------------------------------------
 
-% enable Python syntax highlighting:
+\title{\textbf{###TITLE###}\\
+\vspace{2ex}
+\textbf{v. ###VERSION###}}
 
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{248,248,248}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{#1}
+\author{###AUTHOR###}
+
+\date{###DATE###}
 
 \begin{document}
 
-\author{###AUTHOR###}
-\title{###TITLE###}
-\date{###DATE###}
+\hypersetup{pageanchor=false}
 
 \maketitle
 
+\clearpage
+\pagenumbering{Alph}
 \tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+\hypersetup{pageanchor=true}
+
       """
-      sReturn = sHeader.replace('###AUTHOR###', sAuthor)
-      sReturn = sReturn.replace('###TITLE###', sTitle)
-      sReturn = sReturn.replace('###DATE###', sDate)
+      sReturn = sHeader.replace('###TITLE###',   sTitle)
+      sReturn = sReturn.replace('###VERSION###', sVersion)
+      sReturn = sReturn.replace('###AUTHOR###',  sAuthor)
+      sReturn = sReturn.replace('###DATE###',    sDate)
       return sReturn
 
-   # eof def GetHeader(self, sAuthor="", sTitle="", sDate=""):
+   # eof def GetHeader(self, sTitle="", sVersion="", sAuthor="", sDate=""):
 
    # --------------------------------------------------------------------------------------------------------------
 

@@ -1,8 +1,6 @@
 {
    "REPOSITORYNAME" : "python-genpackagedoc",
    "PACKAGENAME" : "GenPackageDoc",
-   "PACKAGEVERSION" : "0.10.0",
-   "PACKAGEDATE" : "17.05.2022",
    "AUTHOR" : "Holger Queckenstedt",
    "AUTHOREMAIL" : "Holger.Queckenstedt@de.bosch.com",
    "DESCRIPTION" : "Documentation builder for Python packages",
@@ -16,5 +14,6 @@
    "INTENDEDAUDIENCE" : "Intended Audience :: Developers",
    "TOPIC" : "Topic :: Software Development",
    "INSTALLREQUIRES" : ["pypandoc","colorama"],
+   "PACKAGEDATA" : ["*.pdf","./styles/*.sty"],
    "PACKAGEDOC" : "./packagedoc"
 }

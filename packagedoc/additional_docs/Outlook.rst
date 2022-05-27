@@ -41,6 +41,8 @@
 
   Introduce text boxes for warnings, errors and informations.
 
+  19.05.2022: implemented in v. 0.12.0
+
 * [07]
 
   The documentation build process allows relative paths only/
@@ -118,6 +120,9 @@
 
   Selftest
 
+* [20]
 
+  Introduce a separate folder containing TeX styles - instead of having them hard coded within CPatterns.py.
 
+  24.05.2022: implemented in v. 0.13.0
 

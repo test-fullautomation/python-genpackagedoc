@@ -13,7 +13,7 @@ The documentation is generated in two steps:
 
 The sources of ``GenPackageDoc`` are available in the following GitHub repository:
 
-   https://github.com/test-fullautomation/python-genpackagedoc
+   `python-genpackagedoc <https://github.com/test-fullautomation/python-genpackagedoc>`_
 
 The repository ``python-genpackagedoc`` uses it's own functionality to document itself and the contained Python package ``GenPackageDoc``.
 
