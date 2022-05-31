@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 27.05.2022
+# 31.05.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -129,3 +129,4 @@
             "LINUX"   : "${ROBOTLATEXPATH}/miktex/bin/x64/pdflatex"
            }
 }
+
