@@ -63,7 +63,7 @@ Documentation build process
      ``config/repository_config.json``
 
 * The repository configuration object adds dynamic values (like operating system specific settings and paths) to the repository configuration.
-  Not all of them are required for the documentation build process, but the repository configuration also supports the setup process.
+  Not all of them are required for the documentation build process, but the repository configuration also supports the setup process (``setup.py``).
 
   There is one certain setting in the repository configuration file
 
@@ -73,9 +73,8 @@ Documentation build process
 
      ``"PACKAGEDOC" : "./packagedoc"``
 
-  This is the path to a folder, in which all further documentation related files are placed. The path has to be relative! Reference is the position of
-  ``genpackagedoc.py``. This is hard coded internally. The relative path itself can be any one./
-  But it is required that within this folder the configuration file for the documentation build process
+  This is the path to a folder, in which all further documentation related files are placed. In case of the path is relative, the reference
+  is the position of ``genpackagedoc.py``. It is required that within this folder the configuration file for the documentation build process
 
      ``packagedoc_config.json``
 
@@ -96,9 +95,20 @@ Documentation build process
      ``"OUTPUT" : "./build"``
 
   **will be deleted** at the beginning of the documentation build process! Make sure that you do not have any files
-  inside this folder opened when you start the process.
+  inside this folder opened when you start the process. In case of the path is relative, the reference
+  is the position of ``genpackagedoc.py``. The complete path is created recursively.
 
   **Further details are explained within the json file itself.**
+
+* ``genpackagedoc.py`` also creates an own configuration object
+
+     ``GenPackageDoc/CPackageDocConfig.py``
+
+  ``CPackageDocConfig.py`` takes over all repository configuration values, reads in the static ``GenPackageDoc``
+  configuration (``packagedoc_config.json``) and adds dynamically computed values like the full absolute paths
+  belonging to the documentation build process. Also all command line parameters are resolved and checked.
+
+  The reference for all relative paths is the position of ``genpackagedoc.py`` (that is the repository root folder).
 
 After the execution of ``genpackagedoc.py`` the resulting PDF document can be found under the specified name
 within the specified output folder (``"OUTPUT"``). This folder also contains all temporary files generated during the
@@ -106,6 +116,8 @@ documentation build process.
 
 Because the output folder is a temporary one, the PDF document is copied to the folder containing the package sources
 and therefore is included in the package installation. This is defined in the ``GenPackageDoc`` configuration, section ``"PDFDEST"``./
+
+/
 
 **Command line**
 
@@ -134,7 +146,7 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
 
    genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other" --strict=true
 
-All listed parameters are optional.
+All listed parameters are optional. GenPackageDoc creates the complete output path (recursively). The PDF destinatiopn path is expected to be existing already.
 
 //
 
@@ -253,7 +265,7 @@ Runtime variables
 
 *What are "runtime variables" and how to use them in rst text?*
 
-All configuration parameters of ``GenPackageDoc`` are taken out of three sources:
+All configuration parameters of ``GenPackageDoc`` are taken out of four sources:
 
 1. the static repository configuration
 
@@ -266,6 +278,11 @@ All configuration parameters of ``GenPackageDoc`` are taken out of three sources
 3. the static ``GenPackageDoc`` configuration
 
    ``packagedoc/packagedoc_config.json``
+
+4. the dynamic ``GenPackageDoc`` configuration
+
+   ``GenPackageDoc/CPackageDocConfig.py``
+
 
 Some of them are runtime variables and can be accessed within rst text (within docstrings of Python modules and also within separate rst files).
 

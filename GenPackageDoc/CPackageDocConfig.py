@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 31.05.2022
+# 01.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -100,6 +100,10 @@ Responsible for:
          sTmpPath = CString.NormalizePath("%TMP%")
       elif sPlatformSystem == "Linux":
          sTmpPath = "/tmp"
+      else:
+         bSuccess = None
+         sResult  = f"Platform system '{sPlatformSystem}' is not supported"
+         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
       sJsonFileCleaned = f"{sTmpPath}/{sJsonFileName}"
       # print(f"========== sJsonFileCleaned : '{sJsonFileCleaned}'")
@@ -140,7 +144,7 @@ Responsible for:
       self.__dictPackageDocConfig['PDFDEST']  = dictJsonValues['PDFDEST']
       self.__dictPackageDocConfig['TEX']      = dictJsonValues['TEX']
 
-      # get keys and values from documentation build configuration for values with placeholder (in "TOC", "PARAMS" and "DOCUMENT")
+      # get keys and values from documentation build configuration for values with placeholder (in 'TOC', 'PARAMS' and 'DOCUMENT')
       # and resolve placeholder (possible placeholder are the keys from repository configuration)
 
       self.__dictPackageDocConfig['TOC'] = dictJsonValues['TOC']
@@ -181,15 +185,15 @@ Responsible for:
             self.__dictPackageDocConfig['DOCUMENT'][doc_key] = sResolvedValue
 
       # -- the absolute path that is reference for all relative paths
-      sReferencePathAbs = self.__dictPackageDocConfig['PACKAGEDOC'] # set initially in repository config
+      sReferencePathAbs = self.__dictPackageDocConfig['PACKAGEDOC'] # set initially in repository config and already normalized
 
-      # -- convert relative paths to absolute paths in 'DOCUMENTPARTS' section
+      # -- normalize paths in 'DOCUMENTPARTS' section
       listDocumentParts = self.__dictPackageDocConfig['TOC']['DOCUMENTPARTS']
       for sDocumentPart in listDocumentParts:
-         self.__dictPackageDocConfig['TOC'][sDocumentPart] = CString.NormalizePath(f"{sReferencePathAbs}/{self.__dictPackageDocConfig['TOC'][sDocumentPart]}")
+         self.__dictPackageDocConfig['TOC'][sDocumentPart] = CString.NormalizePath(sPath=self.__dictPackageDocConfig['TOC'][sDocumentPart], sReferencePathAbs=sReferencePathAbs)
 
       # -- set further config keys
-      tupleFurtherConfigKeys = ("PICTURES", "OUTPUT", "PDFDEST")
+      tupleFurtherConfigKeys = ('PICTURES', 'OUTPUT', 'PDFDEST')
 
       # -- resolve placeholder in further config keys (possible placeholder are the keys from repository configuration)
       for sConfigKey in tupleFurtherConfigKeys:
@@ -199,11 +203,27 @@ Responsible for:
                sPackageDocValue = sPackageDocValue.replace(f"###{repo_key}###", repo_value)
          self.__dictPackageDocConfig[sConfigKey] = sPackageDocValue
 
-      # -- convert relative paths to absolute paths in further config keys
+      # -- normalize paths in further config keys
       for sConfigKey in tupleFurtherConfigKeys:
-         self.__dictPackageDocConfig[sConfigKey] = CString.NormalizePath(f"{sReferencePathAbs}/{self.__dictPackageDocConfig[sConfigKey]}")
+         self.__dictPackageDocConfig[sConfigKey] = CString.NormalizePath(sPath=self.__dictPackageDocConfig[sConfigKey], sReferencePathAbs=sReferencePathAbs)
 
-      # PrettyPrint(self.__dictPackageDocConfig, sPrefix="Config")
+      # -- prepare path to LaTeX interpreter
+      sLaTeXInterpreter = None
+      sKey = sPlatformSystem.upper()
+      if sKey in self.__dictPackageDocConfig['TEX']:
+         sLaTeXInterpreter = CString.NormalizePath(sPath=self.__dictPackageDocConfig['TEX'][sKey], sReferencePathAbs=sReferencePathAbs)
+      self.__dictPackageDocConfig['LATEXINTERPRETER'] = sLaTeXInterpreter
+
+      # -- prepare path to additional LaTeX stylesheets (expected to be at a position relative to this module, because these stylesheets are part of the installation!)
+      sThisFile = CString.NormalizePath(sPath=__file__, sReferencePathAbs=sReferencePathAbs)
+      sThisFilePath = os.path.dirname(sThisFile)
+      sStylesFolder = f"{sThisFilePath}/styles"
+      # print(f"============================== sStylesFolder: '{sStylesFolder}'")
+      if os.path.isdir(sStylesFolder) is False:
+         bSuccess = None
+         sResult  = f"Missing LaTeX stylesheet folder '{sStylesFolder}'"
+         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+      self.__dictPackageDocConfig['LATEXSTYLESFOLDER'] = sStylesFolder
 
       # ---- prepare dictionary with all parameter that shall have runtime character (flat list instead of nested dict like in packagedoc configuration)
 
@@ -235,6 +255,10 @@ Responsible for:
       bSuccess, sResult = self.__GetCmdLineArgs()
       if bSuccess is not True:
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+
+
+      # PrettyPrint(self.__dictPackageDocConfig, sPrefix="Config")
+
 
    # eof def __init__(self, oRepositoryConfig=None):
 
@@ -300,6 +324,8 @@ Get values fom command linwe and add them to GenPackageDoc configuration. Alread
       bSuccess = False
       sResult  = "UNKNOWN"
 
+      sReferencePathAbs = self.__dictPackageDocConfig['PACKAGEDOC'] # set initially in repository config
+
       oCmdLineParser = argparse.ArgumentParser()
 
       # -- configuration parameter, that can be overwritten in command line (where it makes sense)
@@ -317,7 +343,7 @@ Get values fom command linwe and add them to GenPackageDoc configuration. Alread
             sResult  = "Empty command line argument: -output."
             return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
          else:
-            OUTPUT = CString.NormalizePath(OUTPUT)
+            OUTPUT = CString.NormalizePath(sPath=OUTPUT, sReferencePathAbs=sReferencePathAbs)
             self.__dictPackageDocConfig['OUTPUT'] = OUTPUT
             print(COLNY + f"<'OUTPUT' redirected to '{OUTPUT}'>\n")
 
@@ -329,7 +355,7 @@ Get values fom command linwe and add them to GenPackageDoc configuration. Alread
             sResult  = "Empty command line argument: -pdfdest."
             return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
          else:
-            PDFDEST = CString.NormalizePath(PDFDEST)
+            PDFDEST = CString.NormalizePath(sPath=PDFDEST, sReferencePathAbs=sReferencePathAbs)
             self.__dictPackageDocConfig['PDFDEST'] = PDFDEST
             print(COLNY + f"<'PDFDEST' redirected to '{PDFDEST}'>\n")
 

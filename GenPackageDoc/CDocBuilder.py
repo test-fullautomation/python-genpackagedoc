@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 30.05.2022
+# 01.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -385,18 +385,9 @@ The meaning of clean is: *delete*, followed by *create*.
       sResult  = None
 
       sPDFFileExpected = None
-      sLaTeXInterpreter = None
-
-      sPlatformSystem = platform.system()
-      sKey = sPlatformSystem.upper()
-      if sKey in self.__dictPackageDocConfig['TEX']:
-         sLaTeXInterpreter = CString.NormalizePath(self.__dictPackageDocConfig['TEX'][sKey])
-      else:
-         bSuccess = False
-         sResult  = f"Platform {sPlatformSystem} not supported."
-         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
       # -- consider strictness regarding availability of LaTeX compiler
+      sLaTeXInterpreter = self.__dictPackageDocConfig['LATEXINTERPRETER']
       if os.path.isfile(sLaTeXInterpreter) is False:
          bStrict = self.__dictPackageDocConfig['CONTROL']['STRICT']
          print()
@@ -783,17 +774,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
 
       # -- finally create the main TeX file and the PDF
-
-      # 1. get additional stylesheets (search for it relative to the path to this file)
-      sThisFilePath = CString.NormalizePath(os.path.dirname(__file__))
-      sStylesFolder = f"{sThisFilePath}/styles"
-      # print(f"============================== sStylesFolder: '{sStylesFolder}'")
-
-      if os.path.isdir(sStylesFolder) is False:
-         bSuccess = False
-         sResult  = f"Missing stylesheet folder '{sStylesFolder}'"
-         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-
+      sStylesFolder = self.__dictPackageDocConfig['LATEXSTYLESFOLDER']
       tupleStyleFileNames = ("admonitions.sty","robotframework.sty","pandoc.sty") # TODO: maybe later something like 'CopyFiles(*.sty)'
       for sStyleFileName in tupleStyleFileNames:
          sStyleFile = f"{sStylesFolder}/{sStyleFileName}"
@@ -801,7 +782,6 @@ The meaning of clean is: *delete*, followed by *create*.
             bSuccess = False
             sResult  = f"Missing LaTeX stylesheet '{sStyleFile}'"
             return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-
          sStyleFile_dest = f"{sBuildDir}/{sStyleFileName}"
          oStyleFile = CFile(sStyleFile)
          bSuccess, sResult = oStyleFile.CopyTo(sStyleFile_dest)

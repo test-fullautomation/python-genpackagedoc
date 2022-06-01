@@ -121,7 +121,6 @@
 # GenPackageDoc needs to know where to find LaTeX. Because the path to the LaTeX interpreter depends
 # on the operating system, this path has to be defined separately for every supported operating system
 # (currently "WINDOWS" and "LINUX").
-# In opposite to the previous statement these paths have to be absolute (recommended: usage of environment variables).
 # Example:
 
    "TEX" : {
