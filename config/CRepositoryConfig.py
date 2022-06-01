@@ -56,7 +56,6 @@ def printexception(sMsg):
 
 # --------------------------------------------------------------------------------------------------------------
 
-# TODO: maybe provide repository_config.json also in constructor
 class CRepositoryConfig():
 
     def __init__(self, sCalledBy=None):

@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 27.05.2022
+# 30.05.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -57,185 +57,31 @@ class CDocBuilder():
    """
 Main class to build tex sources out of docstrings of Python modules and separate text files in rst format.
 
-Depends on a json configuration file, provided by a ``oRepositoryConfig`` object.
+Depends on a json configuration file, provided by a ``oPackageDocConfig`` object (this includes the
+Repository configuration).
 
 Method to execute: ``Build()``
    """
 
-   def __init__(self, oRepositoryConfig=None):
+   def __init__(self, oPackageDocConfig=None):
       """
 Constructor of class ``CDocBuilder``.
 
-Responsible for:
+* ``oPackageDocConfig``
 
-* Take over the repository configuration
-* Read the packagedoc configuration from json file
-* Resolve placeholders used in packagedoc configuration
-* Prepare runtime variables
+  / *Condition*: required / *Type*: CPackageDocConfig() /
 
-* ``oRepositoryConfig``
-
-  / *Condition*: required / *Type*: CRepositoryConfig() /
-
-  Repository configuration containing static and dynamic configuration values.
+  GenPackageDoc configuration containing static and dynamic configuration values.
       """
 
       sMethod = "CDocBuilder.__init__"
 
-      if oRepositoryConfig is None:
+      if oPackageDocConfig is None:
          bSuccess = None
-         sResult  = "oRepositoryConfig is None"
+         sResult  = "oPackageDocConfig is None"
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
-      # self.__dictConfig is the documentation build configuration including the repository configuration (placeholders resolved)
-      #
-      self.__dictConfig = {}
-      #
-      # get the repository configuration
-      dictRepositoryConfig = oRepositoryConfig.GetConfig()
-      #
-      # read the documentation build configuration from separate json file
-      #    - the path to the folder containing this json file is taken out of the repository configuration
-      #    - the name of the json file is fix
-      sJsonFileName = "packagedoc_config.json"
-      sDocumentationProjectConfigFile = f"{dictRepositoryConfig['PACKAGEDOC']}/{sJsonFileName}"
-      # print(f"========== sDocumentationProjectConfigFile : '{sDocumentationProjectConfigFile}'")
-
-      # The json file may contain lines that are commented out by a '#' at the beginning of the line.
-      # Therefore we read in this file in text format, remove the comments and save the cleaned file within the temp folder.
-      # Now it's a valid json file and we read the file from there.
-
-      sTmpPath = None
-      sPlatformSystem = platform.system()
-      if sPlatformSystem == "Windows":
-         sTmpPath = CString.NormalizePath("%TMP%")
-      elif sPlatformSystem == "Linux":
-         sTmpPath = "/tmp"
-
-      sJsonFileCleaned = f"{sTmpPath}/{sJsonFileName}"
-      # print(f"========== sJsonFileCleaned : '{sJsonFileCleaned}'")
-
-      oJsonFileSource = CFile(sDocumentationProjectConfigFile)
-      listLines, bSuccess, sResult = oJsonFileSource.ReadLines(bSkipBlankLines=True, sComment='#')
-      del oJsonFileSource
-      if bSuccess is not True:
-         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-      oJsonFileCleaned = CFile(sJsonFileCleaned)
-      bSuccess, sResult = oJsonFileCleaned.Write(listLines)
-      del oJsonFileCleaned
-      if bSuccess is not True:
-         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-
-
-      # TODO: try/except
-      dictDocConfig = None
-      hDocumentationProjectConfigFile = open(sJsonFileCleaned)
-      dictDocConfig = json.load(hDocumentationProjectConfigFile)
-      hDocumentationProjectConfigFile.close()
-
-      # get keys and values from repository configuration
-      for key, value in dictRepositoryConfig.items():
-         self.__dictConfig[key] = value
-
-      # add current timestamp
-      self.__dictConfig['NOW'] = time.strftime('%d.%m.%Y - %H:%M:%S')
-
-      # get some basic keys and values from documentation build configuration
-      # TODO: if key in dict / otherwise error / or make optional?
-      self.__dictConfig['CONTROL']  = dictDocConfig['CONTROL']
-      self.__dictConfig['PICTURES'] = dictDocConfig['PICTURES']
-      self.__dictConfig['OUTPUT']   = dictDocConfig['OUTPUT']
-      self.__dictConfig['PDFDEST']  = dictDocConfig['PDFDEST']
-      self.__dictConfig['TEX']      = dictDocConfig['TEX']
-
-      # get keys and values from documentation build configuration for values with placeholder (in "TOC", "PARAMS" and "DOCUMENT")
-      # and resolve placeholder (possible placeholder are the keys from repository configuration)
-
-      self.__dictConfig['TOC'] = dictDocConfig['TOC']
-      listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
-      for sDocumentPart in listDocumentParts:
-         sDocumentPartPath = self.__dictConfig['TOC'][sDocumentPart]
-         for repo_key, repo_value in dictRepositoryConfig.items():
-            if type(repo_value) == str:
-               sDocumentPartPath = sDocumentPartPath.replace(f"###{repo_key}###", repo_value)
-         self.__dictConfig['TOC'][sDocumentPart] = sDocumentPartPath
-
-      self.__dictConfig['PARAMS'] = {}
-      if 'PARAMS' in dictDocConfig: # option
-         for doc_key, doc_value in dictDocConfig['PARAMS'].items():
-            # print(f"==================== doc_key : '{doc_key}'")
-            # print(f"==================== doc_value : '{doc_value}'")
-            sResolvedValue = str(doc_value) # TODO: other types required?
-            sResolvedValue = sResolvedValue.replace("###NOW###", self.__dictConfig['NOW'])
-            for repo_key, repo_value in dictRepositoryConfig.items():
-               # print(f"==================== repo_key : '{repo_key}'")
-               # print(f"==================== repo_value : '{repo_value}'")
-               if type(repo_value) == str:
-                  sResolvedValue = sResolvedValue.replace(f"###{repo_key}###", repo_value)
-            self.__dictConfig['PARAMS'][doc_key] = sResolvedValue
-
-      self.__dictConfig['DOCUMENT'] = {}
-      if 'DOCUMENT' in dictDocConfig: # required; TODO: error handling
-         for doc_key, doc_value in dictDocConfig['DOCUMENT'].items():
-            # print(f"==================== doc_key : '{doc_key}'")
-            # print(f"==================== doc_value : '{doc_value}'")
-            sResolvedValue = str(doc_value) # TODO: other types required?
-            sResolvedValue = sResolvedValue.replace("###NOW###", self.__dictConfig['NOW'])
-            for repo_key, repo_value in dictRepositoryConfig.items():
-               # print(f"==================== repo_key : '{repo_key}'")
-               # print(f"==================== repo_value : '{repo_value}'")
-               if type(repo_value) == str:
-                  sResolvedValue = sResolvedValue.replace(f"###{repo_key}###", repo_value)
-            self.__dictConfig['DOCUMENT'][doc_key] = sResolvedValue
-
-      # -- the absolute path that is reference for all relative paths
-      sReferencePathAbs = self.__dictConfig['PACKAGEDOC']
-
-      # -- convert relative paths to absolute paths in 'DOCUMENTPARTS' section
-      listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
-      for sDocumentPart in listDocumentParts:
-         self.__dictConfig['TOC'][sDocumentPart] = CString.NormalizePath(f"{sReferencePathAbs}/{self.__dictConfig['TOC'][sDocumentPart]}")
-
-      # -- set further config keys
-      tupleFurtherConfigKeys = ("PICTURES", "OUTPUT", "PDFDEST")
-
-      # -- resolve placeholder in further config keys (possible placeholder are the keys from repository configuration)
-      for sConfigKey in tupleFurtherConfigKeys:
-         sPackageDocValue = self.__dictConfig[sConfigKey]
-         for repo_key, repo_value in dictRepositoryConfig.items():
-            if type(repo_value) == str:
-               sPackageDocValue = sPackageDocValue.replace(f"###{repo_key}###", repo_value)
-         self.__dictConfig[sConfigKey] = sPackageDocValue
-
-      # -- convert relative paths to absolute paths in further config keys
-      for sConfigKey in tupleFurtherConfigKeys:
-         self.__dictConfig[sConfigKey] = CString.NormalizePath(f"{sReferencePathAbs}/{self.__dictConfig[sConfigKey]}")
-
-      # PrettyPrint(self.__dictConfig, sPrefix="Config")
-
-      # ---- prepare dictionary with all parameter that shall have runtime character (flat list instead of nested dict like in packagedoc configuration)
-
-      self.__dictRuntimeVariables = None
-
-      # -- 1. from repository configuration
-      self.__dictRuntimeVariables = oRepositoryConfig.GetConfig()
-
-      # -- 2. current timestamp
-      self.__dictRuntimeVariables['NOW'] = self.__dictConfig['NOW']
-
-      # -- 3. from packagedoc configuration
-      #       a) user defined parameter
-      if 'PARAMS' in self.__dictConfig: # option
-         for key, value in self.__dictConfig['PARAMS'].items():
-            self.__dictRuntimeVariables[key] = value
-      #       b) document ralated parameter
-      if 'DOCUMENT' in self.__dictConfig: # required
-         for key, value in self.__dictConfig['DOCUMENT'].items():
-            self.__dictRuntimeVariables[key] = value
-
-      # TODO: else: error
-
-      # PrettyPrint(self.__dictRuntimeVariables, sPrefix="Runtime")
+      self.__dictPackageDocConfig = oPackageDocConfig.GetConfig()
 
       # -- syntax extensions
       self.__dictPlaceholder = {}
@@ -318,10 +164,10 @@ Responsible for:
 
       listLinesResolved = []
 
-      # self.__dictRuntimeVariables
+      dictRuntimeVariables = self.__dictPackageDocConfig['dictRuntimeVariables']
       for sLine in listLines:
          sLineResolved = sLine
-         for key, value in self.__dictRuntimeVariables.items():
+         for key, value in dictRuntimeVariables.items():
             if type(value) == str:
                sLineResolved = sLineResolved.replace(f"###{key}###", value)
          listLinesResolved.append(sLineResolved)
@@ -456,7 +302,7 @@ The meaning of clean is: *delete*, followed by *create*.
       bSuccess = None
       sResult  = None
 
-      sBuildDir = self.__dictConfig['OUTPUT']
+      sBuildDir = self.__dictPackageDocConfig['OUTPUT']
 
       if os.path.isdir(sBuildDir) is True:
          print(f"* Deleting folder '{sBuildDir}'")
@@ -493,17 +339,17 @@ The meaning of clean is: *delete*, followed by *create*.
       bSuccess = None
       sResult  = None
 
-      # PrettyPrint(self.__dictConfig, sPrefix = "__CopyPictures::dictConfig")
+      # PrettyPrint(self.__dictPackageDocConfig, sPrefix = "__CopyPictures::dictPackageDocConfig")
 
-      if "PICTURES" in self.__dictConfig:
-         sPicturesSourceDir = self.__dictConfig['PICTURES']
+      if "PICTURES" in self.__dictPackageDocConfig:
+         sPicturesSourceDir = self.__dictPackageDocConfig['PICTURES']
 
          # print(f"========== sPicturesSourceDir : '{sPicturesSourceDir}'")
 
          if os.path.isdir(sPicturesSourceDir) is True:
 
             sDirName = os.path.basename(sPicturesSourceDir)
-            sPicturesDestinationDir = f"{self.__dictConfig['OUTPUT']}/{sDirName}"
+            sPicturesDestinationDir = f"{self.__dictPackageDocConfig['OUTPUT']}/{sDirName}"
             # print(f"========== sPicturesDestinationDir : '{sPicturesDestinationDir}'")
 
             try:
@@ -543,8 +389,8 @@ The meaning of clean is: *delete*, followed by *create*.
 
       sPlatformSystem = platform.system()
       sKey = sPlatformSystem.upper()
-      if sKey in self.__dictConfig['TEX']:
-         sLaTeXInterpreter = CString.NormalizePath(self.__dictConfig['TEX'][sKey])
+      if sKey in self.__dictPackageDocConfig['TEX']:
+         sLaTeXInterpreter = CString.NormalizePath(self.__dictPackageDocConfig['TEX'][sKey])
       else:
          bSuccess = False
          sResult  = f"Platform {sPlatformSystem} not supported."
@@ -552,7 +398,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- consider strictness regarding availability of LaTeX compiler
       if os.path.isfile(sLaTeXInterpreter) is False:
-         bStrict = self.__dictConfig['CONTROL']['STRICT']
+         bStrict = self.__dictPackageDocConfig['CONTROL']['STRICT']
          print()
          print(COLBR + f"Missing LaTeX compiler '{sLaTeXInterpreter}'!")
          print()
@@ -565,8 +411,8 @@ The meaning of clean is: *delete*, followed by *create*.
             sResult  = f"Generating the documentation in PDF format not possible because of missing LaTeX compiler ('non strict' mode)!"
          return bSuccess, sResult
 
-      sBuildDir = self.__dictConfig['OUTPUT']
-      sMainTexFile = self.__dictConfig['sMainTexFile']
+      sBuildDir = self.__dictPackageDocConfig['OUTPUT']
+      sMainTexFile = self.__dictPackageDocConfig['sMainTexFile']
 
       # print(f"========== sMainTexFile : '{sMainTexFile}'")
       # print(f"========== sLaTeXInterpreter : '{sLaTeXInterpreter}'")
@@ -607,9 +453,9 @@ The meaning of clean is: *delete*, followed by *create*.
       # eof for nDummy in range(2):
 
       # -- verify the outcome
-      sPDFFileExpected = self.__dictConfig['sPDFFileExpected']
+      sPDFFileExpected = self.__dictPackageDocConfig['sPDFFileExpected']
       if os.path.isfile(sPDFFileExpected) is True:
-         sDestinationPDFFile = f"{self.__dictConfig['PDFDEST']}/{self.__dictConfig['sPDFFileName']}"
+         sDestinationPDFFile = f"{self.__dictPackageDocConfig['PDFDEST']}/{self.__dictPackageDocConfig['sPDFFileName']}"
          oPDFFile = CFile(sPDFFileExpected)
          bSuccess, sResult = oPDFFile.CopyTo(sDestinationPDFFile, bOverwrite=True)
          del oPDFFile
@@ -659,7 +505,7 @@ The meaning of clean is: *delete*, followed by *create*.
       if bSuccess is not True:
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-      sBuildDir = self.__dictConfig['OUTPUT']
+      sBuildDir = self.__dictPackageDocConfig['OUTPUT']
 
       oSourceParser = CSourceParser()
 
@@ -667,9 +513,9 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- check existence of document parts and parse the content
 
-      listDocumentParts = self.__dictConfig['TOC']['DOCUMENTPARTS']
+      listDocumentParts = self.__dictPackageDocConfig['TOC']['DOCUMENTPARTS']
       for sDocumentPart in listDocumentParts:
-         sDocumentPartPath = self.__dictConfig['TOC'][sDocumentPart]
+         sDocumentPartPath = self.__dictPackageDocConfig['TOC'][sDocumentPart]
 
          # -- check existence
 
@@ -736,8 +582,8 @@ The meaning of clean is: *delete*, followed by *create*.
 
                # -- get all informations out of the source file
                dictContent, bSuccess, sResult = oSourceParser.ParseSourceFile(sModule,
-                                                                              self.__dictConfig['CONTROL']['INCLUDEPRIVATE'],
-                                                                              self.__dictConfig['CONTROL']['INCLUDEUNDOCUMENTED'])
+                                                                              self.__dictPackageDocConfig['CONTROL']['INCLUDEPRIVATE'],
+                                                                              self.__dictPackageDocConfig['CONTROL']['INCLUDEUNDOCUMENTED'])
                if bSuccess is not True:
                   return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
@@ -964,21 +810,21 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # 2. main tex file
       oPatterns = CPatterns()
-      sDocumentationTeXFileName = self.__dictConfig['DOCUMENT']['OUTPUTFILENAME']
+      sDocumentationTeXFileName = self.__dictPackageDocConfig['DOCUMENT']['OUTPUTFILENAME']
       sMainTexFile = f"{sBuildDir}/{sDocumentationTeXFileName}"
-      self.__dictConfig['sMainTexFile'] = sMainTexFile
+      self.__dictPackageDocConfig['sMainTexFile'] = sMainTexFile
       # print(f"========== sMainTexFile : '{sMainTexFile}'")
       oMainTexFile = CFile(sMainTexFile)
       dMainTexFileInfo = oMainTexFile.GetFileInfo()
       sMainTexFileNameOnly = dMainTexFileInfo['sFileNameOnly']
       sPDFFileName = f"{sMainTexFileNameOnly}.pdf"
       sPDFFileExpected = f"{sBuildDir}/{sPDFFileName}"
-      self.__dictConfig['sPDFFileName']     = sPDFFileName # used later to copy the file to another location
-      self.__dictConfig['sPDFFileExpected'] = sPDFFileExpected # used later to verify the build
-      sHeader = oPatterns.GetHeader(sTitle=self.__dictConfig['DOCUMENT']['TITLE'],
-                                    sVersion=self.__dictConfig['DOCUMENT']['VERSION'],
-                                    sAuthor=self.__dictConfig['DOCUMENT']['AUTHOR'],
-                                    sDate=self.__dictConfig['DOCUMENT']['DATE'])
+      self.__dictPackageDocConfig['sPDFFileName']     = sPDFFileName # used later to copy the file to another location
+      self.__dictPackageDocConfig['sPDFFileExpected'] = sPDFFileExpected # used later to verify the build
+      sHeader = oPatterns.GetHeader(sTitle=self.__dictPackageDocConfig['DOCUMENT']['TITLE'],
+                                    sVersion=self.__dictPackageDocConfig['DOCUMENT']['VERSION'],
+                                    sAuthor=self.__dictPackageDocConfig['DOCUMENT']['AUTHOR'],
+                                    sDate=self.__dictPackageDocConfig['DOCUMENT']['DATE'])
       oMainTexFile.Write(sHeader)
 
       # -- add modules to main TeX file
@@ -991,7 +837,7 @@ The meaning of clean is: *delete*, followed by *create*.
       oMainTexFile.Write(r"\begin{center}")
       oMainTexFile.Write(r"\begin{tabular}{m{16em}}\hline")
       oMainTexFile.Write(r"   \multicolumn{1}{c}{\textbf{" + f"{sPDFFileName}" + r"}}\\")
-      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{Created at " + self.__dictConfig['NOW'] + r"}}\\")
+      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{Created at " + self.__dictPackageDocConfig['NOW'] + r"}}\\")
       oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{by GenPackageDoc v. " + VERSION + r"}}\\ \hline")
       oMainTexFile.Write(r"\end{tabular}")
       oMainTexFile.Write(r"\end{center}")

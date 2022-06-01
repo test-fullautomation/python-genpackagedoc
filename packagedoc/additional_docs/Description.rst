@@ -51,6 +51,9 @@ Documentation build process
 
 * The process starts with the execution of ``genpackagedoc.py`` within the repository root folder.
 
+  ``genpackagedoc.py`` can be used stand alone - but this script is also called by ``setup.py``. The impact is that every installation
+  includes an update of the documentation.
+
 * ``genpackagedoc.py`` creates a repository configuration object
 
      ``config/CRepositoryConfig.py``
@@ -102,9 +105,36 @@ within the specified output folder (``"OUTPUT"``). This folder also contains all
 documentation build process. 
 
 Because the output folder is a temporary one, the PDF document is copied to the folder containing the package sources
-and therefore is included in the package installation. This is defined in the ``GenPackageDoc`` configuration, section ``"PDFDEST"``.
+and therefore is included in the package installation. This is defined in the ``GenPackageDoc`` configuration, section ``"PDFDEST"``./
 
-After the installation is finished, the output folder can be deleted.
+**Command line**
+
+Some configuration parameter predefined within ``packagedoc_config.json``, can be overwritten in command line.
+
+``--output``
+
+  Path and name of folder containing all output files.
+
+``--pdfdest``
+
+  Path and name of folder in which the generated PDF file will be copied to (after this file has been created within the output folder).
+
+  *Caution*: The generated PDF file will per default be copied to the package folder within the repository. This is defined in ``packagedoc_config.json``.
+  The version of the PDF file within the package folder will be part of the installation (when using ``setup.py``). When you change the PDF destination,
+  then you get this file at another location - but this file will not be part of the installation any more. Installed will be the version,
+  that is still present within the package folder of the repository. Please try to get the bottom of your motivation when you change this setting.
+
+--strict
+
+  If ``True``, a missing LaTeX compiler aborts the process, otherwise the process continues.
+
+**Example**
+
+.. Code::python
+
+   genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other" --strict=true
+
+All listed parameters are optional.
 
 //
 
