@@ -94,6 +94,8 @@
 
   The error handling needs to be extended!
 
+  17.06.2022: Implemented in version 0.17.0
+
 * [14]
 
   Take over the description of

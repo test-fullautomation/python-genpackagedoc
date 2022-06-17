@@ -144,7 +144,7 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
 
 .. Code::python
 
-   genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other" --strict=true
+   genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other" --strict=True
 
 All listed parameters are optional. GenPackageDoc creates the complete output path (recursively). The PDF destinatiopn path is expected to be existing already.
 
