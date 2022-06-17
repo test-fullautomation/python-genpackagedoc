@@ -16,8 +16,8 @@
 #
 # **************************************************************************************************************
 #
-# Version and date of GenPackageDoc
+# Version and date of PythonExtensionsCollection
 #
-VERSION      = "0.17.1"
+VERSION      = "0.7.2"
 VERSION_DATE = "17.06.2022"
 

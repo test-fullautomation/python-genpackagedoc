@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 31.05.2022
+# 17.06.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -73,6 +73,7 @@
 # In second case the key name has to be encapsulated within three hashes '#'. The same notation can be used in rst files and doctrings
 # of Python modules (for example adding an additional hint within a doctring of a class: ###additional_hint###).
 # This mechanism is limited to strings!
+# This key is optional. In case of own parameters are not needed, this key can be removed or set to null.
 
    "PARAMS" : {
                  "additional_hint" : "An additional hint is given ###NOW###",
