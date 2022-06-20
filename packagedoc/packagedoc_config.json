@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 17.06.2022
+# 20.06.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -119,6 +119,17 @@
 # this key can be removed or set to null.
 
    "PDFDEST" : "../###PACKAGENAME###",
+
+# Section "CONFIGDEST":
+# -----------------
+# Defines the path to a folder in which a dump of the current configuration will be copied to.
+# The configuration dump is part of the build output (section 'OUTPUT') and available in txt and in json format.
+# It might be useful for further processes to have access to all details regarding the current
+# documentation build.
+# This key is optional. In case of it is not required to have the configuration dump saved
+# this key can be removed or set to null.
+
+   "CONFIGDEST" : null,
 
 # Section "TEX":
 # -----------------

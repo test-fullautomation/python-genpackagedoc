@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.06.2022
+# 20.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -135,6 +135,7 @@ Responsible for:
                                             "PICTURES",
                                             "OUTPUT",
                                             "PDFDEST",
+                                            "CONFIGDEST",
                                             "TEX")
 
       for sKey in dictJsonValues.keys():
@@ -222,6 +223,12 @@ Responsible for:
       else:
          self.__dictPackageDocConfig['PDFDEST'] = None
 
+      # optional
+      if 'CONFIGDEST' in dictJsonValues:
+         self.__dictPackageDocConfig['CONFIGDEST'] = dictJsonValues['CONFIGDEST']
+      else:
+         self.__dictPackageDocConfig['CONFIGDEST'] = None
+
       # required
       if 'TEX' in dictJsonValues:
          self.__dictPackageDocConfig['TEX'] = dictJsonValues['TEX']
@@ -280,7 +287,7 @@ Responsible for:
          self.__dictPackageDocConfig['TOC'][sDocumentPart] = CString.NormalizePath(sPath=self.__dictPackageDocConfig['TOC'][sDocumentPart], sReferencePathAbs=sReferencePathAbs)
 
       # -- set further config keys (to enable the resolve of placeholders and the normalizing of paths running in a loop)
-      tupleFurtherConfigKeys = ('PICTURES', 'OUTPUT', 'PDFDEST') # values contain paths and can contain placeholders; some of them are optional
+      tupleFurtherConfigKeys = ('PICTURES', 'OUTPUT', 'PDFDEST', 'CONFIGDEST') # values contain paths and can contain placeholders; some of them are optional
       # -- resolve placeholder and normalize paths
       for sConfigKey in tupleFurtherConfigKeys:
          sPackageDocValue = self.__dictPackageDocConfig[sConfigKey]
@@ -471,6 +478,7 @@ Get values fom command linwe and add them to GenPackageDoc configuration. Alread
       # -- configuration parameter, that can be overwritten in command line (where it makes sense)
       oCmdLineParser.add_argument('--output', type=str, help='Path and name of folder containing all output files.')
       oCmdLineParser.add_argument('--pdfdest', type=str, help='Path and name of folder in which the generated PDF file will be copied to.')
+      oCmdLineParser.add_argument('--configdest', type=str, help='Path and name of folder in which the configuration files will be copied to.')
       oCmdLineParser.add_argument('--strict', help='If True, a missing LaTeX compiler aborts the process, otherwise the process continues.')
 
       oCmdLineArgs = oCmdLineParser.parse_args()
@@ -498,6 +506,18 @@ Get values fom command linwe and add them to GenPackageDoc configuration. Alread
             PDFDEST = CString.NormalizePath(sPath=PDFDEST, sReferencePathAbs=sReferencePathAbs)
             self.__dictPackageDocConfig['PDFDEST'] = PDFDEST
             print(COLNY + f"<'PDFDEST' redirected to '{PDFDEST}'>\n")
+
+      CONFIGDEST = None
+      if oCmdLineArgs.configdest != None:
+         CONFIGDEST = oCmdLineArgs.configdest
+         if CONFIGDEST == "":
+            bSuccess = False
+            sResult  = "Empty command line argument: -configdest."
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+         else:
+            CONFIGDEST = CString.NormalizePath(sPath=CONFIGDEST, sReferencePathAbs=sReferencePathAbs)
+            self.__dictPackageDocConfig['CONFIGDEST'] = CONFIGDEST
+            print(COLNY + f"<'CONFIGDEST' redirected to '{CONFIGDEST}'>\n")
 
       STRICT = None
       if oCmdLineArgs.strict != None:

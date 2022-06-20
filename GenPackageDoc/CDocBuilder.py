@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.06.2022
+# 20.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -410,7 +410,6 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- debug
       sCmdLine = " ".join(listCmdLineParts)
-      print()
       print("Now executing command line:\n" + sCmdLine)
       print()
 
@@ -448,7 +447,7 @@ The meaning of clean is: *delete*, followed by *create*.
             bSuccess, sResult = oPDFFile.CopyTo(sDestinationPDFFile, bOverwrite=True)
             del oPDFFile
             if bSuccess is True:
-               # replacement for sResult without debug info
+               # replacement for sResult with line breaks
                sResult = f"File '{sPDFFileExpected}'\ncopied to\n{sDestinationPDFFile}"
             else:
                sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
@@ -769,6 +768,7 @@ The meaning of clean is: *delete*, followed by *create*.
          # eof else - if sDocumentPart.startswith("INTERFACE"):
       # eof for sDocumentPart in listDocumentParts:
 
+      print()
 
       # -- finally create the main TeX file and the PDF
       sStylesFolder = self.__dictPackageDocConfig['LATEXSTYLESFOLDER']
@@ -825,11 +825,13 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- 3. Dump the complete configuration
       sOutputFolder = self.__dictPackageDocConfig['OUTPUT']
+      sPackageName  = self.__dictPackageDocConfig['PACKAGENAME']
 
       # -- 3.a text format
-      sDumpConfigFile = f"{sOutputFolder}/_CONFIG.txt"
+      sDumpConfigFileNameTxt = f"_CONFIG_{sPackageName}.txt"
+      sDumpConfigFileTxt = f"{sOutputFolder}/{sDumpConfigFileNameTxt}"
       try:
-         hDumpConfigFile = open(sDumpConfigFile, "w", encoding="utf-8")
+         hDumpConfigFile = open(sDumpConfigFileTxt, "w", encoding="utf-8")
          PrettyPrint(self.__dictPackageDocConfig, hDumpConfigFile, bToConsole=False, sPrefix=None)
          hDumpConfigFile.close()
          del hDumpConfigFile
@@ -839,9 +841,10 @@ The meaning of clean is: *delete*, followed by *create*.
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
       # -- 3.b json format
-      sDumpConfigFile = f"{sOutputFolder}/_CONFIG.json"
+      sDumpConfigFileNameJson = f"_CONFIG_{sPackageName}.json"
+      sDumpConfigFileJson = f"{sOutputFolder}/{sDumpConfigFileNameJson}"
       try:
-         hDumpConfigFile = open(sDumpConfigFile, "w", encoding="utf-8")
+         hDumpConfigFile = open(sDumpConfigFileJson, "w", encoding="utf-8")
          json.dump(self.__dictPackageDocConfig, hDumpConfigFile)
          hDumpConfigFile.close()
          del hDumpConfigFile
@@ -849,6 +852,30 @@ The meaning of clean is: *delete*, followed by *create*.
          bSuccess = None
          sResult  = str(reason)
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+      # -- make a backup of the configuration (if configured)
+      sConfigDestFolder = self.__dictPackageDocConfig['CONFIGDEST']
+      if sConfigDestFolder is not None:
+         sDumpConfigFileTxtDest = f"{sConfigDestFolder}/{sDumpConfigFileNameTxt}"
+         oDumpConfigFileTxt = CFile(sDumpConfigFileTxt)
+         bSuccess, sResult = oDumpConfigFileTxt.CopyTo(sDumpConfigFileTxtDest, bOverwrite=True)
+         del oDumpConfigFileTxt
+         if bSuccess is not True:
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+         else:
+            sResult = f"File '{sDumpConfigFileTxt}'\ncopied to\n'{sDumpConfigFileTxtDest}'"
+            print(COLBY + sResult)
+            print()
+         sDumpConfigFileJsonDest = f"{sConfigDestFolder}/{sDumpConfigFileNameJson}"
+         oDumpConfigFileJson = CFile(sDumpConfigFileJson)
+         bSuccess, sResult = oDumpConfigFileJson.CopyTo(sDumpConfigFileJsonDest, bOverwrite=True)
+         del oDumpConfigFileJson
+         if bSuccess is not True:
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+         else:
+            sResult = f"File '{sDumpConfigFileJson}'\ncopied to\n'{sDumpConfigFileJsonDest}'"
+            print(COLBY + sResult)
+            print()
 
       # 4. PDF file
       bSuccess, sResult = self.__GenDocPDF()

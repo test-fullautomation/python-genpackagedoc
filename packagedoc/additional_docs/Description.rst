@@ -136,6 +136,14 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
   then you get this file at another location - but this file will not be part of the installation any more. Installed will be the version,
   that is still present within the package folder of the repository. Please try to get the bottom of your motivation when you change this setting.
 
+``--configdest``
+
+  Path and name of folder in which a dump of the current configuration will be copied to.
+
+  The configuration dump is part of the build output (section 'OUTPUT') and available in txt and in json format.
+  It might be useful for further processes to have access to all details regarding the current
+  documentation build.
+
 --strict
 
   If ``True``, a missing LaTeX compiler aborts the process, otherwise the process continues.
@@ -144,9 +152,10 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
 
 .. Code::python
 
-   genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other" --strict=True
+   genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other/location" --configdest="../any/other/location" --strict=True
 
-All listed parameters are optional. GenPackageDoc creates the complete output path (recursively). The PDF destinatiopn path is expected to be existing already.
+All listed parameters are optional. GenPackageDoc creates the complete output path (``--output``) recursively. Other destination folder
+(``--pdfdest`` and ``--configdest``) have to exist already.
 
 //
 
