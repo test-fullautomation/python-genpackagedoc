@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 24.05.2022
+# 01.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -115,6 +115,7 @@ Defines the header of the main tex file.
 \usepackage{pandoc}
 \usepackage{robotframework}
 
+\emergencystretch 3em
 
 % some table layout adaptions
 \setlength{\arrayrulewidth}{0.3mm}

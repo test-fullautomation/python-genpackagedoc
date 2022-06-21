@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 09.05.2022
+# 16.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -96,9 +96,19 @@ The method ``ParseSourceFile`` parses the content of a Python module.
   The result of the computation of the method ``sMethod``.
       """
 
-      sMethod = "ParseSourceFile"
+      sMethod = "CSourceParser.ParseSourceFile"
 
-      # error of sFile is None or does not exist
+      dictContent = {}
+
+      if sFile is None:
+         bSuccess = None
+         sResult  = "sFile is None"
+         return dictContent, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+      if os.path.isfile(sFile) is False:
+         bSuccess = False
+         sResult  = f"File '{sFile}' does not exist"
+         return dictContent, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
       oSourceFile = CFile(sFile)
       listLines, bSuccess, sResult = oSourceFile.ReadLines()
@@ -107,12 +117,9 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
       astModule = ast.parse(sContent)
 
-      dictContent = {}
       listofdictFunctions = []
       listofdictClasses   = []
       sFileDescription    = None
-
-      # print(f"================= sMethod : {sMethod}")
 
       bIsFirstExpressionConstant = True
 
@@ -124,12 +131,10 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                if isinstance(oExpression, ast.Constant):
                   bIsFirstExpressionConstant = False
                   sFileDescription = oExpression.value
-                  # print(f"==================== sFileDescription : '{sFileDescription}'")
 
          if isinstance(node, ast.FunctionDef):
             sFunctionName = f"{node.name}"
             sFunctionDocString = ast.get_docstring(node)
-            # print(f"* function : '{sFunctionName}'")
             bTakeIt = True
             if bIncludePrivate is False:
                if sFunctionName.startswith('_'):
@@ -153,7 +158,6 @@ The method ``ParseSourceFile`` parses the content of a Python module.
             # is class => bIncludeUndocumented has no relevance
             sClassName = f"{node.name}"
             sClassDocString = ast.get_docstring(node)
-            # print(f"* class : '{sClassName}'")
             dictClass = {}
             dictClass['sClassName'] = sClassName
             dictClass['sClassDocString'] = sClassDocString
@@ -164,7 +168,6 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                if isinstance(subnode, ast.FunctionDef):
                   sMethodName = f"{subnode.name}"
                   sMethodDocString = ast.get_docstring(subnode)
-                  # print(f"* method : '{sMethodName}'")
                   bTakeIt = True
                   if bIncludePrivate is False:
                      if sMethodName.startswith('_'):
@@ -202,7 +205,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
       bSuccess = True
       sResult  = "Done"
 
-      return dictContent, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+      return dictContent, bSuccess, sResult
 
    # eof def ParseSourceFile(self, sFile=None, bIncludePrivate=False, bIncludeUndocumented=True):
 

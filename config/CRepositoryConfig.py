@@ -29,7 +29,7 @@
 # 
 # --------------------------------------------------------------------------------------------------------------
 #
-# 24.05.2022
+# 01.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -39,8 +39,8 @@ import pypandoc
 
 from PythonExtensionsCollection.String.CString import CString
 
-from GenPackageDoc.version import VERSION # ! here wee need the package name hard coded !
-from GenPackageDoc.version import DATE    # ! here wee need the package name hard coded !
+from GenPackageDoc.version import VERSION      # ! here wee need the package name hard coded !
+from GenPackageDoc.version import VERSION_DATE # ! here wee need the package name hard coded !
 
 col.init(autoreset=True)
 COLBR = col.Style.BRIGHT + col.Fore.RED
@@ -72,18 +72,19 @@ class CRepositoryConfig():
         self.__dictRepositoryConfig = json.load(hRepositoryConfigurationFile)
         hRepositoryConfigurationFile.close()
 
-        # make absolute path to package documentation
-        self.__dictRepositoryConfig['PACKAGEDOC'] = CString.NormalizePath(f"{self.__sReferencePath}/{self.__dictRepositoryConfig['PACKAGEDOC']}")
-
-        # add version and date of the package this repository configuration belongs to
-        self.__dictRepositoryConfig['PACKAGEVERSION'] = VERSION
-        self.__dictRepositoryConfig['PACKAGEDATE']    = DATE
-
         # add further infos
         # (to have the possibility to print out all values with help of 'PrintConfig()')
         self.__dictRepositoryConfig['CALLEDBY']                    = sCalledBy
+        self.__dictRepositoryConfig['CWD']                         = os.getcwd()
         self.__dictRepositoryConfig['REFERENCEPATH']               = self.__sReferencePath
         self.__dictRepositoryConfig['REPOSITORYCONFIGURATIONFILE'] = sRepositoryConfigurationFile
+
+        # add version and date of the package this repository configuration belongs to
+        self.__dictRepositoryConfig['PACKAGEVERSION'] = VERSION
+        self.__dictRepositoryConfig['PACKAGEDATE']    = VERSION_DATE
+
+        # make absolute path to package documentation
+        self.__dictRepositoryConfig['PACKAGEDOC'] = CString.NormalizePath(sPath=self.__dictRepositoryConfig['PACKAGEDOC'], sReferencePathAbs=self.__sReferencePath)
 
         # compute dynamic configuration values
         bSuccess, sResult = self.__InitConfig()
@@ -108,7 +109,8 @@ class CRepositoryConfig():
         sInstalledPackageFolder = None
 
         try:
-            self.__dictRepositoryConfig['PANDOC'] = CString.NormalizePath(pypandoc.get_pandoc_path())
+            # try to access pandoc; if not installed we detect this already here as early as possible
+            pypandoc.get_pandoc_path()
         except Exception as ex:
             bSuccess = False
             sResult  = str(ex)
@@ -138,7 +140,7 @@ class CRepositoryConfig():
         self.__dictRepositoryConfig['README_MD']  = CString.NormalizePath(f"{self.__sReferencePath}/README.md")
 
         # The following key doesn't matter in case of the documentation builder itself is using this CRepositoryConfig.
-        # But if the documentation builder is called by other apps like setup_ext.py, they need to know where to find.
+        # But if the documentation builder is called by other apps like setup.py, they need to know where to find.
         self.__dictRepositoryConfig['DOCUMENTATIONBUILDER'] = CString.NormalizePath(f"{self.__sReferencePath}/genpackagedoc.py")
 
         # - folder containing the package source files (will also contain the PDF documentation)

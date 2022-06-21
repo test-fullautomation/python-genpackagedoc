@@ -35,7 +35,9 @@
 
   Currently the configuration parameter for the documentation build proccess are taken from a json file ``packagedoc_config.json``./
   It might be helpful to have the possibility to overwrite them in command line (e.g. for redirecting the path to the output folder
-  without changing any code). 
+  without changing any code).
+
+  31.05.2022: Implemented in v. 0.15.0
 
 * [06]
 
@@ -48,6 +50,8 @@
   The documentation build process allows relative paths only/
   (in ``packagedoc_config.json``)./
   Maybe a mechanism is useful to allow absolute paths and paths based on environment variables also.
+
+  01.06.2022: implemented in v. 0.16.0
 
 * [08]
 
@@ -89,6 +93,8 @@
 * [13]
 
   The error handling needs to be extended!
+
+  17.06.2022: Implemented in version 0.17.0
 
 * [14]
 

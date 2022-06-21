@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 31.05.2022
+# 20.06.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -73,6 +73,7 @@
 # In second case the key name has to be encapsulated within three hashes '#'. The same notation can be used in rst files and doctrings
 # of Python modules (for example adding an additional hint within a doctring of a class: ###additional_hint###).
 # This mechanism is limited to strings!
+# This key is optional. In case of own parameters are not needed, this key can be removed or set to null.
 
    "PARAMS" : {
                  "additional_hint" : "An additional hint is given ###NOW###",
@@ -99,6 +100,8 @@
 # Additional rst files may import pictures. GenPackageDoc needs to know where to find them.
 # To keep the relative paths to possibly imported pictures valid also within the created tex files,
 # this pictures folder will be copied into the output folder defined by key "OUTPUT".
+# This key is optional. In case of there are no pictures needed in this package description,
+# this key can be removed or set to null.
 
    "PICTURES" : "./additional_docs/pictures",
 
@@ -112,8 +115,21 @@
 # -----------------
 # Defines the path to a folder in which the PDF file will be copied after creation
 # (the "OUTPUT" folder in which the LaTeX compiler creates the PDF file, is not really a proper destination finally)
+# This key is optional. In case of it is not required to copy the PDF file to another location,
+# this key can be removed or set to null.
 
    "PDFDEST" : "../###PACKAGENAME###",
+
+# Section "CONFIGDEST":
+# -----------------
+# Defines the path to a folder in which a dump of the current configuration will be copied to.
+# The configuration dump is part of the build output (section 'OUTPUT') and available in txt and in json format.
+# It might be useful for further processes to have access to all details regarding the current
+# documentation build.
+# This key is optional. In case of it is not required to have the configuration dump saved
+# this key can be removed or set to null.
+
+   "CONFIGDEST" : null,
 
 # Section "TEX":
 # -----------------
@@ -121,7 +137,6 @@
 # GenPackageDoc needs to know where to find LaTeX. Because the path to the LaTeX interpreter depends
 # on the operating system, this path has to be defined separately for every supported operating system
 # (currently "WINDOWS" and "LINUX").
-# In opposite to the previous statement these paths have to be absolute (recommended: usage of environment variables).
 # Example:
 
    "TEX" : {
