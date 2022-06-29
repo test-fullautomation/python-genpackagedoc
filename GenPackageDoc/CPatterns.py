@@ -153,6 +153,7 @@ Defines the header of the main tex file.
 \hypersetup{pageanchor=true}
 
       """
+      sTitle  = sTitle.replace('_', r'\_') # LaTeX requires this masking
       sReturn = sHeader.replace('###TITLE###',   sTitle)
       sReturn = sReturn.replace('###VERSION###', sVersion)
       sReturn = sReturn.replace('###AUTHOR###',  sAuthor)

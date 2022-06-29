@@ -809,10 +809,11 @@ The meaning of clean is: *delete*, followed by *create*.
          oMainTexFile.Write(sChapter)
 
       # -- add creation date to main TeX file
+      sPDFFileName_masked = sPDFFileName.replace('_', r'\_') # LaTeX requires this masking
       oMainTexFile.Write(r"\vfill")
       oMainTexFile.Write(r"\begin{center}")
       oMainTexFile.Write(r"\begin{tabular}{m{16em}}\hline")
-      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textbf{" + f"{sPDFFileName}" + r"}}\\")
+      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textbf{" + f"{sPDFFileName_masked}" + r"}}\\")
       oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{Created at " + self.__dictPackageDocConfig['NOW'] + r"}}\\")
       oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{by GenPackageDoc v. " + VERSION + r"}}\\ \hline")
       oMainTexFile.Write(r"\end{tabular}")
