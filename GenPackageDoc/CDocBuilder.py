@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 20.06.2022
+# 29.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -772,7 +772,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- finally create the main TeX file and the PDF
       sStylesFolder = self.__dictPackageDocConfig['LATEXSTYLESFOLDER']
-      tupleStyleFileNames = ("admonitions.sty","robotframework.sty","pandoc.sty") # TODO: maybe later something like 'CopyFiles(*.sty)'
+      tupleStyleFileNames = ("admonitions.sty","robotframeworkaio.sty","pandoc.sty") # TODO: maybe later something like 'CopyFiles(*.sty)'
       for sStyleFileName in tupleStyleFileNames:
          sStyleFile = f"{sStylesFolder}/{sStyleFileName}"
          if os.path.isfile(sStyleFile) is False:
