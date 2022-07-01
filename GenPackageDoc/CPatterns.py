@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 01.06.2022
+# 29.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -113,7 +113,7 @@ Defines the header of the main tex file.
 
 \usepackage{admonitions}
 \usepackage{pandoc}
-\usepackage{robotframework}
+\usepackage{robotframeworkaio}
 
 \emergencystretch 3em
 
@@ -153,6 +153,7 @@ Defines the header of the main tex file.
 \hypersetup{pageanchor=true}
 
       """
+      sTitle  = sTitle.replace('_', r'\_') # LaTeX requires this masking
       sReturn = sHeader.replace('###TITLE###',   sTitle)
       sReturn = sReturn.replace('###VERSION###', sVersion)
       sReturn = sReturn.replace('###AUTHOR###',  sAuthor)

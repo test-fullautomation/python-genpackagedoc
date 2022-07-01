@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 20.06.2022
+# 29.06.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -772,7 +772,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- finally create the main TeX file and the PDF
       sStylesFolder = self.__dictPackageDocConfig['LATEXSTYLESFOLDER']
-      tupleStyleFileNames = ("admonitions.sty","robotframework.sty","pandoc.sty") # TODO: maybe later something like 'CopyFiles(*.sty)'
+      tupleStyleFileNames = ("admonitions.sty","robotframeworkaio.sty","pandoc.sty") # TODO: maybe later something like 'CopyFiles(*.sty)'
       for sStyleFileName in tupleStyleFileNames:
          sStyleFile = f"{sStylesFolder}/{sStyleFileName}"
          if os.path.isfile(sStyleFile) is False:
@@ -809,10 +809,11 @@ The meaning of clean is: *delete*, followed by *create*.
          oMainTexFile.Write(sChapter)
 
       # -- add creation date to main TeX file
+      sPDFFileName_masked = sPDFFileName.replace('_', r'\_') # LaTeX requires this masking
       oMainTexFile.Write(r"\vfill")
       oMainTexFile.Write(r"\begin{center}")
       oMainTexFile.Write(r"\begin{tabular}{m{16em}}\hline")
-      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textbf{" + f"{sPDFFileName}" + r"}}\\")
+      oMainTexFile.Write(r"   \multicolumn{1}{c}{\textbf{" + f"{sPDFFileName_masked}" + r"}}\\")
       oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{Created at " + self.__dictPackageDocConfig['NOW'] + r"}}\\")
       oMainTexFile.Write(r"   \multicolumn{1}{c}{\textit{by GenPackageDoc v. " + VERSION + r"}}\\ \hline")
       oMainTexFile.Write(r"\end{tabular}")
