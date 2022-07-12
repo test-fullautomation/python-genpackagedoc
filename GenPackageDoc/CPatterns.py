@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 29.06.2022
+# 12.07.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -84,49 +84,14 @@ Defines the header of the main tex file.
       sHeader = r"""
 \documentclass[a4paper,10pt]{report}
 
-% \usepackage[left=2.5cm, right=2.5cm, top=2cm, bottom=2cm]{geometry}
-\usepackage[textheight=700pt, textwidth=460pt]{geometry}
+% --------------------------------------------------------------------------------------------------------------
+% preamble
+% --------------------------------------------------------------------------------------------------------------
 
-\pagestyle{headings} % Footer is blank, header displays information according to document class (e.g., section name) and page number top right. 
+\input{preamble}
 
-
-\usepackage[bookmarksopen, bookmarksnumbered, bookmarksdepth=3]{hyperref}
-\hypersetup{
-    colorlinks,
-    citecolor=blue,
-    filecolor=blue,
-    linkcolor=blue,
-    urlcolor=blue,
-    final=true
-}
-\usepackage{graphicx}
-\usepackage{longtable}
-\usepackage{multirow}
-\usepackage{array}
-\usepackage{booktabs}
-\usepackage{framed}
-\usepackage{fvextra}
-\usepackage{courier}
-\usepackage{amssymb}
-\usepackage{xcolor}
-
-
-\usepackage{admonitions}
-\usepackage{pandoc}
-\usepackage{robotframeworkaio}
-
-\emergencystretch 3em
-
-% some table layout adaptions
-\setlength{\arrayrulewidth}{0.3mm}
-\setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.3}
-
-% further individual adaptions
-
-\setlength{\parindent}{0em}
-\setlength{\parskip}{1ex}
-
+% --------------------------------------------------------------------------------------------------------------
+% title
 % --------------------------------------------------------------------------------------------------------------
 
 \title{\textbf{###TITLE###}\\
@@ -136,6 +101,10 @@ Defines the header of the main tex file.
 \author{###AUTHOR###}
 
 \date{###DATE###}
+
+% --------------------------------------------------------------------------------------------------------------
+% document
+% --------------------------------------------------------------------------------------------------------------
 
 \begin{document}
 
