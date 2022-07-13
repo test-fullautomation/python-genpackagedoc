@@ -20,10 +20,9 @@
 %
 % Common preamble for tex files (used for both: GenPackageDoc and GenMainDoc)
 %
-% 12.07.2022
+% 13.07.2022
 %
 % --------------------------------------------------------------------------------------------------------------
-
 
 % \usepackage[left=2.5cm, right=2.5cm, top=2cm, bottom=2cm]{geometry}
 \usepackage[textheight=700pt, textwidth=460pt]{geometry}
@@ -51,10 +50,15 @@
 \usepackage{amssymb}
 \usepackage{xcolor}
 
+\usepackage{efbox}
 
-\usepackage{admonitions}
-\usepackage{pandoc}
-\usepackage{robotframeworkaio}
+%provide \includepdf and allow multidots in filenames
+\usepackage{grffile}
+\usepackage{pdfpages}
+
+\usepackage{styles/admonitions}
+\usepackage{styles/pandoc}
+\usepackage{styles/robotframeworkaio}
 
 \emergencystretch 3em
 
