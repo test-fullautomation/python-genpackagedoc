@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 29.06.2022
+# 13.07.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -40,6 +40,7 @@ from GenPackageDoc.version import VERSION
 
 from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
+from PythonExtensionsCollection.Folder.CFolder import CFolder
 from PythonExtensionsCollection.Utils.CUtils import *
 
 col.init(autoreset=True)
@@ -301,13 +302,13 @@ The meaning of clean is: *delete*, followed by *create*.
       bSuccess = None
       sResult  = None
 
-      sBuildDir = self.__dictPackageDocConfig['OUTPUT']
+      sBuildFolder = self.__dictPackageDocConfig['OUTPUT']
 
-      if os.path.isdir(sBuildDir) is True:
-         print(f"* Deleting folder '{sBuildDir}'")
+      if os.path.isdir(sBuildFolder) is True:
+         print(f"* Deleting folder '{sBuildFolder}'")
          print()
          try:
-            shutil.rmtree(sBuildDir)
+            shutil.rmtree(sBuildFolder)
             pass
          except Exception as ex:
             bSuccess = None
@@ -315,14 +316,14 @@ The meaning of clean is: *delete*, followed by *create*.
             return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
       try:
-         os.makedirs(sBuildDir)
+         os.makedirs(sBuildFolder)
       except Exception as ex:
          bSuccess = None
          sResult  = str(ex)
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
       bSuccess = True
-      sResult  = f"Build folder '{sBuildDir}' cleaned"
+      sResult  = f"Build folder '{sBuildFolder}' cleaned"
 
       return bSuccess, sResult
 
@@ -397,7 +398,7 @@ The meaning of clean is: *delete*, followed by *create*.
             sResult  = f"Generating the documentation in PDF format not possible because of missing LaTeX compiler ('non strict' mode)!"
          return bSuccess, sResult
 
-      sBuildDir = self.__dictPackageDocConfig['OUTPUT']
+      sBuildFolder = self.__dictPackageDocConfig['OUTPUT']
       sMainTexFile = self.__dictPackageDocConfig['sMainTexFile']
 
       listCmdLineParts = []
@@ -417,7 +418,7 @@ The meaning of clean is: *delete*, followed by *create*.
          cwd = os.getcwd() # we have to save cwd because later we have to change
          nReturn = ERROR
          try:
-            os.chdir(sBuildDir) # otherwise LaTeX compiler is not able to find files inside
+            os.chdir(sBuildFolder) # otherwise LaTeX compiler is not able to find files inside
             nReturn = subprocess.call(listCmdLineParts)
             print()
             print(f"LaTeX compiler returned {nReturn}")
@@ -494,7 +495,7 @@ The meaning of clean is: *delete*, followed by *create*.
       if bSuccess is not True:
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-      sBuildDir = self.__dictPackageDocConfig['OUTPUT']
+      sBuildFolder = self.__dictPackageDocConfig['OUTPUT']
 
       oSourceParser = CSourceParser()
 
@@ -559,7 +560,7 @@ The meaning of clean is: *delete*, followed by *create*.
                sModuleTeXFileName = sModuleTeXFileName.replace('.', '_')
                sModuleTeXFileName = sModuleTeXFileName.replace('/', '_')
                sModuleTeXFileName = f"{sModuleTeXFileName}.tex"
-               sModuleTeXFile = f"{sBuildDir}/{sModuleTeXFileName}"
+               sModuleTeXFile = f"{sBuildFolder}/{sModuleTeXFileName}"
 
                sSourceFilesRootFolderName = os.path.basename(sRootPath)
                sPythonModuleImport = ""
@@ -656,7 +657,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
                # debug only; sRSTCodeFile not really required
                sRSTCodeFileName = os.path.basename(sModule) + ".rst"
-               sRSTCodeFile = f"{sBuildDir}/{sRSTCodeFileName}"
+               sRSTCodeFile = f"{sBuildFolder}/{sRSTCodeFileName}"
                oRSTCodeFile = CFile(sRSTCodeFile)
                oRSTCodeFile.Write(sRSTCode)
                del oRSTCodeFile
@@ -709,7 +710,7 @@ The meaning of clean is: *delete*, followed by *create*.
                del oRSTFile
                sChaptername = sRSTFileNameOnly
                sRSTFileNameOnly = sRSTFileNameOnly.replace(" ", "_")
-               sTeXFile = f"{sBuildDir}/{sRSTFileNameOnly}.tex"
+               sTeXFile = f"{sBuildFolder}/{sRSTFileNameOnly}.tex"
 
                listLinesResolved, bSuccess, sResult = self.__ResolvePlaceholders(listLinesRST)
                if bSuccess is not True:
@@ -756,7 +757,7 @@ The meaning of clean is: *delete*, followed by *create*.
                sTEXFileNameOnly = dTEXFileInfo['sFileNameOnly']
                sChaptername = sTEXFileNameOnly
                sTEXFileNameOnly = sTEXFileNameOnly.replace(" ", "_")
-               sDestTeXFile = f"{sBuildDir}/{sTEXFileNameOnly}.tex"
+               sDestTeXFile = f"{sBuildFolder}/{sTEXFileNameOnly}.tex"
                bSucces, sResult = oTEXFile.CopyTo(sDestTeXFile, bOverwrite=True)
                if bSuccess is not True:
                   return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
@@ -772,29 +773,21 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- finally create the main TeX file and the PDF
       sStylesFolder = self.__dictPackageDocConfig['LATEXSTYLESFOLDER']
-      tupleStyleFileNames = ("admonitions.sty","robotframeworkaio.sty","pandoc.sty") # TODO: maybe later something like 'CopyFiles(*.sty)'
-      for sStyleFileName in tupleStyleFileNames:
-         sStyleFile = f"{sStylesFolder}/{sStyleFileName}"
-         if os.path.isfile(sStyleFile) is False:
-            bSuccess = False
-            sResult  = f"Missing LaTeX stylesheet '{sStyleFile}'"
-            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
-         sStyleFile_dest = f"{sBuildDir}/{sStyleFileName}"
-         oStyleFile = CFile(sStyleFile)
-         bSuccess, sResult = oStyleFile.CopyTo(sStyleFile_dest)
-         if bSuccess is not True:
-            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+      oStylesFolder = CFolder(sStylesFolder)
+      bSuccess, sResult = oStylesFolder.CopyTo(sBuildFolder)
+      if bSuccess is not True:
+         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
       # 2. main tex file
       oPatterns = CPatterns()
       sDocumentationTeXFileName = self.__dictPackageDocConfig['DOCUMENT']['OUTPUTFILENAME']
-      sMainTexFile = f"{sBuildDir}/{sDocumentationTeXFileName}"
+      sMainTexFile = f"{sBuildFolder}/{sDocumentationTeXFileName}"
       self.__dictPackageDocConfig['sMainTexFile'] = sMainTexFile
       oMainTexFile = CFile(sMainTexFile)
       dMainTexFileInfo = oMainTexFile.GetFileInfo()
       sMainTexFileNameOnly = dMainTexFileInfo['sFileNameOnly']
       sPDFFileName = f"{sMainTexFileNameOnly}.pdf"
-      sPDFFileExpected = f"{sBuildDir}/{sPDFFileName}"
+      sPDFFileExpected = f"{sBuildFolder}/{sPDFFileName}"
       self.__dictPackageDocConfig['sPDFFileName']     = sPDFFileName # used later to copy the file to another location
       self.__dictPackageDocConfig['sPDFFileExpected'] = sPDFFileExpected # used later to verify the build
       sHeader = oPatterns.GetHeader(sTitle=self.__dictPackageDocConfig['DOCUMENT']['TITLE'],

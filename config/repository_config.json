@@ -14,6 +14,6 @@
    "INTENDEDAUDIENCE" : "Intended Audience :: Developers",
    "TOPIC" : "Topic :: Software Development",
    "INSTALLREQUIRES" : ["pypandoc","colorama"],
-   "PACKAGEDATA" : ["*.pdf","./styles/*.sty"],
+   "PACKAGEDATA" : ["*.pdf","./styles/*.sty","./styles/*.tex"],
    "PACKAGEDOC" : "./packagedoc"
 }
