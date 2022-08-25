@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 13.07.2022
+# 24.08.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -618,14 +618,18 @@ The meaning of clean is: *delete*, followed by *create*.
 
                   print(f"  > Class : '{sClassName}'")
 
+                  sPythonModuleImportFull = f"from {sPythonModuleImport} import {sClassName}"
+
                   sClassHeadline1 = f"Class: {sClassName}"
                   listLinesRST.append(sClassHeadline1)
                   sClassHeadline2 = len(sClassHeadline1)*"="
                   listLinesRST.append(sClassHeadline2)
                   listLinesRST.append("")
+                  listLinesRST.append("*Imported by*:")
+                  listLinesRST.append("")
                   listLinesRST.append(".. code::python")
                   listLinesRST.append("")
-                  listLinesRST.append(f"   {sPythonModuleImport}")
+                  listLinesRST.append(f"   {sPythonModuleImportFull}")
                   listLinesRST.append("")
                   if sClassDocString is not None:
                      listLinesRST.append(sClassDocString)
