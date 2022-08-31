@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 20.06.2022
+# 31.08.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -480,6 +480,7 @@ Get values fom command linwe and add them to GenPackageDoc configuration. Alread
       oCmdLineParser.add_argument('--pdfdest', type=str, help='Path and name of folder in which the generated PDF file will be copied to.')
       oCmdLineParser.add_argument('--configdest', type=str, help='Path and name of folder in which the configuration files will be copied to.')
       oCmdLineParser.add_argument('--strict', help='If True, a missing LaTeX compiler aborts the process, otherwise the process continues.')
+      oCmdLineParser.add_argument('--simulateonly', action='store_true', help='If True, the LaTeX compiler is switched off; a syntax check only remains in this case. Default: False')
 
       oCmdLineArgs = oCmdLineParser.parse_args()
 
@@ -528,6 +529,14 @@ Get values fom command linwe and add them to GenPackageDoc configuration. Alread
          elif ( (STRICT == "false") or (STRICT == "False") ):
             self.__dictPackageDocConfig['CONTROL']['STRICT'] = False
             print(COLNY + "<'STRICT' set to False>\n")
+
+      bSimulateOnly = False
+      if oCmdLineArgs.simulateonly is not None:
+         bSimulateOnly = oCmdLineArgs.simulateonly
+      self.__dictPackageDocConfig['bSimulateOnly'] = bSimulateOnly
+      if bSimulateOnly is True:
+         print(COLNY + "<running in simulation mode>\n")
+
 
       bSuccess = True
       sResult  = "Done"
