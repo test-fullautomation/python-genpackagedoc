@@ -162,6 +162,12 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
 
   If ``True``, a missing LaTeX compiler aborts the process, otherwise the process continues.
 
+--simulateonly
+
+  If ``True``, the LaTeX compiler is switched off. No new PDF output will be generated. Already existing PDF output will not be updated.
+  This is not handled as error and also not handled as warning. Only the source files will be parsed. This switch is useful
+  to do a pre check for possible syntax issues within the source files without spending time for rendering PDF files.
+
 **Example**
 
 .. Code::python

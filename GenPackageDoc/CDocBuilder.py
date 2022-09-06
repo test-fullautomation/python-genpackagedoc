@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 24.08.2022
+# 31.08.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -876,9 +876,19 @@ The meaning of clean is: *delete*, followed by *create*.
             print()
 
       # 4. PDF file
-      bSuccess, sResult = self.__GenDocPDF()
+      if self.__dictPackageDocConfig['bSimulateOnly'] is True:
+         print()
+         print(COLBY + "GenPackageDoc is running in simulation mode.")
+         print(COLBY + "Skipping call of LaTeX compiler. No new PDF output will be generated, already existing output will not be updated!")
+         print(COLBY + "! This is not handled as error and also not handled as warning !")
+         print()
+         bSuccess = True
+         sResult  = f"Generation of PDF output skipped because of simulation mode!"
+      else:
+         bSuccess, sResult = self.__GenDocPDF()
+
       if bSuccess is not True:
-         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+         sResult = CString.FormatResult(sMethod, bSuccess, sResult)
 
       return bSuccess, sResult
 
