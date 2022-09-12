@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 31.08.2022
+# 12.09.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -567,6 +567,7 @@ The meaning of clean is: *delete*, followed by *create*.
                if sModuleFileSubPath == "":
                   sPythonModuleImport = f"{sSourceFilesRootFolderName}.{sModuleFileNameOnly}"
                else:
+                  sModuleFileSubPath = sModuleFileSubPath.replace('/', '.')
                   sPythonModuleImport = f"{sSourceFilesRootFolderName}.{sModuleFileSubPath}.{sModuleFileNameOnly}"
 
                # -- get all informations out of the source file
