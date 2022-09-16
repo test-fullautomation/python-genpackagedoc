@@ -382,9 +382,3 @@ Syntax extensions
 
 These syntax extensions can currently be used in separate rst files only and are not available within docstrings of Python modules.
 
-
-Examples
---------
-
-*(to be continued)*
-

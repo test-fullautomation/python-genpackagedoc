@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 13.07.2022
+# 15.09.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -133,7 +133,7 @@ Defines the header of the main tex file.
 
    # --------------------------------------------------------------------------------------------------------------
 
-   def GetChapter(self, sHeadline="", sDocumentName=""):
+   def GetChapter(self, sHeadline="", sLabel="", sDocumentName=""):
       """
 Defines single chapter of the main tex file.
 
@@ -147,6 +147,12 @@ within a Python package.
   / *Condition*: required / *Type*: str /
 
   The chapter headline (that is either the name of an additional rst file or the name of a Python module).
+
+* ``sLabel``
+
+  / *Condition*: required / *Type*: str /
+
+  The chapter label (to enable linking to this chapter)
 
 * ``sDocumentName``
 
@@ -165,14 +171,15 @@ within a Python package.
       """
 
       sChapter = """
-\chapter{###HEADLINE###}
+\chapter{###HEADLINE###}\label{###LABEL###}
 \input{./###DOCUMENTNAME###}
       """
       sHeadline = sHeadline.replace('_', r'\_') # because '_' has special meaning in LaTeX
       sReturn = sChapter.replace('###HEADLINE###', sHeadline)
+      sReturn = sReturn.replace('###LABEL###', sLabel)
       sReturn = sReturn.replace('###DOCUMENTNAME###', sDocumentName)
       return sReturn
-   # eof def GetChapter(self, sHeadline="", sDocumentName=""):
+   # eof def GetChapter(self, sHeadline="", sLabel="", sDocumentName=""):
 
    # --------------------------------------------------------------------------------------------------------------
 

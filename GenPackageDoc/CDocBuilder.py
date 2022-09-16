@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 12.09.2022
+# 16.09.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -102,16 +102,34 @@ Constructor of class ``CDocBuilder``.
       sPattern_Name     = r"{(.+?)}"
       self.__regex_Name = re.compile(sPattern_Name)
 
-      # A Python module may contain more than one class. Every class contains a constructor and a destructor
-      # that have the same name in every class. In case of private methods are included this causes an
-      # "multiply-defined labels" warning (LaTeX). In case of several classes within the same module have methods
-      # with the same common name like "Run" or "Execute", this also causes "multiply-defined labels".
+      # Python modules may contain methods with same name in several classes. Also classes with same name in different Python modules
+      # are possible - but this really should be avoided!
+      # GenPackageDoc parses the content of Python modules. The outcome is that for every Python module GenPackageDoc creates a
+      # temporary rst file (because the content of the docstrings also has to be written in rst format).
+      # This rst file is converted to LaTeX format by Pandoc. To support linking Pandoc adds labels to every
+      # heading (that are the names of classes and methods). The names of the labels are the headings - this means: names of classes
+      # and methods are used as label. In case of the names of classes and methods are not unique over all files, also the labels will
+      # not be unique. The conversion from rst format to LaTeX format happens for every Python module separately (and therefore the scope is not known).
+      # At the end all LaTeX files are put together to one LaTeX file. Outcome: In case of ambiguous labels the LaTeX compiler throws a
+      # "multiply-defined labels" warning. Some effort in this code is necessary to avoid this.
+      #
       # A possibility to heal this is to add the name of the class to the label. But unfortunately when __PostprocessTEX()
       # is being executed, the class name is not available any more - and it would cause a lot of effort to add this name.
       # Therefore we prefer another solution that is quite simpler: We add a counter to every name. This makes sure,
       # that every name is unique (names of hypertargets and labels).
       self.__nCntNamesHypertarget = 0
       self.__nCntNamesLabel = 0
+      # !!! 16.09.2022 !!! This solution is obsolete now. Alternative solution currently under evaluation. !!!
+      # !!! bAddNameCounter is set to False in the complete code. !!!
+      # Current state:
+      # Methods with same name but in different files do not cause ambiguities because the full scope is added to the label by GenPackageDoc
+      # (therefore additional counter values are not needed in this case).
+      # Methods with same name but in different classes of the same file do also not cause ambiguities because in this case already Pandoc
+      # itself adds counter values to the labels of these methods to make them unique. Therefore the "multiply-defined labels" warning is not expected any more.
+      # The only negative impact is that the automated counting of labels is not really user friendly. The user needs to know the name of the
+      # label in case he wants to add a link to this labelled position anywhere within the LaTeX code. And when the label name changes also all
+      # links have to be adapted. This is not practicable.
+      # Better solution coming soon.
 
    def __del__(self):
       pass
@@ -225,6 +243,7 @@ The masking of newline, newpage and vspace (rst syntax extensions) are replaced 
          sNamePrefix_1 = sNamePrefix_1.replace(".","-")
          sNamePrefix_1 = sNamePrefix_1.replace(":","-")
          sNamePrefix_1 = sNamePrefix_1.replace(" ","-")
+         sNamePrefix_1 = sNamePrefix_1.replace("/","-")
          sNamePrefix_1 = sNamePrefix_1.lower()
 
       if sNamePrefix_2 is not None:
@@ -233,6 +252,7 @@ The masking of newline, newpage and vspace (rst syntax extensions) are replaced 
          sNamePrefix_2 = sNamePrefix_2.replace(".","-")
          sNamePrefix_2 = sNamePrefix_2.replace(":","-")
          sNamePrefix_2 = sNamePrefix_2.replace(" ","-")
+         sNamePrefix_2 = sNamePrefix_2.replace("/","-")
          sNamePrefix_2 = sNamePrefix_2.lower()
 
       listLinesProcessed = []
@@ -280,6 +300,7 @@ The masking of newline, newpage and vspace (rst syntax extensions) are replaced 
             if len(listNameNew) > 0:
                sName_new = "-".join(listNameNew)
                sLabel_new = sLabel.replace(sName, sName_new)
+               sLabel_new = sLabel_new.replace('_', '-')
                sTEXCode = sTEXCode.replace(sLabel, sLabel_new)
       # eof for sLabel in self.__regex_label.findall(sTEXCode):
 
@@ -676,7 +697,7 @@ The meaning of clean is: *delete*, followed by *create*.
                listLinesTEX = sTEX.splitlines() # ensure proper line endings
 
                # -- tex postprocessing (extended syntax and multiply-defined labels)
-               listLinesProcessed = self.__PostprocessTEX(listLinesTEX, sNamePrefix_1=sPythonModuleImport, bAddNameCounter=True)
+               listLinesProcessed = self.__PostprocessTEX(listLinesTEX, sNamePrefix_1=sPythonModuleImport, bAddNameCounter=False)  # True TM***
 
                sTEX = "\n".join(listLinesProcessed)
 
@@ -803,7 +824,11 @@ The meaning of clean is: *delete*, followed by *create*.
 
       # -- add modules to main TeX file
       for sHeadline, sTeXFileName in listoftuplesChaptersInfo:
-         sChapter = oPatterns.GetChapter(sHeadline=sHeadline, sDocumentName=sTeXFileName)
+         sLabel = sHeadline.lower()
+         sLabel = sLabel.replace(' ', '-')
+         sLabel = sLabel.replace('_', '-')
+         sLabel = sLabel.replace('.', '-')
+         sChapter = oPatterns.GetChapter(sHeadline=sHeadline, sLabel=sLabel, sDocumentName=sTeXFileName)
          oMainTexFile.Write(sChapter)
 
       # -- add creation date to main TeX file
