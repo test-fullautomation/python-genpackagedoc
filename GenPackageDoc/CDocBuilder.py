@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 16.09.2022
+# 19.09.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -91,48 +91,40 @@ Constructor of class ``CDocBuilder``.
       self.__dictPlaceholder['newpage'] = ("!N!E!W!P!A!G!E!")
       self.__dictPlaceholder['vspace']  = ("!V!S!P!A!C!E!")
 
-      # -- multiply-defined labels fix
-
-      self.__sPattern_hypertarget = r"(hypertarget{.+?})"
-      self.__regex_hypertarget    = re.compile(self.__sPattern_hypertarget)
-
-      self.__sPattern_label = r"(label{.+?})"
-      self.__regex_label    = re.compile(self.__sPattern_label)
-
-      sPattern_Name     = r"{(.+?)}"
-      self.__regex_Name = re.compile(sPattern_Name)
-
-      # Python modules may contain methods with same name in several classes. Also classes with same name in different Python modules
-      # are possible - but this really should be avoided!
-      # GenPackageDoc parses the content of Python modules. The outcome is that for every Python module GenPackageDoc creates a
-      # temporary rst file (because the content of the docstrings also has to be written in rst format).
+      # Python modules may contain methods with same name in several classes. Different Python modules may contain classes or functions
+      # with the same name. GenPackageDoc parses the content of Python modules. The outcome is that for every Python module GenPackageDoc
+      # creates a temporary rst file (because the content of the docstrings also has to be written in rst format).
       # This rst file is converted to LaTeX format by Pandoc. To support linking Pandoc adds labels to every
-      # heading (that are the names of classes and methods). The names of the labels are the headings - this means: names of classes
+      # heading (that are the names of classes and methods) automatically. The names of the labels are the headings - this means: names of classes
       # and methods are used as label. In case of the names of classes and methods are not unique over all files, also the labels will
-      # not be unique. The conversion from rst format to LaTeX format happens for every Python module separately (and therefore the scope is not known).
-      # At the end all LaTeX files are put together to one LaTeX file. Outcome: In case of ambiguous labels the LaTeX compiler throws a
-      # "multiply-defined labels" warning. Some effort in this code is necessary to avoid this.
+      # not be unique. The conversion from rst format to LaTeX format happens for every Python module separately (and therefore the scope
+      # is not known). At the end all LaTeX files are put together to one LaTeX file. Outcome: In case of ambiguous labels the LaTeX compiler
+      # throws a "multiply-defined labels" warning.
       #
-      # A possibility to heal this is to add the name of the class to the label. But unfortunately when __PostprocessTEX()
-      # is being executed, the class name is not available any more - and it would cause a lot of effort to add this name.
-      # Therefore we prefer another solution that is quite simpler: We add a counter to every name. This makes sure,
-      # that every name is unique (names of hypertargets and labels).
-      self.__nCntNamesHypertarget = 0
-      self.__nCntNamesLabel = 0
-      # !!! 16.09.2022 !!! This solution is obsolete now. Alternative solution currently under evaluation. !!!
-      # !!! bAddNameCounter is set to False in the complete code. !!!
-      # Current state:
-      # Methods with same name but in different files do not cause ambiguities because the full scope is added to the label by GenPackageDoc
-      # (therefore additional counter values are not needed in this case).
-      # Methods with same name but in different classes of the same file do also not cause ambiguities because in this case already Pandoc
-      # itself adds counter values to the labels of these methods to make them unique. Therefore the "multiply-defined labels" warning is not expected any more.
-      # The only negative impact is that the automated counting of labels is not really user friendly. The user needs to know the name of the
-      # label in case he wants to add a link to this labelled position anywhere within the LaTeX code. And when the label name changes also all
-      # links have to be adapted. This is not practicable.
-      # Better solution coming soon.
+      # To avoid these warnings every headline is replaced by a string containing the full scope (starting with the name of the package folder).
+      # This is written to the temporary rst file. Pandoc uses now these full scope strings for labels when converting the rst code into LaTeX code.
+      # Finally by __PostprocessRST within every 'section' and 'subsection' command in the LaTeX code the full scope string (that must be unique)
+      # is replaced by the original headline (that might be ambiguous). The full scope strings together with their original headlines are stored
+      # in 'self.__dictScopes'.
+
+      self.__dictScopes = {}
 
    def __del__(self):
       pass
+
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def __ConvertToScopeFormat(self, sString=""):
+      """Converts a string to 'scope' format.
+      """
+      sString = sString.replace(' ', '-')
+      sString = sString.replace('_', '-')
+      sString = sString.replace('.', '-')
+      sString = sString.replace('/', '-')
+      sString = sString.lower()
+      return sString
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
@@ -230,85 +222,40 @@ characters belonging to syntax of rst and LaTeX.
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
-   def __PostprocessTEX(self, listLinesTEX=[], sNamePrefix_1=None, sNamePrefix_2=None, bAddNameCounter=False):
-      """Postprocessing of TEX text. This covers e.g. the computation of syntax extensions.
-Also multiply-defined labels (erroneously generated by pandoc) are resolved.
+   def __PostprocessTEX(self, listLinesTEX=[]):
+      """Postprocessing of TEX text. This covers e.g. the computation of rst syntax extensions and also
+the recovery of the original headlines out of the intermediately used full scope strings.
 
 The masking of newline, newpage and vspace (rst syntax extensions) are replaced by the corresponding LaTeX commands.
       """
 
-      if sNamePrefix_1 is not None:
-         sNamePrefix_1 = f"{sNamePrefix_1}"
-         sNamePrefix_1 = sNamePrefix_1.replace("_","-")
-         sNamePrefix_1 = sNamePrefix_1.replace(".","-")
-         sNamePrefix_1 = sNamePrefix_1.replace(":","-")
-         sNamePrefix_1 = sNamePrefix_1.replace(" ","-")
-         sNamePrefix_1 = sNamePrefix_1.replace("/","-")
-         sNamePrefix_1 = sNamePrefix_1.lower()
-
-      if sNamePrefix_2 is not None:
-         sNamePrefix_2 = f"{sNamePrefix_2}"
-         sNamePrefix_2 = sNamePrefix_2.replace("_","-")
-         sNamePrefix_2 = sNamePrefix_2.replace(".","-")
-         sNamePrefix_2 = sNamePrefix_2.replace(":","-")
-         sNamePrefix_2 = sNamePrefix_2.replace(" ","-")
-         sNamePrefix_2 = sNamePrefix_2.replace("/","-")
-         sNamePrefix_2 = sNamePrefix_2.lower()
-
       listLinesProcessed = []
 
       for sLine in listLinesTEX:
+
+         # certain syntax extensions
          sLine = sLine.replace(self.__dictPlaceholder['vspace'], r"\vspace{1ex}")
          sLine = sLine.replace(self.__dictPlaceholder['newpage'], r"\newpage")
          sLine = sLine.replace(self.__dictPlaceholder['newline'], r"\newline")
+
+         # To handle ambiguous names of methods, classes and methods, the original names (= document headlines)
+         # are replaced by the full scopes. We will not run into trouble any more when Pandoc creates labels out of the headlines
+         # when converting the rst source code to LaTeX code.
+         # Here we have to undo this replacement: We replace the full scope string in every section and subsection by the original headline.
+
+         for sKey in self.__dictScopes:
+            # sKey is full scope string
+            # value of sKey is original headline
+            sSearch  = "section{" + sKey + "}" # this includes 'subsection'
+            sReplace = "section{" + self.__dictScopes[sKey] + "}"
+            sReplace = sReplace.replace('_', r'\_') # LaTeX requires this masking
+            sLine = sLine.replace(sSearch, sReplace)
+
          listLinesProcessed.append(sLine)
-
-      sTEXCode = "\n".join(listLinesProcessed)
-
-      for sHypertarget in self.__regex_hypertarget.findall(sTEXCode):
-         listNames = self.__regex_Name.findall(sHypertarget)
-         if len(listNames) == 1:
-            sName = f"{listNames[0]}"
-            listNameNew = []
-            if sNamePrefix_1 is not None:
-               listNameNew.append(sNamePrefix_1)
-            if sNamePrefix_2 is not None:
-               listNameNew.append(sNamePrefix_2)
-            listNameNew.append(sName)
-            if bAddNameCounter is True:
-               self.__nCntNamesHypertarget = self.__nCntNamesHypertarget + 1
-               listNameNew.append(f"{self.__nCntNamesHypertarget}")
-            if len(listNameNew) > 0:
-               sName_new        = "-".join(listNameNew)
-               sHypertarget_new = sHypertarget.replace(sName, sName_new)
-               sTEXCode         = sTEXCode.replace(sHypertarget, sHypertarget_new)
-      # eof for sHypertarget in self.__regex_hypertarget.findall(sCode):
-
-      for sLabel in self.__regex_label.findall(sTEXCode):
-         listNames = self.__regex_Name.findall(sLabel)
-         if len(listNames) == 1:
-            sName = f"{listNames[0]}"
-            listNameNew = []
-            if sNamePrefix_1 is not None:
-               listNameNew.append(sNamePrefix_1)
-            if sNamePrefix_2 is not None:
-               listNameNew.append(sNamePrefix_2)
-            listNameNew.append(sName)
-            if bAddNameCounter is True:
-               self.__nCntNamesLabel = self.__nCntNamesLabel + 1
-               listNameNew.append(f"{self.__nCntNamesLabel}")
-            if len(listNameNew) > 0:
-               sName_new = "-".join(listNameNew)
-               sLabel_new = sLabel.replace(sName, sName_new)
-               sLabel_new = sLabel_new.replace('_', '-')
-               sTEXCode = sTEXCode.replace(sLabel, sLabel_new)
-      # eof for sLabel in self.__regex_label.findall(sTEXCode):
-
-      listLinesProcessed = sTEXCode.splitlines()
 
       return listLinesProcessed
 
-   # eof def __PostprocessTEX(self, listLinesTEX=[], sNamePrefix_1=None, sNamePrefix_2=None, bAddNameCounter=False):
+   # eof def __PostprocessTEX(self, listLinesTEX=[]):
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
@@ -520,7 +467,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
       oSourceParser = CSourceParser()
 
-      listoftuplesChaptersInfo = [] # needed for TOC of main TeX file
+      listofdictChapterInfo = [] # needed for TOC of main TeX file
 
       # -- check existence of document parts and parse the content
 
@@ -548,6 +495,7 @@ The meaning of clean is: *delete*, followed by *create*.
          if sDocumentPart.startswith("INTERFACE"):
 
             sRootPath = sDocumentPartPath
+            sSourceFilesRootFolderName = os.path.basename(sRootPath) # should be the package name
 
             listModules, bSuccess, sResult = self.__GetModulesList(sRootPath)
             if bSuccess is not True:
@@ -568,22 +516,21 @@ The meaning of clean is: *delete*, followed by *create*.
                oModule = CFile(sModule)
                dModuleFileInfo = oModule.GetFileInfo()
                del oModule
-               sModuleFilePath = dModuleFileInfo['sFilePath']
+               sModuleFilePath     = dModuleFileInfo['sFilePath']
                sModuleFileNameOnly = dModuleFileInfo['sFileNameOnly']
-               sModuleFileSubPath = sModuleFilePath[len(sRootPath)+1:]
-               sModuleTeXFileName = ""
-               if sModuleFileSubPath == "":
-                  sModuleTeXFileName = f"{sModuleFileNameOnly}"
-               else:
-                  sModuleTeXFileName = f"{sModuleFileSubPath}_{sModuleFileNameOnly}"
-               sModuleTeXFileName = sModuleTeXFileName.replace(' ', '_')
-               sModuleTeXFileName = sModuleTeXFileName.replace('-', '_')
-               sModuleTeXFileName = sModuleTeXFileName.replace('.', '_')
-               sModuleTeXFileName = sModuleTeXFileName.replace('/', '_')
-               sModuleTeXFileName = f"{sModuleTeXFileName}.tex"
-               sModuleTeXFile = f"{sBuildFolder}/{sModuleTeXFileName}"
+               sModuleFileSubPath  = sModuleFilePath[len(sRootPath)+1:]
 
-               sSourceFilesRootFolderName = os.path.basename(sRootPath)
+               # -- prepare the scope of the module file (used for labels within LaTeX code and for the names of LaTeX files generated out of rst code)
+               sModuleFileScope = ""
+               if sModuleFileSubPath == "":
+                  sModuleFileScope = f"{sSourceFilesRootFolderName}-{sModuleFileNameOnly}"
+               else:
+                  sModuleFileScope = f"{sSourceFilesRootFolderName}-{sModuleFileSubPath}-{sModuleFileNameOnly}"
+               sModuleFileScope   = self.__ConvertToScopeFormat(sModuleFileScope)
+               sModuleTeXFileName = f"{sModuleFileScope}.tex"
+               sModuleTeXFile     = f"{sBuildFolder}/{sModuleTeXFileName}"
+
+               # -- prepare the import path of the module in Python 'import' notation
                sPythonModuleImport = ""
                if sModuleFileSubPath == "":
                   sPythonModuleImport = f"{sSourceFilesRootFolderName}.{sModuleFileNameOnly}"
@@ -615,15 +562,19 @@ The meaning of clean is: *delete*, followed by *create*.
                # -- rst content of all functions
 
                for dictFunction in listofdictFunctions:
-                  sFunctionName      = dictFunction['sFunctionName']
+                  sFunctionName  = dictFunction['sFunctionName']
+                  sFunctionScope = f"{sModuleFileScope}-{sFunctionName}"
+                  sFunctionScope = self.__ConvertToScopeFormat(sFunctionScope)
+                  sFunctionHeadline = f"Function: {sFunctionName}"
+                  self.__dictScopes[sFunctionScope] = sFunctionHeadline
+
                   sFunctionDocString = dictFunction['sFunctionDocString']
 
-                  print(f"    > Function : '{sFunctionName}'")
+                  print(f"    > Function : '{sFunctionName}' / scope: '{sFunctionScope}'")
 
-                  sFunctionHeadline1 = f"Function: {sFunctionName}"
-                  listLinesRST.append(sFunctionHeadline1)
-                  sFunctionHeadline2 = len(sFunctionHeadline1)*"="
-                  listLinesRST.append(sFunctionHeadline2)
+                  listLinesRST.append(sFunctionScope)
+                  sFunctionHeadlineUnderline = len(sFunctionScope)*"="
+                  listLinesRST.append(sFunctionHeadlineUnderline)
                   listLinesRST.append("")
                   if sFunctionDocString is not None:
                      listLinesRST.append(sFunctionDocString)
@@ -634,18 +585,25 @@ The meaning of clean is: *delete*, followed by *create*.
                # -- rst content of all classes and methods
 
                for dictClass in listofdictClasses:
-                  sClassName        = dictClass['sClassName']
+                  sClassName  = dictClass['sClassName']
+                  sClassScope = f"{sModuleFileScope}-{sClassName}"
+                  sClassScope = self.__ConvertToScopeFormat(sClassScope)
+                  sClassHeadline = f"Class: {sClassName}"
+                  self.__dictScopes[sClassScope] = sClassHeadline
+
                   sClassDocString   = dictClass['sClassDocString']
                   listofdictMethods = dictClass['listofdictMethods']
 
-                  print(f"  > Class : '{sClassName}'")
+                  print(f"  > Class : '{sClassName}' / scope: '{sClassScope}'")
+
+                  # tmp mapping
+                  sClassHeadline = sClassScope
 
                   sPythonModuleImportFull = f"from {sPythonModuleImport} import {sClassName}"
 
-                  sClassHeadline1 = f"Class: {sClassName}"
-                  listLinesRST.append(sClassHeadline1)
-                  sClassHeadline2 = len(sClassHeadline1)*"="
-                  listLinesRST.append(sClassHeadline2)
+                  listLinesRST.append(sClassHeadline)
+                  sClassHeadlineUnderline = len(sClassHeadline)*"="
+                  listLinesRST.append(sClassHeadlineUnderline)
                   listLinesRST.append("")
                   listLinesRST.append("*Imported by*:")
                   listLinesRST.append("")
@@ -659,14 +617,21 @@ The meaning of clean is: *delete*, followed by *create*.
 
                   for dictMethod in listofdictMethods:
                      sMethodName = dictMethod['sMethodName']
+                     sMethodScope = f"{sModuleFileScope}-{sClassName}-{sMethodName}"
+                     sMethodScope = self.__ConvertToScopeFormat(sMethodScope)
+                     sMethodHeadline = f"Method: {sMethodName}"
+                     self.__dictScopes[sMethodScope] = sMethodHeadline
+
                      sMethodDocString = dictMethod['sMethodDocString']
 
-                     print(f"    - Method : '{sMethodName}'")
+                     print(f"    - Method : '{sMethodName}' / scope: '{sMethodScope}'")
 
-                     sMethodHeadline1 = f"Method: {sMethodName}"
-                     listLinesRST.append(sMethodHeadline1)
-                     sMethodHeadline2 = len(sMethodHeadline1)*"-"
-                     listLinesRST.append(sMethodHeadline2)
+                     # tmp mapping
+                     sMethodHeadline = sMethodScope
+
+                     listLinesRST.append(sMethodHeadline)
+                     sMethodHeadlineUnderline = len(sMethodHeadline)*"-"
+                     listLinesRST.append(sMethodHeadlineUnderline)
                      listLinesRST.append("")
                      if sMethodDocString is not None:
                         listLinesRST.append(sMethodDocString)
@@ -697,7 +662,7 @@ The meaning of clean is: *delete*, followed by *create*.
                listLinesTEX = sTEX.splitlines() # ensure proper line endings
 
                # -- tex postprocessing (extended syntax and multiply-defined labels)
-               listLinesProcessed = self.__PostprocessTEX(listLinesTEX, sNamePrefix_1=sPythonModuleImport, bAddNameCounter=False)  # True TM***
+               listLinesProcessed = self.__PostprocessTEX(listLinesTEX)
 
                sTEX = "\n".join(listLinesProcessed)
 
@@ -712,8 +677,12 @@ The meaning of clean is: *delete*, followed by *create*.
                del oModuleTeXFile
 
                # -- save some infos needed for TOC of main TeX file
-               sModuleName = dModuleFileInfo['sFileName']
-               listoftuplesChaptersInfo.append((sModuleName, sModuleTeXFileName))
+               sFileName = dModuleFileInfo['sFileName']
+               dictChapterInfo ={}
+               dictChapterInfo['sChaptername'] = sFileName
+               dictChapterInfo['sTeXFileName'] = sModuleTeXFileName
+               dictChapterInfo['sLabel']       = sModuleFileScope
+               listofdictChapterInfo.append(dictChapterInfo)
 
             # eof for sModule in listModules:
 
@@ -755,7 +724,7 @@ The meaning of clean is: *delete*, followed by *create*.
                listLinesTEX = sTEX.splitlines() # ensure proper line endings
 
                # -- tex postprocessing (extended syntax and multiply-defined labels)
-               listLinesProcessed = self.__PostprocessTEX(listLinesTEX, sNamePrefix_1=sRSTFileNameOnly, bAddNameCounter=False)
+               listLinesProcessed = self.__PostprocessTEX(listLinesTEX)
 
                sTEX = "\n".join(listLinesProcessed)
 
@@ -770,7 +739,11 @@ The meaning of clean is: *delete*, followed by *create*.
                del oTeXFile
 
                # -- save some infos needed for TOC of main TeX file
-               listoftuplesChaptersInfo.append((sChaptername, f"{sRSTFileNameOnly}.tex"))
+               dictChapterInfo ={}
+               dictChapterInfo['sChaptername'] = sChaptername
+               dictChapterInfo['sTeXFileName'] = f"{sRSTFileNameOnly}.tex"
+               dictChapterInfo['sLabel']       = self.__ConvertToScopeFormat(f"{sRSTFileNameOnly}")
+               listofdictChapterInfo.append(dictChapterInfo)
 
             # eof if sDocumentPartPath.lower().endswith('rst'):
 
@@ -789,7 +762,11 @@ The meaning of clean is: *delete*, followed by *create*.
                   return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
                del oTEXFile
                # -- save some infos needed for TOC of main tex file
-               listoftuplesChaptersInfo.append((sChaptername, f"{sTEXFileNameOnly}.tex"))
+               dictChapterInfo ={}
+               dictChapterInfo['sChaptername'] = sChaptername
+               dictChapterInfo['sTeXFileName'] = f"{sTEXFileNameOnly}.tex"
+               dictChapterInfo['sLabel']       = self.__ConvertToScopeFormat(f"{sTEXFileNameOnly}")
+               listofdictChapterInfo.append(dictChapterInfo)
 
             # eof else - if sDocumentPartPath.lower().endswith('rst'):
          # eof else - if sDocumentPart.startswith("INTERFACE"):
@@ -823,12 +800,8 @@ The meaning of clean is: *delete*, followed by *create*.
       oMainTexFile.Write(sHeader)
 
       # -- add modules to main TeX file
-      for sHeadline, sTeXFileName in listoftuplesChaptersInfo:
-         sLabel = sHeadline.lower()
-         sLabel = sLabel.replace(' ', '-')
-         sLabel = sLabel.replace('_', '-')
-         sLabel = sLabel.replace('.', '-')
-         sChapter = oPatterns.GetChapter(sHeadline=sHeadline, sLabel=sLabel, sDocumentName=sTeXFileName)
+      for dictChapterInfo in listofdictChapterInfo:
+         sChapter = oPatterns.GetChapter(sHeadline=dictChapterInfo['sChaptername'], sLabel=dictChapterInfo['sLabel'], sDocumentName=dictChapterInfo['sTeXFileName'])
          oMainTexFile.Write(sChapter)
 
       # -- add creation date to main TeX file
