@@ -346,14 +346,27 @@ With this mechanism it is e.g. possible to give the output PDF document automati
 Syntax aspects
 ==============
 
+Common rules
+------------
+
 **Important to know about the syntax of Python and rst is:**
 
 * In both Python and rst the indentation of text is part of the syntax!
 * The indentation of the triple quotes indicating the beginning and the end of a docstring has to follow the Python syntax rules.
 * The indentation of the content of the docstring (= the interface description in rst format) has to follow the rst syntax rules.
-  To avoid a needless indentation of the text within the resulting PDF document it is recommended to start the docstring text
-  within the first column (or rather use the first column as reference for further indentations of rst text).
+  To avoid a needless indentation of the text within the resulting PDF document and to avoid further unwanted side effects caused by
+  improper indentations, it is strongly required to start at least the first line of a docstring text within the first column!
+  And this first line is the reference for the indentation of further lines of the current docstring. The indentation of these further
+  lines depends on the rst syntax element that is used here.
 * In rst also blank lines are part of the syntax!
+
+*Why is a proper indentation of the docstrings so much important?*
+
+The contents of all doctrings of a Python module will be merged to one single rst document (internally by GenPackageDoc). In this
+single rst document we do not have separated docstring lines any more. We have one text! And we have a relationship between previous
+lines and following lines in this text. The indentation of these previous and following lines must fit together – accordingly
+to the rst syntax rules. Otherwise we either get syntax issues during computation or we get text with a layout that does not fit
+to our expectation.
 
 *Please be attentive while typing your documentation in rst format!*/
 
