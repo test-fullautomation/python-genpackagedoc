@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 19.09.2022
+# 04.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -775,14 +775,30 @@ The meaning of clean is: *delete*, followed by *create*.
       print()
 
       # -- finally create the main TeX file and the PDF
+
+      # make the styles folder available within the new build folder
       sStylesFolder = self.__dictPackageDocConfig['LATEXSTYLESFOLDER']
       oStylesFolder = CFolder(sStylesFolder)
       bSuccess, sResult = oStylesFolder.CopyTo(sBuildFolder)
       if bSuccess is not True:
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-      # 2. main tex file
+      # access to patterns
       oPatterns = CPatterns()
+
+      # 1. autodefined sty file (containing runtime informations)
+      sAutodefinedFile = f"{sBuildFolder}/styles/autodefined.sty"
+      oAutodefinedFile = CFile(sAutodefinedFile)
+      sAutodefinedHeader = oPatterns.GetAutodefinedHeader(time.strftime('%d.%m.%Y - %H:%M:%S'))
+      oAutodefinedFile.Write(sAutodefinedHeader)
+      sCommand = r"\newcommand{\repo}{" + self.__dictPackageDocConfig['REPOSITORYNAME'] + "}"
+      oAutodefinedFile.Write(sCommand)
+      sCommand = r"\newcommand{\pkg}{" + self.__dictPackageDocConfig['PACKAGENAME'] + "}"
+      oAutodefinedFile.Write(sCommand)
+      oAutodefinedFile.Write()
+      del oAutodefinedFile
+
+      # 2. main tex file
       sDocumentationTeXFileName = self.__dictPackageDocConfig['DOCUMENT']['OUTPUTFILENAME']
       sMainTexFile = f"{sBuildFolder}/{sDocumentationTeXFileName}"
       self.__dictPackageDocConfig['sMainTexFile'] = sMainTexFile
