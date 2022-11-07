@@ -341,6 +341,23 @@ With this mechanism it is e.g. possible to give the output PDF document automati
 
 .. image:: ./pictures/RST02.png
 
+/
+
+Within parts of the documentation that are written in LaTeX directly, two auto generated LaTeX commands can be used to insert the name of the
+repository and the name of the package. Both values are taken out of the repository configuration.
+
+1. ``\repo`` : name of the repository
+2. ``\pkg`` : name of the package
+
+Example:
+
+.. Code::
+
+   The repository \repo\ contains the package \pkg.
+
+Consider the trailing backslash at the end of the command (that together with the following blank indicates a masked blank). This is necessary when you use the command
+in the middle of a text.
+
 //
 
 Syntax aspects
