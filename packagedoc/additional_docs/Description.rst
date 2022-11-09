@@ -56,6 +56,10 @@ Repository content
 
     Little helper to dump the repository configuration to console
 
+  - ``readme.rst2md.py``
+
+    Little helper to convert the RST version of the README file to MD format separately (``setup.py`` also does this).
+
 //
 
 Documentation build process
@@ -97,9 +101,9 @@ Documentation build process
 * The configuration file ``packagedoc_config.json`` contains settings like
 
   * Paths to Python packages to be documented
-  * Paths and names of additional rst files
-  * Path and name of output folder (tex files and output PDF file)
-  * User defined parameter (that can be defined here as global runtime variables and can be used in any rst code)
+  * Paths and names of additional RST files
+  * Path and name of output folder (LaTeX files and output PDF file)
+  * User defined parameter (that can be defined here as global runtime variables and can be used in any RST code)
   * Basic settings related to the output PDF file (like document name, name of author, ...)
   * Path to LaTeX compiler/
     (*a LaTeX distribution is not part of* ``GenPackageDoc``)
@@ -174,7 +178,7 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
 
    genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other/location" --configdest="../any/other/location" --strict=True
 
-All listed parameters are optional. GenPackageDoc creates the complete output path (``--output``) recursively. Other destination folder
+All listed parameters are optional. ``GenPackageDoc`` creates the complete output path (``--output``) recursively. Other destination folder
 (``--pdfdest`` and ``--configdest``) have to exist already.
 
 //
@@ -190,18 +194,18 @@ A *chapter* is the top level within the PDF document; a *section* is the level b
 
 *The following assignments happen during the generation of a PDF document:*
 
-* The content of every additionally included separate rst file is a *chapter*.
+* The content of every additionally included separate RST file is a *chapter*.
 
-  - In case of you want to add another chapter to your documentation, you have to include another rst file.
-  - The headline of the chapter is the name of the rst file (automatically)./
-    *Therefore the heading within an rst file has to start at section level!*
+  - In case of you want to add another chapter to your documentation, you have to include another RST file.
+  - The headline of the chapter is the name of the RST file (automatically)./
+    *Therefore the heading within an RST file has to start at section level!*
 
 * The content of every included Python module is also a *chapter*.
 
   - The headline of the chapter is the name of the Python module (automatically)./
-    This means also that within the PDF document structure every Python module is at the same level as additionally included rst files.
+    This means also that within the PDF document structure every Python module is at the same level as additionally included RST files.
 
-* Within additionally included separate rst files sections and subsections can be defined by the following rst syntax elements for headings:
+* Within additionally included separate RST files sections and subsections can be defined by the following RST syntax elements for headings:
 
   - A line underlined with "``=``" characters is a section
   - A line underlined with "``-``" characters is a subsection
@@ -218,12 +222,12 @@ A *chapter* is the top level within the PDF document; a *section* is the level b
 Examples
 ========
 
-Example 1: rst file
+Example 1: RST file
 -------------------
 
-The text of this chapter is taken over from an rst file named ``Description.rst``.
+The text of this chapter is taken over from an RST file named ``Description.rst``.
 
-This rst file contains the following headlines:
+This RST file contains the following headlines:
 
 ::
 
@@ -239,14 +243,14 @@ This rst file contains the following headlines:
    Examples
    ========
 
-   Example 1: rst file
+   Example 1: RST file
    -------------------
 
    Example 2: Python module
    ------------------------
 
-Because ``Description.rst`` is the second imported rst file, the chapter number is 2. The chapter headline is "Description" (the name of the rst file).
-The top level headlines *within* the rst file are at *section* level. The fourth section (Examples) contains two subsections.
+Because ``Description.rst`` is the second imported RST file, the chapter number is 2. The chapter headline is "Description" (the name of the RST file).
+The top level headlines *within* the RST file are at *section* level. The fourth section (Examples) contains two subsections.
 
 The outcome is the following part of the table of content:
 
@@ -277,7 +281,7 @@ To have a unique look and feel of all interface descriptions, the following styl
 
 .. image:: ./pictures/Interface01.png
 
-Some of the special characters used within the interface description, are part of the rst syntax. They will be explained in one of the next sections.
+Some of the special characters used within the interface description, are part of the RST syntax. They will be explained in one of the next sections.
 
 The docstrings containing the description, have to be placed directly in the next line after the ``def`` or ``class`` statement.
 
@@ -292,7 +296,7 @@ The usage of such a docstring is an option.
 Runtime variables
 =================
 
-*What are "runtime variables" and how to use them in rst text?*
+*What are "runtime variables" and how to use them in RST text?*
 
 All configuration parameters of ``GenPackageDoc`` are taken out of four sources:
 
@@ -313,14 +317,14 @@ All configuration parameters of ``GenPackageDoc`` are taken out of four sources:
    ``GenPackageDoc/CPackageDocConfig.py``
 
 
-Some of them are runtime variables and can be accessed within rst text (within docstrings of Python modules and also within separate rst files).
+Some of them are runtime variables and can be accessed within RST text (within docstrings of Python modules and also within separate RST files).
 
 This means it is possible to add configuration values automatically to the documentation.
 
 This happens by encapsulating the runtime variable name in triple hashes. This "triple hash" syntax is introduced to make it easier
 to distinguish between the json syntax (mostly based on curly brackets) and additional syntax elements used within values of json keys.
 
-The name of the repository e.g. can be added to the documentation with the following rst text:
+The name of the repository e.g. can be added to the documentation with the following RST text:
 
 .. image:: ./pictures/RST01.png
 
@@ -366,36 +370,36 @@ Syntax aspects
 Common rules
 ------------
 
-**Important to know about the syntax of Python and rst is:**
+**Important to know about the syntax of Python and RST is:**
 
-* In both Python and rst the indentation of text is part of the syntax!
+* In both Python and RST the indentation of text is part of the syntax!
 * The indentation of the triple quotes indicating the beginning and the end of a docstring has to follow the Python syntax rules.
-* The indentation of the content of the docstring (= the interface description in rst format) has to follow the rst syntax rules.
+* The indentation of the content of the docstring (= the interface description in RST format) has to follow the RST syntax rules.
   To avoid a needless indentation of the text within the resulting PDF document and to avoid further unwanted side effects caused by
   improper indentations, it is strongly required to start at least the first line of a docstring text within the first column!
   And this first line is the reference for the indentation of further lines of the current docstring. The indentation of these further
-  lines depends on the rst syntax element that is used here.
-* In rst also blank lines are part of the syntax!
+  lines depends on the RST syntax element that is used here.
+* In RST also blank lines are part of the syntax!
 
 *Why is a proper indentation of the docstrings so much important?*
 
-The contents of all doctrings of a Python module will be merged to one single rst document (internally by GenPackageDoc). In this
-single rst document we do not have separated docstring lines any more. We have one text! And we have a relationship between previous
+The contents of all doctrings of a Python module will be merged to one single RST document (internally by ``GenPackageDoc``). In this
+single RST document we do not have separated docstring lines any more. We have one text! And we have a relationship between previous
 lines and following lines in this text. The indentation of these previous and following lines must fit together – accordingly
-to the rst syntax rules. Otherwise we either get syntax issues during computation or we get text with a layout that does not fit
+to the RST syntax rules. Otherwise we either get syntax issues during computation or we get text with a layout that does not fit
 to our expectation.
 
-*Please be attentive while typing your documentation in rst format!*/
+*Please be attentive while typing your documentation in RST format!*/
 
 
 Syntax extensions
 -----------------
 
-``GenPackageDoc`` extends the rst syntax by the following topics:
+``GenPackageDoc`` extends the RST syntax by the following topics:
 
 * *newline*
 
-  A newline (line break) is realized by a slash ('``/``') at the end of a line containing any other rst text
+  A newline (line break) is realized by a slash ('``/``') at the end of a line containing any other RST text
   (this means: the slash must **not** be the only character in line)./
   Internally this slash is mapped to the LaTeX command ``\newline``.
 
@@ -410,5 +414,5 @@ Syntax extensions
   A newpage (page break) is realized by a double slash ('``//``'). These two slashes must be the only characters in line!/
   Internally this double slash is mapped to the LaTeX command ``\newpage``.
 
-These syntax extensions can currently be used in separate rst files only and are not available within docstrings of Python modules.
+These syntax extensions can currently be used in separate RST files only and are not available within docstrings of Python modules.
 

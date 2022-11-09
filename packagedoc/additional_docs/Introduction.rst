@@ -15,15 +15,15 @@
 The Python package ``GenPackageDoc`` generates the documentation of Python modules. The content of this documentation is taken out of the docstrings of
 functions, classes and their methods.
 
-It is possible to extend the documentation by the content of additional text files. The docstrings and also the
-additional text files have to be written in rst syntax (rst is the abbreviation for "**r**\ e **s**\ tructured **t**\ ext",
-that is a certain markdown dialect).
+It is possible to extend the documentation by the content of additional files either in reStructuredText (RST) format or in LaTeX format.
 
-The documentation is generated in two steps:
+The documentation is generated in four steps:
 
-1. The rst sources are converted into LaTeX sources
-2. The LaTeX sources are converted into a PDF document. This requires a separately installed LaTeX distribution (recommended: MiKTeX),
-   that is **not** part of ``GenPackageDoc``.
+1. Files in LaTeX format are taken over immediately.
+2. Files in reStructuredText format are converted to LaTeX files.
+3. All docstrings of all Python modules in the package are converted to LaTeX files.
+4. All LaTeX files together are converted to a single PDF document. This requires a separately installed LaTeX distribution (recommended: TeX Live).
+   A LaTeX distribution is **not** part of ``GenPackageDoc`` and has to be installed separately!
 
 The sources of ``GenPackageDoc`` are available in the following GitHub repository:
 
