@@ -60,7 +60,7 @@ How to install
 How to use
 ----------
 
-The main goal of ``GenPackageDoc`` is to document Python sources that are stored within a repository.
+``GenPackageDoc`` provides a toolchain to generate documentation out of Python sources that are stored within a repository.
 ``GenPackageDoc`` is also designed to be able to consider setup informations of a repository.
 
 The impact is: There is a deep relationship between the repository containing the sources to be documented, and the sources and the configuration
