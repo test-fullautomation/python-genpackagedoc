@@ -12,40 +12,67 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-Package Description
-===================
+GenPackageDoc Description
+=========================
 
 The Python package ``GenPackageDoc`` generates the documentation of Python modules. The content of this documentation is taken out of the docstrings of
 functions, classes and their methods.
 
-It is possible to extend the documentation by the content of additional text files.
+It is possible to extend the documentation by the content of additional files either in reStructuredText (RST) format or in LaTeX format.
 
-The documentation is generated in two steps:
+The documentation is generated in four steps:
 
-1. The rst sources are converted into LaTeX sources
-2. The LaTeX sources are converted into a PDF document. This requires a separately installed LaTeX distribution (recommended: MiKTeX),
-   that is **not** part of ``GenPackageDoc``.
+1. Files in LaTeX format are taken over immediately.
+2. Files in reStructuredText format are converted to LaTeX files.
+3. All docstrings of all Python modules in the package are converted to LaTeX files.
+4. All LaTeX files together are converted to a single PDF document. This requires a separately installed LaTeX distribution (recommended: TeX Live).
+   A LaTeX distribution is **not** part of ``GenPackageDoc`` and has to be installed separately!
 
 How to install
 --------------
 
-Firstly clone the **python-genpackagedoc** repository to your machine.
+``GenPackageDoc`` can be installed in two different ways.
 
-.. code::
+1. Installation via PyPi (recommended for users)
 
-   git clone https://github.com/test-fullautomation/python-genpackagedoc.git
+   .. code::
 
-Use the following command to install this package:
+      pip install GenPackageDoc
 
-.. code::
+   `GenPackageDoc in PyPi <https://pypi.org/project/GenPackageDoc/>`_
 
-    setup.py install
+2. Installation via GitHub (recommended for developers)
 
-Package Documentation
----------------------
+   Clone the **python-genpackagedoc** repository to your machine.
 
-A detailed documentation of the GenPackageDoc package can be found here:
+   .. code::
+
+      git clone https://github.com/test-fullautomation/python-genpackagedoc.git
+
+   `GenPackageDoc in GitHub <https://github.com/test-fullautomation/python-genpackagedoc>`_
+
+   Use the following command to install ``GenPackageDoc``:
+
+   .. code::
+
+      setup.py install
+
+How to use
+----------
+
+``GenPackageDoc`` provides a toolchain to generate documentation out of Python sources that are stored within a repository.
+``GenPackageDoc`` is also designed to be able to consider setup informations of a repository.
+
+The impact is: There is a deep relationship between the repository containing the sources to be documented, and the sources and the configuration
+of ``GenPackageDoc`` itself. Therefore ``GenPackageDoc`` needs to be configured to get to know about things like the path to the package sources
+and the desired name of the generated documentation PDF file.
+
+``GenPackageDoc`` is able to use it's own sources to document itself. Therefore the complete
+`GenPackageDoc repository <https://github.com/test-fullautomation/python-genpackagedoc>`_ can be used as example about about writing a package documentation.
+
+At the end of all preparations you will get for your own repository a PDF document that will look like this:
 `GenPackageDoc.pdf <https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/GenPackageDoc/GenPackageDoc.pdf>`_
+(that is the detailed documentation of ``GenPackageDoc``).
 
 Feedback
 --------
