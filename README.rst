@@ -1,12 +1,12 @@
 .. Copyright 2020-2022 Robert Bosch GmbH
 
-   Licensed under the Apache License, Version 2.0 (the "License");
+.. Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+.. http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
+.. Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
@@ -15,7 +15,7 @@
 GenPackageDoc Description
 =========================
 
-The Python package ``GenPackageDoc`` generates the documentation of Python modules. The content of this documentation is taken out of the docstrings of
+The Python package **GenPackageDoc** generates the documentation of Python modules. The content of this documentation is taken out of the docstrings of
 functions, classes and their methods.
 
 It is possible to extend the documentation by the content of additional files either in reStructuredText (RST) format or in LaTeX format.
@@ -26,12 +26,12 @@ The documentation is generated in four steps:
 2. Files in reStructuredText format are converted to LaTeX files.
 3. All docstrings of all Python modules in the package are converted to LaTeX files.
 4. All LaTeX files together are converted to a single PDF document. This requires a separately installed LaTeX distribution (recommended: TeX Live).
-   A LaTeX distribution is **not** part of ``GenPackageDoc`` and has to be installed separately!
+   A LaTeX distribution is **not** part of **GenPackageDoc** and has to be installed separately!
 
 How to install
 --------------
 
-``GenPackageDoc`` can be installed in two different ways.
+**GenPackageDoc** can be installed in two different ways.
 
 1. Installation via PyPi (recommended for users)
 
@@ -51,7 +51,7 @@ How to install
 
    `GenPackageDoc in GitHub <https://github.com/test-fullautomation/python-genpackagedoc>`_
 
-   Use the following command to install ``GenPackageDoc``:
+   Use the following command to install **GenPackageDoc**:
 
    .. code::
 
@@ -60,19 +60,19 @@ How to install
 How to use
 ----------
 
-``GenPackageDoc`` provides a toolchain to generate documentation out of Python sources that are stored within a repository.
-``GenPackageDoc`` is also designed to be able to consider setup informations of a repository.
+**GenPackageDoc** provides a toolchain to generate documentation out of Python sources that are stored within a repository.
+**GenPackageDoc** is also designed to be able to consider setup informations of a repository.
 
 The impact is: There is a deep relationship between the repository containing the sources to be documented, and the sources and the configuration
-of ``GenPackageDoc`` itself. Therefore ``GenPackageDoc`` needs to be configured to get to know about things like the path to the package sources
+of **GenPackageDoc** itself. Therefore **GenPackageDoc** needs to be configured to get to know about things like the path to the package sources
 and the desired name of the generated documentation PDF file.
 
-``GenPackageDoc`` is able to use it's own sources to document itself. Therefore the complete
+**GenPackageDoc** is able to use it's own sources to document itself. Therefore the complete
 `GenPackageDoc repository <https://github.com/test-fullautomation/python-genpackagedoc>`_ can be used as example about about writing a package documentation.
 
 At the end of all preparations you will get for your own repository a PDF document that will look like this:
 `GenPackageDoc.pdf <https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/GenPackageDoc/GenPackageDoc.pdf>`_
-(that is the detailed documentation of ``GenPackageDoc``).
+(that is the detailed documentation of **GenPackageDoc**).
 
 Feedback
 --------
