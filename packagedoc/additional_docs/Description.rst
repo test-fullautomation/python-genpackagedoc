@@ -15,7 +15,7 @@
 Repository content
 ==================
 
-*What is the content of the repository* ``python-genpackagedoc``*?*
+*What is the content of the repository* **python-genpackagedoc**?
 
 * Folder ``GenPackageDoc``
 
@@ -36,7 +36,7 @@ Repository content
 
 * Folder ``packagedoc``
 
-  Contains all package documentation related files, e.g. the ``GenPackageDoc`` configuration, additional input files
+  Contains all package documentation related files, e.g. the **GenPackageDoc** configuration, additional input files
   and the generated documentation itself.
 
   *This folder is specific for the documentation.*
@@ -106,7 +106,7 @@ Documentation build process
   * User defined parameter (that can be defined here as global runtime variables and can be used in any RST code)
   * Basic settings related to the output PDF file (like document name, name of author, ...)
   * Path to LaTeX compiler/
-    (*a LaTeX distribution is not part of* ``GenPackageDoc``)
+    (*a LaTeX distribution is not part of* **GenPackageDoc**)
 
   Be aware of that the within ``packagedoc_config.json`` specified output folder
 
@@ -122,7 +122,7 @@ Documentation build process
 
      ``GenPackageDoc/CPackageDocConfig.py``
 
-  ``CPackageDocConfig.py`` takes over all repository configuration values, reads in the static ``GenPackageDoc``
+  ``CPackageDocConfig.py`` takes over all repository configuration values, reads in the static **GenPackageDoc**
   configuration (``packagedoc_config.json``) and adds dynamically computed values like the full absolute paths
   belonging to the documentation build process. Also all command line parameters are resolved and checked.
 
@@ -133,7 +133,7 @@ within the specified output folder (``"OUTPUT"``). This folder also contains all
 documentation build process. 
 
 Because the output folder is a temporary one, the PDF document is copied to the folder containing the package sources
-and therefore is included in the package installation. This is defined in the ``GenPackageDoc`` configuration, section ``"PDFDEST"``./
+and therefore is included in the package installation. This is defined in the **GenPackageDoc** configuration, section ``"PDFDEST"``./
 
 /
 
@@ -178,7 +178,7 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
 
    genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other/location" --configdest="../any/other/location" --strict=True
 
-All listed parameters are optional. ``GenPackageDoc`` creates the complete output path (``--output``) recursively. Other destination folder
+All listed parameters are optional. **GenPackageDoc** creates the complete output path (``--output``) recursively. Other destination folder
 (``--pdfdest`` and ``--configdest``) have to exist already.
 
 //
@@ -298,7 +298,7 @@ Runtime variables
 
 *What are "runtime variables" and how to use them in RST text?*
 
-All configuration parameters of ``GenPackageDoc`` are taken out of four sources:
+All configuration parameters of **GenPackageDoc** are taken out of four sources:
 
 1. the static repository configuration
 
@@ -308,11 +308,11 @@ All configuration parameters of ``GenPackageDoc`` are taken out of four sources:
 
    ``config/CRepositoryConfig.py``
 
-3. the static ``GenPackageDoc`` configuration
+3. the static **GenPackageDoc** configuration
 
    ``packagedoc/packagedoc_config.json``
 
-4. the dynamic ``GenPackageDoc`` configuration
+4. the dynamic **GenPackageDoc** configuration
 
    ``GenPackageDoc/CPackageDocConfig.py``
 
@@ -383,7 +383,7 @@ Common rules
 
 *Why is a proper indentation of the docstrings so much important?*
 
-The contents of all doctrings of a Python module will be merged to one single RST document (internally by ``GenPackageDoc``). In this
+The contents of all doctrings of a Python module will be merged to one single RST document (internally by **GenPackageDoc**). In this
 single RST document we do not have separated docstring lines any more. We have one text! And we have a relationship between previous
 lines and following lines in this text. The indentation of these previous and following lines must fit together – accordingly
 to the RST syntax rules. Otherwise we either get syntax issues during computation or we get text with a layout that does not fit
@@ -395,7 +395,7 @@ to our expectation.
 Syntax extensions
 -----------------
 
-``GenPackageDoc`` extends the RST syntax by the following topics:
+**GenPackageDoc** extends the RST syntax by the following topics:
 
 * *newline*
 
