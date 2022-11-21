@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 16.06.2022
+# 21.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -62,7 +62,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
   Path and name of a single Python module.
 
-* ``bIncludePrivate``
+* ``bIncludePrivate`` (currently not active, is ``False``)
 
   / *Condition*: optional / *Type*: bool / *Default*: False /
 
@@ -168,6 +168,14 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                if isinstance(subnode, ast.FunctionDef):
                   sMethodName = f"{subnode.name}"
                   sMethodDocString = ast.get_docstring(subnode)
+
+                  # is keyword?
+                  bIsKeyword = False
+                  for decorator in subnode.decorator_list:
+                     if decorator.id == "keyword":
+                        bIsKeyword = True
+                        break
+
                   bTakeIt = True
                   if bIncludePrivate is False:
                      if sMethodName.startswith('_'):
@@ -181,7 +189,8 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                   # eof if bIncludeUndocumented is False:
                   if bTakeIt is True:
                      dictMethod = {}
-                     dictMethod['sMethodName'] = sMethodName
+                     dictMethod['sMethodName']      = sMethodName
+                     dictMethod['bIsKeyword']       = bIsKeyword
                      dictMethod['sMethodDocString'] = sMethodDocString
                      listofdictMethods.append(dictMethod)
                   # eof if bTakeIt is True

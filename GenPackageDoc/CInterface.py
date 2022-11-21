@@ -20,13 +20,13 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 28.06.2022
+# 21.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
 """
-Python module containing an interface for ``GenPackageDoc``. This interface can be used to get access to the
-LaTeX stylesheets that are part of the ``GenPackageDoc`` installation.
+Python module containing an interface for **GenPackageDoc**. This interface can be used to get access to the
+LaTeX stylesheets that are part of the **GenPackageDoc** installation.
 """
 
 # --------------------------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ Constructor of class ``CInterface``.
 
    def GetLaTeXStyles(self, sDestination=None):
       """
-The LaTeX stylesheets are part of the installation of ``GenPackageDoc``. In case of anyone else than ``GenPackageDoc``
+The LaTeX stylesheets are part of the installation of **GenPackageDoc**. In case of anyone else than **GenPackageDoc**
 needs these stylesheets, this method can be used to copy them to any other folder.
 
 **Arguments:**
@@ -80,7 +80,7 @@ needs these stylesheets, this method can be used to copy them to any other folde
 
   / *Condition*: required / *Type*: str /
 
-  Path and name of a folder in which the styles folder from ``GenPackageDoc`` will be copied.
+  Path and name of a folder in which the styles folder from **GenPackageDoc** will be copied.
 
 **Returns:**
 
