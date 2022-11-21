@@ -172,9 +172,10 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                   # is keyword?
                   bIsKeyword = False
                   for decorator in subnode.decorator_list:
-                     if decorator.id == "keyword":
-                        bIsKeyword = True
-                        break
+                     if hasattr(decorator, 'id'):
+                        if decorator.id == "keyword":
+                           bIsKeyword = True
+                           break
 
                   bTakeIt = True
                   if bIncludePrivate is False:

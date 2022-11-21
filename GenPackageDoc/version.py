@@ -18,6 +18,6 @@
 #
 # Version and date of GenPackageDoc
 #
-VERSION      = "0.37.0"
+VERSION      = "0.37.1"
 VERSION_DATE = "21.11.2022"
 
