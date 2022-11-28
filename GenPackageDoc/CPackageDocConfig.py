@@ -20,12 +20,12 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 31.08.2022
+# 21.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
 """
-Python module containing the configuration for GenPackageDoc. This includes the repository configurantion
+Python module containing the configuration for **GenPackageDoc**. This includes the repository configurantion
 and command line values.
 """
 
@@ -67,7 +67,7 @@ Responsible for:
 
   / *Condition*: required / *Type*: CRepositoryConfig() /
 
-  GenPackageDoc configuration containing static and dynamic configuration values (this includes the
+  **GenPackageDoc** configuration containing static and dynamic configuration values (this includes the
   Repository configuration).
       """
 
@@ -168,6 +168,10 @@ Responsible for:
          bSuccess = None
          sResult  = f"Missing key 'CONTROL' within '{sDocumentationProjectConfigFile}'"
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+      # ==============================================================================================================
+      # 21.11.2022 Feature 'INCLUDEPRIVATE' switched off. TODO: needs several bugfixes
+      self.__dictPackageDocConfig['CONTROL']['INCLUDEPRIVATE'] = False
+      # ==============================================================================================================
       bSuccess, sResult = self.__CheckElements(('INCLUDEPRIVATE','INCLUDEUNDOCUMENTED','STRICT'), self.__dictPackageDocConfig['CONTROL'].keys(), "subkey")
       if bSuccess is not True:
          sResult = sResult + f"\nWhile reading from '{sDocumentationProjectConfigFile}'"
@@ -463,7 +467,7 @@ Returns the complete configuration dictionary.
 
    def __GetCmdLineArgs(self):
       """
-Get values fom command linwe and add them to GenPackageDoc configuration. Already existing configuration values will be overwritten.
+Get values fom command linwe and add them to **GenPackageDoc** configuration. Already existing configuration values will be overwritten.
       """
 
       sMethod = "CPackageDocConfig.__GetCmdLineArgs"

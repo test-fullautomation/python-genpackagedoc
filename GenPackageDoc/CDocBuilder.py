@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 16.11.2022
+# 21.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ Constructor of class ``CDocBuilder``.
 
   / *Condition*: required / *Type*: CPackageDocConfig() /
 
-  GenPackageDoc configuration containing static and dynamic configuration values.
+  **GenPackageDoc** configuration containing static and dynamic configuration values.
       """
 
       sMethod = "CDocBuilder.__init__"
@@ -617,14 +617,16 @@ The meaning of clean is: *delete*, followed by *create*.
 
                   for dictMethod in listofdictMethods:
                      sMethodName = dictMethod['sMethodName']
-                     sMethodScope = f"{sModuleFileScope}-{sClassName}-{sMethodName}"
-                     sMethodScope = self.__ConvertToScopeFormat(sMethodScope)
-                     sMethodHeadline = f"Method: {sMethodName}"
+                     bIsKeyword  = dictMethod['bIsKeyword']
+                     sIdentifier = "Method"
+                     if bIsKeyword is True:
+                        sIdentifier = "Keyword"
+                     sMethodHeadline = f"{sIdentifier}: {sMethodName}"
+                     sMethodScope    = f"{sModuleFileScope}-{sClassName}-{sMethodName}"
+                     sMethodScope    = self.__ConvertToScopeFormat(sMethodScope)
                      self.__dictScopes[sMethodScope] = sMethodHeadline
 
-                     sMethodDocString = dictMethod['sMethodDocString']
-
-                     print(f"    - Method : '{sMethodName}' / scope: '{sMethodScope}'")
+                     print(f"    - {sIdentifier} : '{sMethodName}' / scope: '{sMethodScope}'")
 
                      # tmp mapping
                      sMethodHeadline = sMethodScope
@@ -633,6 +635,7 @@ The meaning of clean is: *delete*, followed by *create*.
                      sMethodHeadlineUnderline = len(sMethodHeadline)*"-"
                      listLinesRST.append(sMethodHeadlineUnderline)
                      listLinesRST.append("")
+                     sMethodDocString = dictMethod['sMethodDocString']
                      if sMethodDocString is not None:
                         listLinesRST.append(sMethodDocString)
 
