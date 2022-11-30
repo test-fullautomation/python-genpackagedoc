@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 21.11.2022
+# 30.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -243,9 +243,14 @@ The masking of newline, newpage and vspace (rst syntax extensions) are replaced 
          # when converting the rst source code to LaTeX code.
          # Here we have to undo this replacement: We replace the full scope string in every section and subsection by the original headline.
 
+         # Pandoc adds ligatures in some cases: '--' -> '-\/-'. We do not need them. They have to be removed before we search for sKey,
+         # because sKey does not contain these ligatures.
+         if "section{" in sLine:
+            sLine = sLine.replace(r'\/', '')
+
          for sKey in self.__dictScopes:
             # sKey is full scope string
-            # value of sKey is original headline
+            # value of sKey is original headline (= original name of function, class or method)
             sSearch  = "section{" + sKey + "}" # this includes 'subsection'
             sReplace = "section{" + self.__dictScopes[sKey] + "}"
             sReplace = sReplace.replace('_', r'\_') # LaTeX requires this masking
