@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 30.11.2022
+# 06.01.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -799,9 +799,11 @@ The meaning of clean is: *delete*, followed by *create*.
       oAutodefinedFile = CFile(sAutodefinedFile)
       sAutodefinedHeader = oPatterns.GetAutodefinedHeader(time.strftime('%d.%m.%Y - %H:%M:%S'))
       oAutodefinedFile.Write(sAutodefinedHeader)
-      sCommand = r"\newcommand{\repo}{\textbf{" + self.__dictPackageDocConfig['REPOSITORYNAME'] + "}}"
+      REPOSITORYNAME = self.__dictPackageDocConfig['REPOSITORYNAME'].replace("_", r"\_")
+      sCommand = r"\newcommand{\repo}{\textbf{" + REPOSITORYNAME + "}}"
       oAutodefinedFile.Write(sCommand)
-      sCommand = r"\newcommand{\pkg}{\textbf{" + self.__dictPackageDocConfig['PACKAGENAME'] + "}}"
+      PACKAGENAME = self.__dictPackageDocConfig['PACKAGENAME'].replace("_", r"\_")
+      sCommand = r"\newcommand{\pkg}{\textbf{" + PACKAGENAME + "}}"
       oAutodefinedFile.Write(sCommand)
       oAutodefinedFile.Write()
       del oAutodefinedFile
