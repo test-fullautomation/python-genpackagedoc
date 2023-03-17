@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 21.11.2022
+# 17.03.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -47,6 +47,11 @@ COLBW = col.Style.BRIGHT + col.Fore.WHITE
 
 SUCCESS = 0
 ERROR   = 1
+
+# --------------------------------------------------------------------------------------------------------------
+
+def printerror(sMsg):
+    sys.stderr.write(COLBR + f"Error: {sMsg}!\n")
 
 # --------------------------------------------------------------------------------------------------------------
 
@@ -447,8 +452,9 @@ Returns the configuration value belonging to a key name.
       """
       if ( (sName is None) or (sName not in self.__dictPackageDocConfig) ):
          print()
-         printerror(f"Error: Configuration parameter '{sName}' not existing!")
+         printerror(f"Configuration parameter '{sName}' not existing")
          # from here it's standard output:
+         print()
          print("Use instead one of:")
          self.PrintConfigKeys()
          return None # returning 'None' in case of key is not existing !!!
