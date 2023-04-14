@@ -1,11 +1,11 @@
 # **************************************************************************************************************
 # GenPackageDoc configuration file
 #
-# GenPackageDoc creates tex files out of the docstrings of Python modules and out of separate rst files.
+# GenPackageDoc creates tex files out of the docstrings of Python modules and out of separate RST files.
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 21.11.2022
+# 14.04.2023
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -34,42 +34,43 @@
 # Section "TOC":
 # --------------
 # Defines the content of the PDF document (= the order of the chapters).
-# A chapter can be represented by an additional text file in rst format. Every rst file is a separate chapter
+# A chapter can be represented by an additional text file in RST format. Every RST file is a separate chapter
 # within the resulting PDF document.
 # A chapter can also be represented by an additional tex file. Every tex file is a separate chapter
 # within the resulting PDF document.
 # In case of Python modules are involved, every Python module is a chapter.
 # Class and function definitions within a Python module are subchapters. Methods of classes are subsubchapters.
-# In this section every additional rst file is represented by a short name (key) and a path incl. file name (key value).
+# In this section every additional RST file is represented by a short name (key) and a path incl. file name (key value).
 # This is completely under the responsibility of the user and therefore the names have to be written in small letters only.
 # The keys with name starting with "INTERFACE" points to folder containing Python modules that have to be documented.
 # In case of a repository contains several separate folder with Python modules, it is possible to use more than one
 # key starting with "INTERFACE", e.g. "INTERFACE_part1" and "INTERFACE_part2".
 # The key "DOCUMENTPARTS" contains a list of all defined keys in the order of their desired appearances within the resulting PDF document.
-# It is strongly recommended to place all additional rst files flat into one single folder (and not in any further sub folder).
-# Reason is that currently the tex files generated out of the rst files are also placed flat into only one single output folder
+# It is strongly recommended to place all additional RST files flat into one single folder (and not in any further sub folder).
+# Reason is that currently the tex files generated out of the RST files are also placed flat into only one single output folder
 # (see section "OUTPUT") and the relative paths to possibly imported pictures (see section "PICTURES") must be kept valid!
 
    "TOC" : {
             "introduction"  : "./additional_docs/Introduction.rst",
             "description"   : "./additional_docs/Description.rst",
+            "diagrams"   : "./additional_docs/Diagrams.tex",
             # -- a) single root folder version
             "INTERFACE"     : "../###PACKAGENAME###",
             "appendix"      : "./additional_docs/Appendix.rst",
             "history"       : "./additional_docs/History.tex",
-            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","appendix","history"]
+            "DOCUMENTPARTS" : ["introduction","description","diagrams","INTERFACE","appendix","history"]
             # -- b) multiple root folder version (example)
             # "INTERFACE_part1" : "../additions/PythonExtensionsCollection/File",
             # "INTERFACE_part2" : "../additions/PythonExtensionsCollection/Dummy",
-            # "DOCUMENTPARTS"   : ["introduction","description","INTERFACE_part1","INTERFACE_part2","appendix","history"]
+            # "DOCUMENTPARTS"   : ["introduction","description","diagrams","INTERFACE_part1","INTERFACE_part2","appendix","history"]
            },
 
 # Section "PARAMS":
 # -----------------
 # In this section a user has the ability to define own runtime variables, that are accessible within the doctrings of involved Python modules
-# and also within separate rst files. Key names have to be written in small letters to indicate that they are user defined.
+# and also within separate RST files. Key names have to be written in small letters to indicate that they are user defined.
 # Values can be either hard coded or taken over from the repository configuration (see config/repository_config.json).
-# In second case the key name has to be encapsulated within three hashes '#'. The same notation can be used in rst files and doctrings
+# In second case the key name has to be encapsulated within three hashes '#'. The same notation can be used in RST files and doctrings
 # of Python modules (for example adding an additional hint within a doctring of a class: ###additional_hint###).
 # This mechanism is limited to strings!
 # This key is optional. In case of own parameters are not needed, this key can be removed or set to null.
@@ -96,13 +97,25 @@
 
 # Section "PICTURES":
 # -------------------
-# Additional rst files may import pictures. GenPackageDoc needs to know where to find them.
+# Additional files may import pictures. GenPackageDoc needs to know where to find them.
 # To keep the relative paths to possibly imported pictures valid also within the created tex files,
 # this pictures folder will be copied into the output folder defined by key "OUTPUT".
 # This key is optional. In case of there are no pictures needed in this package description,
 # this key can be removed or set to null.
 
    "PICTURES" : "./additional_docs/pictures",
+
+# Section "DIAGRAMS":
+# -------------------
+# A 'diagram' in this context is a picture that is rendered out of source code (by PlantUML).
+# This 'DIAGRAMS' folder contains both: the source files (extension: .txt) and also the rendered pictures.
+# Additional files may import diagrams. GenPackageDoc needs to know where to find them.
+# To keep the relative paths to possibly imported diagrams valid also within the created tex files,
+# this diagrams folder will be copied into the output folder defined by key "OUTPUT".
+# This key is optional. In case of there are no diagrams needed in this package description,
+# this key can be removed or set to null.
+
+   "DIAGRAMS" : "./additional_docs/diagrams",
 
 # Section "OUTPUT":
 # -----------------
@@ -111,7 +124,7 @@
    "OUTPUT" : "./build",
 
 # Section "PDFDEST":
-# -----------------
+# ------------------
 # Defines the path to a folder in which the PDF file will be copied after creation
 # (the "OUTPUT" folder in which the LaTeX compiler creates the PDF file, is not really a proper destination finally)
 # This key is optional. In case of it is not required to copy the PDF file to another location,
@@ -120,7 +133,7 @@
    "PDFDEST" : "../###PACKAGENAME###",
 
 # Section "CONFIGDEST":
-# -----------------
+# ---------------------
 # Defines the path to a folder in which a dump of the current configuration will be copied to.
 # The configuration dump is part of the build output (section 'OUTPUT') and available in txt and in json format.
 # It might be useful for further processes to have access to all details regarding the current
@@ -131,16 +144,36 @@
    "CONFIGDEST" : null,
 
 # Section "TEX":
-# -----------------
+# --------------
 # Converting the generated text source files to a PDF document requires a LaTeX distribution.
 # GenPackageDoc needs to know where to find LaTeX. Because the path to the LaTeX interpreter depends
 # on the operating system, this path has to be defined separately for every supported operating system
 # (currently "WINDOWS" and "LINUX").
-# Example:
 
    "TEX" : {
             "WINDOWS" : "%GENDOC_LATEXPATH%/pdflatex.exe",
             "LINUX"   : "${GENDOC_LATEXPATH}/pdflatex"
-           }
+           },
+
+# Section "JAVA":
+# ---------------
+# GenPackageDoc supports PlantUML, that is a Java application. Therefore GenPackageDoc needs to know
+# where to find Java.
+# This key is optional. In case of Java is not required (because of also PlantUML is not required),
+# this key can be removed or set to null.
+
+   "JAVA" : {
+             "WINDOWS" : "%JAVA_HOME%/bin/java.exe",
+             "LINUX"   : "${JAVA_HOME}/bin/java"
+            },
+
+# Section "PLANT_UML":
+# --------------------
+# GenPackageDoc supports PlantUML. Therefore GenPackageDoc needs to know where to find PlantUML.
+
+   "PLANT_UML" : {
+                  "WINDOWS" : "%GENDOC_PLANTUML_PATH%/plantuml.jar",
+                  "LINUX"   : "${GENDOC_PLANTUML_PATH}/plantuml"
+                 }
 }
 

@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.03.2023
+# 14.04.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -138,10 +138,13 @@ Responsible for:
                                             "PARAMS",
                                             "DOCUMENT",
                                             "PICTURES",
+                                            "DIAGRAMS",
                                             "OUTPUT",
                                             "PDFDEST",
                                             "CONFIGDEST",
-                                            "TEX")
+                                            "TEX",
+                                            "JAVA",
+                                            "PLANT_UML")
 
       for sKey in dictJsonValues.keys():
          if sKey not in tupleKeysAllowedInPackageDocConfig:
@@ -168,7 +171,7 @@ Responsible for:
 
       # required
       if 'CONTROL' in dictJsonValues:
-         self.__dictPackageDocConfig['CONTROL']  = dictJsonValues['CONTROL']
+         self.__dictPackageDocConfig['CONTROL'] = dictJsonValues['CONTROL']
       else:
          bSuccess = None
          sResult  = f"Missing key 'CONTROL' within '{sDocumentationProjectConfigFile}'"
@@ -218,6 +221,12 @@ Responsible for:
       else:
          self.__dictPackageDocConfig['PICTURES'] = None
 
+      # optional
+      if 'DIAGRAMS' in dictJsonValues:
+         self.__dictPackageDocConfig['DIAGRAMS'] = dictJsonValues['DIAGRAMS']
+      else:
+         self.__dictPackageDocConfig['DIAGRAMS'] = None
+
       # required
       if 'OUTPUT' in dictJsonValues:
          self.__dictPackageDocConfig['OUTPUT'] = dictJsonValues['OUTPUT']
@@ -245,6 +254,18 @@ Responsible for:
          bSuccess = None
          sResult  = f"Missing key 'TEX' within '{sDocumentationProjectConfigFile}'"
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+
+      # optional (but PLANT_UML requires JAVA; in case of PLANT_UML is requested, JAVA needs to be defined)
+      if 'JAVA' in dictJsonValues:
+         self.__dictPackageDocConfig['JAVA'] = dictJsonValues['JAVA']
+      else:
+         self.__dictPackageDocConfig['JAVA'] = None
+
+      # optional
+      if 'PLANT_UML' in dictJsonValues:
+         self.__dictPackageDocConfig['PLANT_UML'] = dictJsonValues['PLANT_UML']
+      else:
+         self.__dictPackageDocConfig['PLANT_UML'] = None
 
       # Now we have all configuration values available in self.__dictPackageDocConfig. Next steps are:
       # - resolve placeholders (possible placeholders are the keys from repository configuration)
@@ -296,7 +317,7 @@ Responsible for:
          self.__dictPackageDocConfig['TOC'][sDocumentPart] = CString.NormalizePath(sPath=self.__dictPackageDocConfig['TOC'][sDocumentPart], sReferencePathAbs=sReferencePathAbs)
 
       # -- set further config keys (to enable the resolve of placeholders and the normalizing of paths running in a loop)
-      tupleFurtherConfigKeys = ('PICTURES', 'OUTPUT', 'PDFDEST', 'CONFIGDEST') # values contain paths and can contain placeholders; some of them are optional
+      tupleFurtherConfigKeys = ('PICTURES', 'DIAGRAMS', 'OUTPUT', 'PDFDEST', 'CONFIGDEST') # values contain paths and can contain placeholders; some of them are optional
       # -- resolve placeholder and normalize paths
       for sConfigKey in tupleFurtherConfigKeys:
          sPackageDocValue = self.__dictPackageDocConfig[sConfigKey]
@@ -309,7 +330,7 @@ Responsible for:
             # normalize path and write value back to dict
             self.__dictPackageDocConfig[sConfigKey] = CString.NormalizePath(sPath=sPackageDocValue, sReferencePathAbs=sReferencePathAbs)
 
-      # -- prepare path to LaTeX interpreter
+      # -- prepare path to LaTeX interpreter (mandatory)
       sLaTeXInterpreter = None
       sKey = sPlatformSystem.upper()
       if sKey in self.__dictPackageDocConfig['TEX']:
@@ -329,6 +350,36 @@ Responsible for:
          sResult  = f"Missing LaTeX stylesheet folder '{sStylesFolder}'"
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
       self.__dictPackageDocConfig['LATEXSTYLESFOLDER'] = sStylesFolder
+
+      # -- Prepare path to Java (optional)
+      #    Usage of Java depends on availability of diagram files (DIAGRAMS) and PLANT_UML (like configured in packagedoc_config.json;
+      #    computation in CDocBuilder)
+      if self.__dictPackageDocConfig['JAVA'] is not None:
+         JAVA = None
+         sKey = sPlatformSystem.upper()
+         if sKey in self.__dictPackageDocConfig['JAVA']:
+            JAVA = CString.NormalizePath(sPath=self.__dictPackageDocConfig['JAVA'][sKey], sReferencePathAbs=sReferencePathAbs)
+         else:
+            bSuccess = None
+            sResult  = f"Java not defined for current operating system '{sPlatformSystem}' in section 'JAVA' of '{sDocumentationProjectConfigFile}'"
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         self.__dictPackageDocConfig['JAVA'] = JAVA
+      # eof if self.__dictPackageDocConfig['JAVA'] is not None:
+
+      # -- Prepare path to PlantUML (optional)
+      #    Usage of PlantUML depends on availability of diagram files (DIAGRAMS) and PLANT_UML (like configured in packagedoc_config.json;
+      #    computation in CDocBuilder; PlantUML also requires JAVA)
+      if self.__dictPackageDocConfig['PLANT_UML'] is not None:
+         PLANT_UML = None
+         sKey = sPlatformSystem.upper()
+         if sKey in self.__dictPackageDocConfig['PLANT_UML']:
+            PLANT_UML = CString.NormalizePath(sPath=self.__dictPackageDocConfig['PLANT_UML'][sKey], sReferencePathAbs=sReferencePathAbs)
+         else:
+            bSuccess = None
+            sResult  = f"PlantUML not defined for current operating system '{sPlatformSystem}' in section 'PLANT_UML' of '{sDocumentationProjectConfigFile}'"
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         self.__dictPackageDocConfig['PLANT_UML'] = PLANT_UML
+      # eof if self.__dictPackageDocConfig['PLANT_UML'] is not None:
 
       # ---- prepare dictionary with all parameter that shall have runtime character (flat list instead of nested dict like in packagedoc configuration)
 

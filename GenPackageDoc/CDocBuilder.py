@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 06.01.2023
+# 13.04.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -344,6 +344,148 @@ The meaning of clean is: *delete*, followed by *create*.
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
+   def __RenderDiagrams(self):
+      """Render all diagrams in 'DIAGRAMS' folder (with PlantUML). Diagram files are expected to have the extension '.puml'.
+      """
+
+      sMethod = "CDocBuilder.__RenderDiagrams"
+
+      bSuccess = None
+      sResult  = "UNKNOWN"
+
+      sDiagramsSourceDir = self.__dictPackageDocConfig['DIAGRAMS']
+      if sDiagramsSourceDir is None:
+         bSuccess = True
+         sResult  = f"No diagrams folder configured in DIAGRAMS section of GenPackageDoc configuration; nothing to render"
+         return bSuccess, sResult
+      else:
+         if os.path.isdir(sDiagramsSourceDir) is True:
+            # -- identify diagram files
+            listDiagramFiles = []
+            for sLocalRootPath, listFolderNames, listFileNames in os.walk(sDiagramsSourceDir):
+               for sFileName in listFileNames:
+                  if sFileName.endswith('.puml'):
+                     sDiagramFile = CString.NormalizePath(os.path.join(sLocalRootPath, sFileName))
+                     if sDiagramFile not in listDiagramFiles:
+                        listDiagramFiles.append(sDiagramFile)
+            # eof for ...
+
+            nNrOfDiagramFiles = len(listDiagramFiles)
+            if nNrOfDiagramFiles == 0:
+               bSuccess = True
+               sResult  = f"No diagram files found in '{sDiagramsSourceDir}'; nothing to render"
+               return bSuccess, sResult
+
+            # diagram files available in diagrams folder (DIAGRAMS), therefore we need JAVA and PLANT_UML
+            # -- JAVA
+            JAVA = self.__dictPackageDocConfig['JAVA']
+            if JAVA is None:
+               bSuccess = False
+               sResult  = f"Java not configured in GenPackageDoc configuration; cannot render diagrams"
+               return bSuccess, sResult
+            if os.path.isfile(JAVA) is False:
+               bSuccess = False
+               sResult  = f"Java '{JAVA}' not found; check GenPackageDoc configuration; cannot render diagrams"
+               return bSuccess, sResult
+            # -- PLANT_UML
+            PLANT_UML = self.__dictPackageDocConfig['PLANT_UML']
+            if PLANT_UML is None:
+               bSuccess = False
+               sResult  = f"PlantUML not configured in GenPackageDoc configuration; cannot render diagrams"
+               return bSuccess, sResult
+            if os.path.isfile(PLANT_UML) is False:
+               bSuccess = False
+               sResult  = f"PlantUML '{PLANT_UML}' not found; check GenPackageDoc configuration; cannot render diagrams"
+               return bSuccess, sResult
+
+            print(COLBY + "Rendering diagrams ...")
+            print()
+
+            # -- render all diagrams
+            nCntDiagramFiles = 0
+            for sDiagramFile in listDiagramFiles:
+               nCntDiagramFiles = nCntDiagramFiles + 1
+               sInfo = f"* ({nCntDiagramFiles}/{nNrOfDiagramFiles}) : '{sDiagramFile}'"
+               print(sInfo)
+               print()
+               listCmdLineParts = []
+               listCmdLineParts.append(f"\"{JAVA}\"")
+               listCmdLineParts.append(f"-jar")
+               listCmdLineParts.append(f"\"{PLANT_UML}\"")
+               listCmdLineParts.append(f"\"{sDiagramFile}\"")
+
+               sCmdLine = " ".join(listCmdLineParts)
+               # -- debug
+               print("Now executing command line:\n" + sCmdLine)
+               print()
+               del listCmdLineParts
+               listCmdLineParts = shlex.split(sCmdLine)
+
+               try:
+                  nReturn = subprocess.call(listCmdLineParts)
+                  print(f"PlantUML returned {nReturn}")
+                  print()
+               except Exception as ex:
+                  bSuccess = None
+                  sResult  = str(ex)
+                  return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+            # eof for sDiagramFile in listDiagramFiles:
+
+            bSuccess = True
+            sResult  = f"{nCntDiagramFiles} diagrams within '{sDiagramsSourceDir}' rendered"
+         else:
+            bSuccess = False
+            sResult  = f"Diagrams folder '{sDiagramsSourceDir}' does not exist"
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+      # eof else - if sDiagramsSourceDir is None:
+
+      return bSuccess, sResult
+
+   # eof def __RenderDiagrams(self):
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def __CopyDiagrams(self):
+      """Copies the diagrams folder to the output folder (required to keep relative paths valid also in created tex files)
+      """
+
+      sMethod = "CDocBuilder.__CopyDiagrams"
+
+      bSuccess = None
+      sResult  = "UNKNOWN"
+
+      sDiagramsSourceDir = self.__dictPackageDocConfig['DIAGRAMS']
+      if sDiagramsSourceDir is None:
+         bSuccess = True
+         sResult  = f"No diagrams defined, nothing to copy"
+      else:
+         if os.path.isdir(sDiagramsSourceDir) is True:
+            # copy the diagrams folder to output folder
+            sDirName = os.path.basename(sDiagramsSourceDir)
+            sDiagramsDestinationDir = f"{self.__dictPackageDocConfig['OUTPUT']}/{sDirName}"
+            try:
+               shutil.copytree(sDiagramsSourceDir, sDiagramsDestinationDir)
+            except Exception as ex:
+               bSuccess = None
+               sResult  = str(ex)
+               return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+            bSuccess = True
+            sResult  = f"Pictures folder '{sDiagramsSourceDir}' copied to build folder '{sDiagramsDestinationDir}'"
+         else:
+            bSuccess = False
+            sResult  = f"Pictures folder '{sDiagramsSourceDir}' does not exist"
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+      # eof else - if sDiagramsSourceDir is None:
+
+      return bSuccess, sResult
+
+   # eof def __CopyDiagrams(self):
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
    def __GenDocPDF(self):
       """Executes the LaTeX compiler to create the PDF file out of the generated source tex files
       """
@@ -461,6 +603,17 @@ The meaning of clean is: *delete*, followed by *create*.
       sMethod = "CDocBuilder.Build"
 
       bSuccess, sResult = self.__CleanBuildFolder()
+      if bSuccess is not True:
+         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+      bSuccess, sResult = self.__RenderDiagrams()
+      if bSuccess is not True:
+         return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
+      print(COLBY + sResult)
+      print()
+
+      bSuccess, sResult = self.__CopyDiagrams()
       if bSuccess is not True:
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
