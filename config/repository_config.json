@@ -13,7 +13,7 @@
    "DEVELOPMENTSTATUS" : "Development Status :: 3 - Alpha",
    "INTENDEDAUDIENCE" : "Intended Audience :: Developers",
    "TOPIC" : "Topic :: Software Development",
-   "INSTALLREQUIRES" : ["pypandoc","colorama"],
+   "INSTALLREQUIRES" : ["pypandoc","colorama","PythonExtensionsCollection"],
    "PACKAGEDATA" : ["*.pdf","./styles/*.sty","./styles/*.tex"],
    "PACKAGEDOC" : "./packagedoc"
 }
