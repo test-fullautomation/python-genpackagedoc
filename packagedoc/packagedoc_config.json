@@ -5,10 +5,10 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 14.04.2023
+# 05.05.2023
 #
 # **************************************************************************************************************
-# Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
+# Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
 # All fixed terms (keys) have to be written in capital letters, all user defined keys in small letters.
 # Paths to files and folders within this file must be relative (except "TEX"). The reference for relative paths
 # is the position of this file.
@@ -53,16 +53,10 @@
    "TOC" : {
             "introduction"  : "./additional_docs/Introduction.rst",
             "description"   : "./additional_docs/Description.rst",
-            "diagrams"   : "./additional_docs/Diagrams.tex",
-            # -- a) single root folder version
             "INTERFACE"     : "../###PACKAGENAME###",
             "appendix"      : "./additional_docs/Appendix.rst",
             "history"       : "./additional_docs/History.tex",
-            "DOCUMENTPARTS" : ["introduction","description","diagrams","INTERFACE","appendix","history"]
-            # -- b) multiple root folder version (example)
-            # "INTERFACE_part1" : "../additions/PythonExtensionsCollection/File",
-            # "INTERFACE_part2" : "../additions/PythonExtensionsCollection/Dummy",
-            # "DOCUMENTPARTS"   : ["introduction","description","diagrams","INTERFACE_part1","INTERFACE_part2","appendix","history"]
+            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","appendix","history"]
            },
 
 # Section "PARAMS":
@@ -115,7 +109,7 @@
 # This key is optional. In case of there are no diagrams needed in this package description,
 # this key can be removed or set to null.
 
-   "DIAGRAMS" : "./additional_docs/diagrams",
+   # "DIAGRAMS" : "./additional_docs/diagrams",
 
 # Section "OUTPUT":
 # -----------------
@@ -170,6 +164,7 @@
 # Section "PLANT_UML":
 # --------------------
 # GenPackageDoc supports PlantUML. Therefore GenPackageDoc needs to know where to find PlantUML.
+# This key is optional. In case of PlantUML is not required, this key can be removed or set to null.
 
    "PLANT_UML" : {
                   "WINDOWS" : "%GENDOC_PLANTUML_PATH%/plantuml.jar",

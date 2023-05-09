@@ -416,3 +416,107 @@ Syntax extensions
 
 These syntax extensions can currently be used in separate RST files only and are not available within docstrings of Python modules.
 
+
+//
+
+Diagrams
+========
+
+A *diagram* in this context is a picture that is rendered out of source code. **GenPackageDoc** supports **PlantUML** that supports a wide range of diagrams.
+
+To use the **PlantUML** functionality with **GenPackageDoc**, some preconditions have to be fulfilled:
+
+1. **PlantUML** is installed (either as stand-alone installation or as VSCodium extension)
+2. **GenPackageDoc** is configured (``packagedoc_config.json``):
+   a. In section ``"DIAGRAMS"`` a path to a diagrams folder is defined (containing the diagrams source code).
+   b. In section ``"JAVA"`` path and name of the java interpreter is defined (because **PlantUML** is a java application).
+   c. In section ``"PLANT_UML"`` path and name of the **PlantUML** application is defined.
+
+All **PlantUML** source code files within the ``"DIAGRAMS"`` folder need to have the extension ``puml``.
+
+Example 1: Sequence diagram
+---------------------------
+
+The following code of a ``puml`` file produces a sequence diagram:
+
+.. code::
+
+   @startuml
+   GenPackageDoc -> ConstructionWorkerBob: Hello Bob!
+   ConstructionWorkerBob --> GenPackageDoc: Hi GenPackageDoc, how are you?
+   GenPackageDoc -> ConstructionWorkerBob: Fine, thanks.
+   ConstructionWorkerBob --> GenPackageDoc: Have a nice day.
+   @enduml
+
+Result:
+
+.. image:: ./pictures/SequenceDiagram.png
+
+
+//
+
+Example 2: JSON diagram
+-----------------------
+
+The following code of a ``puml`` file produces a sequence diagram:
+
+.. code::
+
+   @startjson
+   {
+     "WelcomeString"   : "Hello World",
+
+     "Maximum_version" : "1.0.0",
+     "Minimum_version" : "0.6.0",
+
+     "Project"         : "Example Project",
+     "TargetName"      : "Example Target",
+
+     "params" : {
+                  "global" : {
+                               "str_val"   : "string value",
+                               "int_val"   : 123,
+                               "float_val" : 4.56,
+                               "bool_val"  : true,
+                               "null_val"  : null,
+                               "dict_val"  : {"keyA" : "keyA_val", "keyB" : "keyB_val"},
+                               "list_val"  : ["A", 1, true]}
+                 }
+   }
+   @endjson
+
+Result:
+
+.. image:: ./pictures/JsonDiagram.png
+
+
+Picture import
+--------------
+
+In case of **PlantUML** is configured in the **GenPackageDoc** configuration and in case of ``puml`` files are available within the diagrams folder,
+**GenPackageDoc** automatically calls **PlantUML** to render the diagrams. They can be imported in the following way:
+
+1. Import in RST code:
+
+   .. code::
+
+      .. image:: ./diagrams/SequenceDiagram.png
+
+2. Import in LaTeX code:
+
+   .. code::
+
+      \includegraphics[scale=0.7]{./diagrams/SequenceDiagram.png}
+
+The user needs to adapt the scaling to make the rendered diagrams fit to a page of a PDF document in best way.
+But this scaling only works in LaTeX code, but not in RST code.
+
+
+
+
+
+
+
+
+
+

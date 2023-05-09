@@ -1,6 +1,0 @@
-@startuml
-GenPackageDoc -> ConstructionWorkerBob: Hello Bob!
-ConstructionWorkerBob --> GenPackageDoc: Hi GenPackageDoc, how are you?
-GenPackageDoc -> ConstructionWorkerBob: Fine, thanks.
-ConstructionWorkerBob --> GenPackageDoc: Have a nice day.
-@enduml
