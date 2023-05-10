@@ -46,7 +46,7 @@ The documentation is generated in four steps:
         **GenPackageDoc** requires some additional Python libraries.
         Before you install the cloned repository sources you have to
         install the dependencies manually. The names of all related
-        mackages you can find in the file `requirements.txt` in the
+        packages you can find in the file `requirements.txt` in the
         repository root folder. Use pip to install them:
 
         ``` 
