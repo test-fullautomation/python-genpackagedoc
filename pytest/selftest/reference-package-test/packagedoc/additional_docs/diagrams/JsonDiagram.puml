@@ -1,0 +1,22 @@
+@startjson
+{
+  "WelcomeString"   : "Hello World",
+
+  "Maximum_version" : "1.0.0",
+  "Minimum_version" : "0.6.0",
+
+  "Project"         : "Example Project",
+  "TargetName"      : "Example Target",
+
+  "params" : {
+               "global" : {
+                            "str_val"   : "string value",
+                            "int_val"   : 123,
+                            "float_val" : 4.56,
+                            "bool_val"  : true,
+                            "null_val"  : null,
+                            "dict_val"  : {"keyA" : "keyA_val", "keyB" : "keyB_val"},
+                            "list_val"  : ["A", 1, true]}
+              }
+}
+@endjson
