@@ -32,20 +32,32 @@ The documentation is generated in four steps:
 
 2.  Installation via GitHub (recommended for developers)
 
-    Clone the **python-genpackagedoc** repository to your machine.
+    a.  Clone the **python-genpackagedoc** repository to your machine
 
-    ``` 
-    git clone https://github.com/test-fullautomation/python-genpackagedoc.git
-    ```
+        ``` 
+        git clone https://github.com/test-fullautomation/python-genpackagedoc.git
+        ```
 
-    [GenPackageDoc in
-    GitHub](https://github.com/test-fullautomation/python-genpackagedoc)
+        [GenPackageDoc in
+        GitHub](https://github.com/test-fullautomation/python-genpackagedoc)
 
-    Use the following command to install **GenPackageDoc**:
+    b.  Install dependencies
 
-    ``` 
-    setup.py install
-    ```
+        **GenPackageDoc** requires some additional Python libraries.
+        Before you install the cloned repository sources you have to
+        install the dependencies manually. The names of all related
+        packages you can find in the file `requirements.txt` in the
+        repository root folder. Use pip to install them:
+
+        ``` 
+        pip install -r requirements.txt
+        ```
+
+    c.  Use the following command to install **GenPackageDoc**:
+
+        ``` 
+        setup.py install
+        ```
 
 ## How to use
 
