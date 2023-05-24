@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 05.05.2023
+# 24.05.2023
 #
 # **************************************************************************************************************
 # Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -147,7 +147,7 @@
    "TEX" : {
             "WINDOWS" : "%GENDOC_LATEXPATH%/pdflatex.exe",
             "LINUX"   : "${GENDOC_LATEXPATH}/pdflatex"
-           },
+           }
 
 # Section "JAVA":
 # ---------------
@@ -156,19 +156,19 @@
 # This key is optional. In case of Java is not required (because of also PlantUML is not required),
 # this key can be removed or set to null.
 
-   "JAVA" : {
-             "WINDOWS" : "%JAVA_HOME%/bin/java.exe",
-             "LINUX"   : "${JAVA_HOME}/bin/java"
-            },
+#   "JAVA" : {
+#             "WINDOWS" : "%JAVA_HOME%/bin/java.exe",
+#             "LINUX"   : "${JAVA_HOME}/bin/java"
+#            },
 
 # Section "PLANT_UML":
 # --------------------
 # GenPackageDoc supports PlantUML. Therefore GenPackageDoc needs to know where to find PlantUML.
 # This key is optional. In case of PlantUML is not required, this key can be removed or set to null.
 
-   "PLANT_UML" : {
-                  "WINDOWS" : "%GENDOC_PLANTUML_PATH%/plantuml.jar",
-                  "LINUX"   : "${GENDOC_PLANTUML_PATH}/plantuml"
-                 }
+#   "PLANT_UML" : {
+#                  "WINDOWS" : "%GENDOC_PLANTUML_PATH%/plantuml.jar",
+#                  "LINUX"   : "${GENDOC_PLANTUML_PATH}/plantuml.jar"
+#                 }
 }
 
