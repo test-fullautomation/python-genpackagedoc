@@ -43,29 +43,50 @@ How to install
 
 2. Installation via GitHub (recommended for developers)
 
-   a. Clone the **python-genpackagedoc** repository to your machine
+   * Clone the **python-genpackagedoc** repository to your machine
 
-      .. code::
+     .. code::
 
-         git clone https://github.com/test-fullautomation/python-genpackagedoc.git
+        git clone https://github.com/test-fullautomation/python-genpackagedoc.git
 
-      `GenPackageDoc in GitHub <https://github.com/test-fullautomation/python-genpackagedoc>`_
+     `GenPackageDoc in GitHub <https://github.com/test-fullautomation/python-genpackagedoc>`_
 
-   b. Install dependencies
+   * Install dependencies
 
-      **GenPackageDoc** requires some additional Python libraries. Before you install the cloned repository sources
-      you have to install the dependencies manually. The names of all related packages you can find in the file ``requirements.txt``
-      in the repository root folder. Use pip to install them:
+     **GenPackageDoc** requires some additional Python libraries. Before you install the cloned repository sources
+     you have to install the dependencies manually. The names of all related packages you can find in the file ``requirements.txt``
+     in the repository root folder. Use pip to install them:
 
-      .. code::
+     .. code::
 
-         pip install -r requirements.txt
+        pip install -r requirements.txt
 
-   c. Use the following command to install **GenPackageDoc**:
+     Additionally install **LaTeX** (recommended: TeX Live). This is required.
 
-      .. code::
+     Additionally install **PlantUML**. This is an option.
 
-         setup.py install
+   * Configure dependencies
+
+     **GenPackageDoc** uses **LaTeX** to generate the documentation in PDF format. **GenPackageDoc** also supports **PlantUML**.
+     **PlantUML** requires **Java**.
+
+     **GenPackageDoc** needs to know where to find those applications. This is defined in the **GenPackageDoc** configuration file
+
+     .. code::
+
+        packagedoc\packagedoc_config.json
+
+     Before you start the installation you have to introduce the following environment variables, that are used in ``packagedoc_config.json``:
+
+     - ``GENDOC_LATEXPATH`` : path to ``pdflatex`` executable
+     - ``GENDOC_PLANTUML_PATH`` : path to ``plantuml`` executable (optional)
+     - ``JAVA_HOME`` : path to ``java`` executable (optional, only in case of **PlantUML** is used)
+
+   * Use the following command to install **GenPackageDoc**:
+
+     .. code::
+
+        setup.py install
 
 How to use
 ----------

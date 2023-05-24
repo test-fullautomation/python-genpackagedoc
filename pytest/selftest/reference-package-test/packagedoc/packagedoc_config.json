@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 09.05.2023
+# 24.05.2023
 #
 # **************************************************************************************************************
 # Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -172,7 +172,7 @@
 
    "PLANT_UML" : {
                   "WINDOWS" : "%GENDOC_PLANTUML_PATH%/plantuml.jar",
-                  "LINUX"   : "${GENDOC_PLANTUML_PATH}/plantuml"
+                  "LINUX"   : "${GENDOC_PLANTUML_PATH}/plantuml.jar"
                  }
 }
 
