@@ -73,7 +73,8 @@ The documentation is generated in four steps:
         ```
 
         Before you start the installation you have to introduce the
-        following environment variables:
+        following environment variables, that are used in
+        `packagedoc_config.json`:
 
         -   `GENDOC_LATEXPATH` : path to `pdflatex` executable
         -   `GENDOC_PLANTUML_PATH` : path to `plantuml` executable
