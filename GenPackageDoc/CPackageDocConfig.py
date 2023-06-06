@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 14.04.2023
+# 06.06.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -91,8 +91,7 @@ Responsible for:
       # read the documentation build configuration from separate json file
       #    - the path to the folder containing this json file is taken out of the repository configuration
       #    - the name of the json file is fix
-      sJsonFileName = "packagedoc_config.json"
-      sDocumentationProjectConfigFile = f"{dictRepositoryConfig['PACKAGEDOC']}/{sJsonFileName}"
+      sDocumentationProjectConfigFile = f"{dictRepositoryConfig['PACKAGEDOC']}/packagedoc_config.json"
 
       # The json file may contain lines that are commented out by a '#' at the beginning of the line.
       # Therefore we read in this file in text format, remove the comments and save the cleaned file within the temp folder.
@@ -103,13 +102,13 @@ Responsible for:
       if sPlatformSystem == "Windows":
          sTmpPath = CString.NormalizePath("%TMP%")
       elif sPlatformSystem == "Linux":
-         sTmpPath = "/tmp"
+         sTmpPath = "~/"
       else:
          bSuccess = None
          sResult  = f"Platform system '{sPlatformSystem}' is not supported"
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
-      sJsonFileCleaned = f"{sTmpPath}/{sJsonFileName}"
+      sJsonFileCleaned = f"{sTmpPath}/packagedoc_config.tmp"
 
       oJsonFileSource = CFile(sDocumentationProjectConfigFile)
       listLines, bSuccess, sResult = oJsonFileSource.ReadLines(bSkipBlankLines=True, sComment='#')
@@ -122,15 +121,29 @@ Responsible for:
       if bSuccess is not True:
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
+      listExceptions = []
+
       dictJsonValues = {}
       try:
          hDocumentationProjectConfigFile = open(sJsonFileCleaned)
          dictJsonValues = json.load(hDocumentationProjectConfigFile)
          hDocumentationProjectConfigFile.close()
+         del hDocumentationProjectConfigFile
       except Exception as reason:
          bSuccess = None
          sResult  = str(reason) + f" - while reading from '{sDocumentationProjectConfigFile}'"
-         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         listExceptions.append(CString.FormatResult(sMethod, bSuccess, sResult))
+
+      # tidy up
+      oJsonFileCleaned = CFile(sJsonFileCleaned)
+      bSuccess, sResult = oJsonFileCleaned.Delete(bConfirmDelete=True)
+      del oJsonFileCleaned
+      if bSuccess is not True:
+         listExceptions.append(CString.FormatResult(sMethod, bSuccess, sResult))
+
+      if len(listExceptions) > 0:
+         sException = "; ".join(listExceptions)
+         raise Exception(sException)
 
       # check for unexpected keys
       tupleKeysAllowedInPackageDocConfig = ("CONTROL",
