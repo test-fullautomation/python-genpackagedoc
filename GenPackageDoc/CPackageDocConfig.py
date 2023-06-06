@@ -116,11 +116,17 @@ Responsible for:
       if bSuccess is not True:
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
+      dictJsonValues = None
       try:
          dictJsonValues = json.loads("\n".join(listLines))
       except Exception as reason:
          bSuccess = None
          sResult  = str(reason) + f" - while parsing JSON content of '{sDocumentationProjectConfigFile}'"
+         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+
+      if dictJsonValues is None:
+         bSuccess = None
+         sResult  = "dictJsonValues is None"
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
       # check for unexpected keys
