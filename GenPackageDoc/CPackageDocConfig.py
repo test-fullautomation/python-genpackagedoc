@@ -100,50 +100,34 @@ Responsible for:
       sTmpPath = None
       sPlatformSystem = platform.system()
       if sPlatformSystem == "Windows":
-         sTmpPath = CString.NormalizePath("%TMP%")
+         # currently nothing to do
+         pass
       elif sPlatformSystem == "Linux":
-         sTmpPath = "~/"
+         # currently nothing to do
+         pass
       else:
          bSuccess = None
          sResult  = f"Platform system '{sPlatformSystem}' is not supported"
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-
-      sJsonFileCleaned = f"{sTmpPath}/packagedoc_config.tmp"
 
       oJsonFileSource = CFile(sDocumentationProjectConfigFile)
       listLines, bSuccess, sResult = oJsonFileSource.ReadLines(bSkipBlankLines=True, sComment='#')
       del oJsonFileSource
       if bSuccess is not True:
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-      oJsonFileCleaned = CFile(sJsonFileCleaned)
-      bSuccess, sResult = oJsonFileCleaned.Write(listLines)
-      del oJsonFileCleaned
-      if bSuccess is not True:
-         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
-      listExceptions = []
-
-      dictJsonValues = {}
+      dictJsonValues = None
       try:
-         hDocumentationProjectConfigFile = open(sJsonFileCleaned)
-         dictJsonValues = json.load(hDocumentationProjectConfigFile)
-         hDocumentationProjectConfigFile.close()
-         del hDocumentationProjectConfigFile
+         dictJsonValues = json.loads("\n".join(listLines))
       except Exception as reason:
          bSuccess = None
-         sResult  = str(reason) + f" - while reading from '{sDocumentationProjectConfigFile}'"
-         listExceptions.append(CString.FormatResult(sMethod, bSuccess, sResult))
+         sResult  = str(reason) + f" - while parsing JSON content of '{sDocumentationProjectConfigFile}'"
+         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
-      # tidy up
-      oJsonFileCleaned = CFile(sJsonFileCleaned)
-      bSuccess, sResult = oJsonFileCleaned.Delete(bConfirmDelete=True)
-      del oJsonFileCleaned
-      if bSuccess is not True:
-         listExceptions.append(CString.FormatResult(sMethod, bSuccess, sResult))
-
-      if len(listExceptions) > 0:
-         sException = "; ".join(listExceptions)
-         raise Exception(sException)
+      if dictJsonValues is None:
+         bSuccess = None
+         sResult  = "dictJsonValues is None"
+         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
       # check for unexpected keys
       tupleKeysAllowedInPackageDocConfig = ("CONTROL",
