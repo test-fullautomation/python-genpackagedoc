@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2022 Robert Bosch GmbH
+#  Copyright 2020-2023 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -417,8 +417,8 @@ Responsible for:
    def __CheckElements(self, listExpected=[], listAvailable=[], sElementName="element"):
       """
 Cross check:
-* Only expected elements available? 
-* All expected elements available? 
+* Only expected elements available?
+* All expected elements available?
       """
       sMethod  = "CPackageDocConfig.__CheckElements"
       bSuccess = False
@@ -602,7 +602,7 @@ Get values fom command linwe and add them to **GenPackageDoc** configuration. Al
 
    # eof def __GetCmdLineArgs():
 
-# eof class CPackageDocConfig(): 
+# eof class CPackageDocConfig():
 
 # **************************************************************************************************************
 
