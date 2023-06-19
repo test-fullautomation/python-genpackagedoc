@@ -1,4 +1,4 @@
-.. Copyright 2020-2022 Robert Bosch GmbH
+.. Copyright 2020-2023 Robert Bosch GmbH
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ Documentation build process
 
 After the execution of ``genpackagedoc.py`` the resulting PDF document can be found under the specified name
 within the specified output folder (``"OUTPUT"``). This folder also contains all temporary files generated during the
-documentation build process. 
+documentation build process.
 
 Because the output folder is a temporary one, the PDF document is copied to the folder containing the package sources
 and therefore is included in the package installation. This is defined in the **GenPackageDoc** configuration, section ``"PDFDEST"``./

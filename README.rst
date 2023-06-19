@@ -1,4 +1,4 @@
-.. Copyright 2020-2022 Robert Bosch GmbH
+.. Copyright 2020-2023 Robert Bosch GmbH
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ At the end of all preparations you will get for your own repository a PDF docume
 Feedback
 --------
 
-To give us a feedback, you can send an email to `Thomas Pollerspöck <mailto:Thomas.Pollerspoeck@de.bosch.com>`_ 
+To give us a feedback, you can send an email to `Thomas Pollerspöck <mailto:Thomas.Pollerspoeck@de.bosch.com>`_
 
 In case you want to report a bug or request any interesting feature, please don't hesitate to raise a ticket.
 
@@ -129,7 +129,7 @@ Contributors
 License
 -------
 
-Copyright 2020-2022 Robert Bosch GmbH
+Copyright 2020-2023 Robert Bosch GmbH
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
