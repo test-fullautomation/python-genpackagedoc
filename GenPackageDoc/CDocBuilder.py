@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 13.04.2023
+# 11.10.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -1021,7 +1021,7 @@ The meaning of clean is: *delete*, followed by *create*.
       sDumpConfigFileJson = f"{sOutputFolder}/{sDumpConfigFileNameJson}"
       try:
          hDumpConfigFile = open(sDumpConfigFileJson, "w", encoding="utf-8")
-         json.dump(self.__dictPackageDocConfig, hDumpConfigFile)
+         json.dump(self.__dictPackageDocConfig, hDumpConfigFile, indent=3)
          hDumpConfigFile.close()
          del hDumpConfigFile
       except Exception as reason:
