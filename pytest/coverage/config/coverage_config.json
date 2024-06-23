@@ -2,13 +2,7 @@
     "COVERAGE": [
         {
             "STATE": "run",
-            "COMMANDLINE": "./genpackagedoc.py",
-            "CURRENT_WORKING_DIR": "",
-            "CONFIG": "./pytest/coverage/config/.coveragerc"
-        },
-        {
-            "STATE": "run",
-            "COMMANDLINE": "--append ./pytest/selftest/reference-package-test/genpackagedoc.py",
+            "COMMANDLINE": "./pytest/selftest/reference-package-test/genpackagedoc.py",
             "CURRENT_WORKING_DIR": "",
             "CONFIG": "./pytest/coverage/config/.coveragerc"
         },
