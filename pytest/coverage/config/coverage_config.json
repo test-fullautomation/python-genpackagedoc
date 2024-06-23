@@ -1,0 +1,28 @@
+{
+    "COVERAGE": [
+        {
+            "STATE": "run",
+            "COMMANDLINE": "./genpackagedoc.py",
+            "CURRENT_WORKING_DIR": "",
+            "CONFIG": "./pytest/coverage/config/.coveragerc"
+        },
+        {
+            "STATE": "run",
+            "COMMANDLINE": "--append ./pytest/selftest/reference-package-test/genpackagedoc.py",
+            "CURRENT_WORKING_DIR": "",
+            "CONFIG": "./pytest/coverage/config/.coveragerc"
+        },
+        {
+            "STATE": "report",
+            "COMMANDLINE": "",
+            "CURRENT_WORKING_DIR": "",
+            "CONFIG": "./pytest/coverage/config/.coveragerc"
+        },
+        {
+            "STATE": "html",
+            "COMMANDLINE": "",
+            "CURRENT_WORKING_DIR": "",
+            "CONFIG": "./pytest/coverage/config/.coveragerc"
+        }
+    ]
+}
