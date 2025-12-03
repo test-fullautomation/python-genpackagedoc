@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools==79.0.1", "wheel", "colorama==0.4.6", "pypandoc_binary==1.15", "PythonExtensionsCollection"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "GenPackageDoc"
+version = "0.41.1"
+description = "Documentation builder for Python packages"
+readme = "README.md"
+requires-python = ">=3.13"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Holger Queckenstedt", email = "Holger.Queckenstedt@de.bosch.com"}
+]
+keywords = ["Documentation", "Package Builder", "Python"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "pypandoc",
+    "colorama",
+    "PythonExtensionsCollection",
+]
+
+[project.urls]
+Homepage = "https://github.com/test-fullautomation/python-genpackagedoc"
+Repository = "https://github.com/test-fullautomation/python-genpackagedoc"
+
+[tool.setuptools]
+packages = ["GenPackageDoc"]
+
+[tool.setuptools.package-data]
+GenPackageDoc = [
+    "*.pdf",
+    "styles/*.sty",
+    "styles/*.tex",
+]
