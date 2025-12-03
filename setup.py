@@ -183,8 +183,10 @@ if ( ('install' in listCmdArgs) or ('build' in listCmdArgs) or ('sdist' in listC
 # --------------------------------------------------------------------------------------------------------------
 
 # -- the 'setup' itself
+# NOTE: Metadata now comes from pyproject.toml
+# This minimal setup.py only runs custom build steps and delegates to pyproject.toml
 
-print(COLBY + "Extended setup step 5/5: install.run(self)")
+print(COLBY + "Extended setup step 5/5: Running setup with pyproject.toml configuration")
 print()
 
 setuptools.setup(
