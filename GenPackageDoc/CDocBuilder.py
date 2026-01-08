@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2024 Robert Bosch GmbH
+#  Copyright 2020-2026 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 11.10.2023
+# 08.01.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ Python module containing all methods to generate tex sources.
 
 import os, sys, time, shlex, subprocess, platform, shutil, re, json
 import colorama as col
-import pypandoc
+from docutils.core import publish_parts
 
 from GenPackageDoc.CSourceParser import CSourceParser
 from GenPackageDoc.CPatterns import CPatterns
@@ -94,7 +94,7 @@ Constructor of class ``CDocBuilder``.
       # Python modules may contain methods with same name in several classes. Different Python modules may contain classes or functions
       # with the same name. GenPackageDoc parses the content of Python modules. The outcome is that for every Python module GenPackageDoc
       # creates a temporary rst file (because the content of the docstrings also has to be written in rst format).
-      # This rst file is converted to LaTeX format by Pandoc. To support linking Pandoc adds labels to every
+      # This rst file is converted to LaTeX format by docutils. To support linking docutils adds labels to every
       # heading (that are the names of classes and methods) automatically. The names of the labels are the headings - this means: names of classes
       # and methods are used as label. In case of the names of classes and methods are not unique over all files, also the labels will
       # not be unique. The conversion from rst format to LaTeX format happens for every Python module separately (and therefore the scope
@@ -102,7 +102,7 @@ Constructor of class ``CDocBuilder``.
       # throws a "multiply-defined labels" warning.
       #
       # To avoid these warnings every headline is replaced by a string containing the full scope (starting with the name of the package folder).
-      # This is written to the temporary rst file. Pandoc uses now these full scope strings for labels when converting the rst code into LaTeX code.
+      # This is written to the temporary rst file. Docutils use now these full scope strings for labels when converting the rst code into LaTeX code.
       # Finally by __PostprocessRST within every 'section' and 'subsection' command in the LaTeX code the full scope string (that must be unique)
       # is replaced by the original headline (that might be ambiguous). The full scope strings together with their original headlines are stored
       # in 'self.__dictScopes'.
@@ -232,27 +232,28 @@ The masking of newline, newpage and vspace (rst syntax extensions) are replaced 
       listLinesProcessed = []
 
       for sLine in listLinesTEX:
-
          # certain syntax extensions
          sLine = sLine.replace(self.__dictPlaceholder['vspace'], r"\vspace{1ex}")
          sLine = sLine.replace(self.__dictPlaceholder['newpage'], r"\newpage")
          sLine = sLine.replace(self.__dictPlaceholder['newline'], r"\newline")
 
          # To handle ambiguous names of methods, classes and methods, the original names (= document headlines)
-         # are replaced by the full scopes. We will not run into trouble any more when Pandoc creates labels out of the headlines
+         # are replaced by the full scopes. We will not run into trouble any more when docutils create labels out of the headlines
          # when converting the rst source code to LaTeX code.
          # Here we have to undo this replacement: We replace the full scope string in every section and subsection by the original headline.
 
          # Pandoc adds ligatures in some cases: '--' -> '-\/-'. We do not need them. They have to be removed before we search for sKey,
+         # Also the docttils add characters: '--' -> '-{}-'. We do not need them. They have to be removed before we search for sKey,
          # because sKey does not contain these ligatures.
          if "section{" in sLine:
-            sLine = sLine.replace(r'\/', '')
+            sLine = sLine.replace(r'\/', '') # undo Pandoc modification (outdated, because Pandoc is not used any more)
+            sLine = sLine.replace(r'{}', '') # undo docutils modification
 
          for sKey in self.__dictScopes:
             # sKey is full scope string
             # value of sKey is original headline (= original name of function, class or method)
-            sSearch  = "section{" + sKey + "}" # this includes 'subsection'
-            sReplace = "section{" + self.__dictScopes[sKey] + "}"
+            sSearch  = "section{" + sKey + "%" # this includes 'subsection'
+            sReplace = "section{" + self.__dictScopes[sKey] + "%"
             sReplace = sReplace.replace('_', r'\_') # LaTeX requires this masking
             sLine = sLine.replace(sSearch, sReplace)
 
@@ -627,6 +628,26 @@ The meaning of clean is: *delete*, followed by *create*.
 
       listofdictChapterInfo = [] # needed for TOC of main TeX file
 
+      # collected_latex_defs = set() # needed for LaTeX definitions autogenerated by docutils
+      collected_latex_defs = [] # needed for LaTeX definitions autogenerated by docutils
+      # Docutils standard requirements
+      collected_latex_defs.append(r"\usepackage{ifthen}")
+      collected_latex_defs.append(r"\usepackage{color}")
+      collected_latex_defs.append(r"\usepackage{alltt}")
+
+      # not autogenerated (not part of 'fallbacks'), why not?
+      # hard coded fall back here (not nice):
+      collected_latex_defs.append(r"\newcommand{\DUroletitlereference}[1]{\emph{#1}}")
+
+      # docutils settings
+      settings_overrides = {
+          'output_encoding'      : 'utf-8',
+          'font_encoding'        : 'T1',
+          'language_code'        : 'en',  # default set explicitly for better readibility
+          'legacy_column_widths' : False, # acitvates a table rendering behavior that is new and more flexible (currently docutils throw a future warning)
+          'use_latex_citations'  : True   # avoid docutils future warning
+      }
+
       # -- check existence of document parts and parse the content
 
       listDocumentParts = self.__dictPackageDocConfig['TOC']['DOCUMENTPARTS']
@@ -763,12 +784,14 @@ The meaning of clean is: *delete*, followed by *create*.
                   sClassHeadlineUnderline = len(sClassHeadline)*"="
                   listLinesRST.append(sClassHeadlineUnderline)
                   listLinesRST.append("")
-                  listLinesRST.append("*Imported by*:")
-                  listLinesRST.append("")
-                  listLinesRST.append(".. code::python")
-                  listLinesRST.append("")
-                  listLinesRST.append(f"   {sPythonModuleImportFull}")
-                  listLinesRST.append("")
+                  # # Let's skip this. The resulting lines are too long for the width of a DinA4 page.
+                  # # And the information is also not so much important.
+                  # # listLinesRST.append("*Imported by*:")
+                  # # listLinesRST.append("")
+                  # # listLinesRST.append(".. code:: python")
+                  # # listLinesRST.append("")
+                  # # listLinesRST.append(f"    {sPythonModuleImportFull}")
+                  # # listLinesRST.append("")
                   if sClassDocString is not None:
                      listLinesRST.append(sClassDocString)
 
@@ -815,16 +838,19 @@ The meaning of clean is: *delete*, followed by *create*.
                del oRSTCodeFile
 
                # -- convert the complete rst content of the current source file to tex format
+               latex_parts = publish_parts(source=sRSTCode, writer_name='latex', settings_overrides=settings_overrides)
+               fallbacks = latex_parts.get('fallbacks', '')
+               new_defs = fallbacks.splitlines()
+               for line in new_defs:
+                   if line.strip():
+                       collected_latex_defs.append(line)
 
-               sTEX = pypandoc.convert_text(sRSTCode,
-                                            'tex',
-                                            format='rst')
+               latex_code = latex_parts['body']
 
-               listLinesTEX = sTEX.splitlines() # ensure proper line endings
+               listLinesTEX = latex_code.splitlines() # ensure proper line endings
 
                # -- tex postprocessing (extended syntax and multiply-defined labels)
                listLinesProcessed = self.__PostprocessTEX(listLinesTEX)
-
                sTEX = "\n".join(listLinesProcessed)
 
                # -- create the corresponding tex file for the current source file
@@ -878,15 +904,19 @@ The meaning of clean is: *delete*, followed by *create*.
                sRSTCode = "\n".join(listLinesProcessed)
 
                # -- convert the complete rst content of the current source file to tex format
-               sTEX = pypandoc.convert_text(sRSTCode,
-                                            'tex',
-                                            format='rst')
+               latex_parts = publish_parts(source=sRSTCode, writer_name='latex', settings_overrides=settings_overrides)
+               fallbacks = latex_parts.get('fallbacks', '')
+               new_defs = fallbacks.splitlines()
+               for line in new_defs:
+                   if line.strip():
+                       collected_latex_defs.append(line)
 
-               listLinesTEX = sTEX.splitlines() # ensure proper line endings
+               latex_code = latex_parts['body']
+
+               listLinesTEX = latex_code.splitlines() # ensure proper line endings
 
                # -- tex postprocessing (extended syntax and multiply-defined labels)
                listLinesProcessed = self.__PostprocessTEX(listLinesTEX)
-
                sTEX = "\n".join(listLinesProcessed)
 
                # -- create the corresponding tex file for the current source file
@@ -935,7 +965,7 @@ The meaning of clean is: *delete*, followed by *create*.
 
       print()
 
-      # -- finally create the main TeX file and the PDF
+      # -- finally create the main TeX file, the autogenerated style files and the PDF
 
       # make the styles folder available within the new build folder
       sStylesFolder = self.__dictPackageDocConfig['LATEXSTYLESFOLDER']
@@ -944,10 +974,19 @@ The meaning of clean is: *delete*, followed by *create*.
       if bSuccess is not True:
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
+      # 1. Collected LaTeX definitions autogenerated by docutils
+      latex_defs_file = f"{sBuildFolder}/styles/docutils.sty"
+      latex_defs_file_handle = CFile(latex_defs_file)
+      hint = f"% file autogenerated by GenPackageDoc at '{time.strftime('%d.%m.%Y - %H:%M:%S')}'"
+      latex_defs_file_handle.Write(hint)
+      for line in collected_latex_defs:
+         latex_defs_file_handle.Write(line)
+      del latex_defs_file_handle
+
       # access to patterns
       oPatterns = CPatterns()
 
-      # 1. autodefined sty file (containing runtime informations)
+      # 2. Autodefined sty file (containing runtime informations)
       sAutodefinedFile = f"{sBuildFolder}/styles/autodefined.sty"
       oAutodefinedFile = CFile(sAutodefinedFile)
       sAutodefinedHeader = oPatterns.GetAutodefinedHeader(time.strftime('%d.%m.%Y - %H:%M:%S'))
@@ -961,7 +1000,7 @@ The meaning of clean is: *delete*, followed by *create*.
       oAutodefinedFile.Write()
       del oAutodefinedFile
 
-      # 2. main tex file
+      # 3. Main tex file
       sDocumentationTeXFileName = self.__dictPackageDocConfig['DOCUMENT']['OUTPUTFILENAME']
       sMainTexFile = f"{sBuildFolder}/{sDocumentationTeXFileName}"
       self.__dictPackageDocConfig['sMainTexFile'] = sMainTexFile
@@ -999,11 +1038,11 @@ The meaning of clean is: *delete*, followed by *create*.
 
       del oMainTexFile
 
-      # -- 3. Dump the complete configuration
+      # -- 4. Dump the complete configuration
       sOutputFolder = self.__dictPackageDocConfig['OUTPUT']
       sPackageName  = self.__dictPackageDocConfig['PACKAGENAME']
 
-      # -- 3.a text format
+      # -- 4.a text format
       sDumpConfigFileNameTxt = f"_CONFIG_{sPackageName}.txt"
       sDumpConfigFileTxt = f"{sOutputFolder}/{sDumpConfigFileNameTxt}"
       try:
@@ -1016,7 +1055,7 @@ The meaning of clean is: *delete*, followed by *create*.
          sResult  = str(reason)
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-      # -- 3.b json format
+      # -- 4.b json format
       sDumpConfigFileNameJson = f"_CONFIG_{sPackageName}.json"
       sDumpConfigFileJson = f"{sOutputFolder}/{sDumpConfigFileNameJson}"
       try:
@@ -1053,7 +1092,7 @@ The meaning of clean is: *delete*, followed by *create*.
             print(COLBY + sResult)
             print()
 
-      # 4. PDF file
+      # 5. PDF file
       if self.__dictPackageDocConfig['bSimulateOnly'] is True:
          print()
          print(COLBY + "GenPackageDoc is running in simulation mode.")

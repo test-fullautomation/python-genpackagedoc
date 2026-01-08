@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2024 Robert Bosch GmbH
+#  Copyright 2020-2026 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 #
-# 17.03.2023
+# 08.01.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -75,6 +75,9 @@ except Exception as ex:
     printexception(str(ex))
     print()
     sys.exit(ERROR)
+
+DOCBUILDERFULLNAME = oPackageDocConfig.Get("DOCBUILDERFULLNAME")
+print(f"\nThis is {DOCBUILDERFULLNAME}\n")
 
 # -- setting up and calling the doc builder
 try:
