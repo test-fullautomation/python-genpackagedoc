@@ -637,7 +637,7 @@ The meaning of clean is: *delete*, followed by *create*.
           'output_encoding'      : 'utf-8',
           'font_encoding'        : 'T1',
           'language_code'        : 'en',  # default set explicitly for better readibility
-          'legacy_column_widths' : False, # acitvates a table rendering behavior that is new and more flexible (currently docutils throw a future warning)
+          'legacy_column_widths' : False, # activates a table rendering behavior that is new and more flexible (currently docutils throw a future warning)
           'use_latex_citations'  : True   # avoid docutils future warning
       }
 
