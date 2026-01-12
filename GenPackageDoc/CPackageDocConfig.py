@@ -409,7 +409,7 @@ Responsible for:
       if bSuccess is not True:
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
-      # finally adding the some GenPackageDoc information to the GenPackageDoc configuration
+      # finally adding some GenPackageDoc information to the GenPackageDoc configuration
       self.__dictPackageDocConfig['GPD_VERSION']        = GPD_VERSION
       self.__dictPackageDocConfig['GPD_VERSION_DATE']   = GPD_VERSION_DATE
       self.__dictPackageDocConfig['DOCBUILDERFULLNAME'] = f"GenPackageDoc v. {GPD_VERSION} / {GPD_VERSION_DATE}"
