@@ -242,7 +242,7 @@ The masking of newline, newpage and vspace (rst syntax extensions) are replaced 
          # Here we have to undo this replacement: We replace the full scope string in every section and subsection by the original headline.
 
          # Pandoc adds ligatures in some cases: '--' -> '-\/-'. We do not need them. They have to be removed before we search for sKey,
-         # Also the docttils add characters: '--' -> '-{}-'. We do not need them. They have to be removed before we search for sKey,
+         # Also the docutils add characters: '--' -> '-{}-'. We do not need them. They have to be removed before we search for sKey,
          # because sKey does not contain these ligatures.
          if "section{" in sLine:
             sLine = sLine.replace(r'\/', '') # undo Pandoc modification (outdated, because Pandoc is not used any more)
