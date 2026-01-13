@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2024 Robert Bosch GmbH
+#  Copyright 2020-2026 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 04.11.2022
+# 05.01.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -225,7 +225,7 @@ Defines the header of the autodefined LaTeX sty file.
 
       sAutodefinedHeader = r"""% --------------------------------------------------------------------------------------------------------------
 %
-% Copyright 2020-2024 Robert Bosch GmbH
+% Copyright 2020-2026 Robert Bosch GmbH
 
 % Licensed under the Apache License, Version 2.0 (the "License");
 % you may not use this file except in compliance with the License.

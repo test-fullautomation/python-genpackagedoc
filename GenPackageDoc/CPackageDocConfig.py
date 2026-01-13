@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2024 Robert Bosch GmbH
+#  Copyright 2020-2026 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 06.06.2023
+# 08.01.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -37,6 +37,9 @@ import colorama as col
 from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
 from PythonExtensionsCollection.Utils.CUtils import *
+
+from GenPackageDoc.version import VERSION as GPD_VERSION
+from GenPackageDoc.version import VERSION_DATE as GPD_VERSION_DATE
 
 col.init(autoreset=True)
 COLBR = col.Style.BRIGHT + col.Fore.RED
@@ -406,6 +409,12 @@ Responsible for:
       if bSuccess is not True:
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
+      # finally adding some GenPackageDoc information to the GenPackageDoc configuration
+      self.__dictPackageDocConfig['GPD_VERSION']        = GPD_VERSION
+      self.__dictPackageDocConfig['GPD_VERSION_DATE']   = GPD_VERSION_DATE
+      self.__dictPackageDocConfig['DOCBUILDERFULLNAME'] = f"GenPackageDoc v. {GPD_VERSION} / {GPD_VERSION_DATE}"
+
+      # debug
       # PrettyPrint(self.__dictPackageDocConfig, sPrefix="Config")
 
    # eof def __init__(self, oRepositoryConfig=None):
