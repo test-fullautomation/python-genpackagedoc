@@ -87,7 +87,7 @@ docs = [
 # Status: Optional
 #
 [project.urls]
-Homepage      = "https://github.com/test-fullautomation/python-genpackagedoc"
+Homepage      = "https://pypi.org/project/GenPackageDoc/"
 Documentation = "https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/GenPackageDoc/GenPackageDoc.pdf"
 Readme        = "https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/README.rst"
 Repository    = "https://github.com/test-fullautomation/python-genpackagedoc"
