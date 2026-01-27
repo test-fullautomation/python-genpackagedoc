@@ -1,4 +1,4 @@
-.. Copyright 2020-2024 Robert Bosch GmbH
+.. Copyright 2020-2026 Robert Bosch GmbH
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -53,17 +53,9 @@ How to install
 
    * Install dependencies
 
-     **GenPackageDoc** requires some additional Python libraries. Before you install the cloned repository sources
-     you have to install the dependencies manually. The names of all related packages you can find in the file ``requirements.txt``
-     in the repository root folder. Use pip to install them:
+     Install **LaTeX** (recommended: TeX Live). This is required.
 
-     .. code::
-
-        pip install -r requirements.txt
-
-     Additionally install **LaTeX** (recommended: TeX Live). This is required.
-
-     Additionally install **PlantUML**. This is an option.
+     Install **PlantUML**. This is an option.
 
    * Configure dependencies
 
@@ -82,11 +74,11 @@ How to install
      - ``GENDOC_PLANTUML_PATH`` : path to ``plantuml`` executable (optional)
      - ``JAVA_HOME`` : path to ``java`` executable (optional, only in case of **PlantUML** is used)
 
-   * Use the following command to install **GenPackageDoc**:
+   * Use the following command to install **GenPackageDoc** (executed in repository main folder):
 
      .. code::
 
-        setup.py install
+        python -m pip install .
 
 How to use
 ----------

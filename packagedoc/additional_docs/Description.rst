@@ -1,4 +1,4 @@
-.. Copyright 2020-2024 Robert Bosch GmbH
+.. Copyright 2020-2026 Robert Bosch GmbH
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,17 +23,6 @@ Repository content
 
   *This folder is specific for the package.*
 
-* Folder ``config``
-
-  Contains the repository configuration (e.g. the name of the package, the name of the repository, the author, and more ...).
-
-  *This folder is specific for the repository.*
-
-* Folder ``additions``
-
-  Contains additionally needed sources like setup related class definitions and sources, that are imported
-  from other repositories - to make this repository stand alone
-
 * Folder ``packagedoc``
 
   Contains all package documentation related files, e.g. the **GenPackageDoc** configuration, additional input files
@@ -47,18 +36,19 @@ Repository content
 
     Python script to start the documentation build
 
-  - ``setup.py``
+  - ``build_backend.py``
 
-    Python script to install the package sources. This includes the execution of ``genpackagedoc.py``.
-    Therefore building the documentation is part of the installation process.
+    Custom build backend to execute additional installation steps. This includes the execution of ``genpackagedoc.py``
+    and the deletion of previous build artefacts and installation folders.
+
+  - ``pyproject.toml``
+
+    Main configuration file for the installation of the component
 
   - ``dump_repository_config.py``
 
     Little helper to dump the repository configuration to console
 
-  - ``readme.rst2md.py``
-
-    Little helper to convert the RST version of the README file to MD format separately (``setup.py`` also does this).
 
 //
 
@@ -69,34 +59,24 @@ Documentation build process
 
 * The process starts with the execution of ``genpackagedoc.py`` within the repository root folder.
 
-  ``genpackagedoc.py`` can be used stand alone - but this script is also called by ``setup.py``. The impact is that every installation
+  ``genpackagedoc.py`` can be used stand alone - but this script is also called by ``build_backend.py```. The impact is that every installation
   includes an update of the documentation.
 
 * ``genpackagedoc.py`` creates a repository configuration object
 
      ``config/CRepositoryConfig.py``
 
-* The repository configuration object reads the static repository configuration values out of a separate json file
+* The repository configuration object reads the static repository configuration values out of the TOML file
 
-     ``config/repository_config.json``
+     ``pyproject.toml``
+
+  Exception: The component version is taken from the Python source code
+
+     ``GenPackageDoc/version.py``
 
 * The repository configuration object adds dynamic values (like operating system specific settings and paths) to the repository configuration.
-  Not all of them are required for the documentation build process, but the repository configuration also supports the setup process (``setup.py``).
-
-  There is one certain setting in the repository configuration file
-
-     ``config/repository_config.json``,
-
-  that is essential for the documentation build process:
-
-     ``"PACKAGEDOC" : "./packagedoc"``
-
-  This is the path to a folder, in which all further documentation related files are placed. In case of the path is relative, the reference
-  is the position of ``genpackagedoc.py``. It is required that within this folder the configuration file for the documentation build process
-
-     ``packagedoc_config.json``
-
-  can be found. The name of this json file is fix!
+  Not all of them are required for the documentation build process, but the repository configuration also supports the installation process
+  (``build_backend.py``).
 
 * The configuration file ``packagedoc_config.json`` contains settings like
 
@@ -135,7 +115,7 @@ documentation build process.
 Because the output folder is a temporary one, the PDF document is copied to the folder containing the package sources
 and therefore is included in the package installation. This is defined in the **GenPackageDoc** configuration, section ``"PDFDEST"``./
 
-/
+//
 
 **Command line**
 
@@ -150,7 +130,7 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
   Path and name of folder in which the generated PDF file will be copied to (after this file has been created within the output folder).
 
   *Caution*: The generated PDF file will per default be copied to the package folder within the repository. This is defined in ``packagedoc_config.json``.
-  The version of the PDF file within the package folder will be part of the installation (when using ``setup.py``). When you change the PDF destination,
+  The version of the PDF file within the package folder will be part of the installation. When you change the PDF destination,
   then you get this file at another location - but this file will not be part of the installation any more. Installed will be the version,
   that is still present within the package folder of the repository. Please try to get the bottom of your motivation when you change this setting.
 
@@ -162,11 +142,11 @@ Some configuration parameter predefined within ``packagedoc_config.json``, can b
   It might be useful for further processes to have access to all details regarding the current
   documentation build.
 
---strict
+``--strict``
 
   If ``True``, a missing LaTeX compiler aborts the process, otherwise the process continues.
 
---simulateonly
+``--simulateonly``
 
   If ``True``, the LaTeX compiler is switched off. No new PDF output will be generated. Already existing PDF output will not be updated.
   This is not handled as error and also not handled as warning. Only the source files will be parsed. This switch is useful
@@ -302,7 +282,7 @@ All configuration parameters of **GenPackageDoc** are taken out of four sources:
 
 1. the static repository configuration
 
-   ``config/repository_config.json``
+   ``pyproject.toml``
 
 2. the dynamic repository configuration
 
