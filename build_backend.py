@@ -22,7 +22,7 @@ Custom Build Backend including additional installation steps like
 * Documentation rendering
 * Delete artefacts from previous installation/build
 
-All data needed to do this are aken from the repository configuration.
+All data needed to do this are taken from the repository configuration.
 No define of any paths here.
 """
 
