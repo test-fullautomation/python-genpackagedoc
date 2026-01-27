@@ -206,7 +206,7 @@ def build_sdist(
     returnval = _manager.run_pre_build_steps()
     if returnval != SUCCESS:
         raise Exception(f"Execution of pre_build_steps failed with error code {returnval}. Premature end of build_sdist.") 
-    build_sdist_return = _build_sdist(wheel_directory, config_settings, metadata_directory)
+    build_sdist_return = _build_sdist(sdist_directory, config_settings)
     logger.info("Leaving build_sdist")
     return build_sdist_return
 
