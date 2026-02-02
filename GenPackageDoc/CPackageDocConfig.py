@@ -39,7 +39,7 @@ from PythonExtensionsCollection.File.CFile import CFile
 from PythonExtensionsCollection.Utils.CUtils import *
 
 from GenPackageDoc.version import __version__ as GPD_VERSION
-from GenPackageDoc.version import __versiondate__ as GPD_VERSION_DATE
+from GenPackageDoc.version import _version_date as GPD_VERSION_DATE
 
 col.init(autoreset=True)
 COLBR = col.Style.BRIGHT + col.Fore.RED

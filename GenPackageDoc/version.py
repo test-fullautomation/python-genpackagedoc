@@ -18,6 +18,6 @@
 #
 # Version and date of GenPackageDoc
 #
-__version__     = "0.43.0"
-__versiondate__ = "26.01.2026"
+__version__   = "0.43.0"
+_version_date = "02.02.2026"
 
