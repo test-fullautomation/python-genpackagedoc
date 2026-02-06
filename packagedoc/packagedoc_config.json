@@ -5,7 +5,7 @@
 # With the help of a LaTeX compiler the tex files can be converted into a PDF file.
 # This json file contains the required settings.
 #
-# 24.05.2023
+# 06.02.2026
 #
 # **************************************************************************************************************
 # Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -49,6 +49,8 @@
 # It is strongly recommended to place all additional RST files flat into one single folder (and not in any further sub folder).
 # Reason is that currently the tex files generated out of the RST files are also placed flat into only one single output folder
 # (see section "OUTPUT") and the relative paths to possibly imported pictures (see section "PICTURES") must be kept valid!
+# The optional key "EXCLUDE" contain a list of file names (without extension!) that will be excluded from computation.
+# The content of the docstrings of the files within this list will not be part of the PDF documentation.
 
    "TOC" : {
             "introduction"  : "./additional_docs/Introduction.rst",
@@ -56,7 +58,8 @@
             "INTERFACE"     : "../###PACKAGENAME###",
             "appendix"      : "./additional_docs/Appendix.rst",
             "history"       : "./additional_docs/History.tex",
-            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","appendix","history"]
+            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","appendix","history"],
+            "EXCLUDE"       : ["short_description"]
            },
 
 # Section "PARAMS":

@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 12.01.2026
+# 06.02.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -641,6 +641,9 @@ The meaning of clean is: *delete*, followed by *create*.
           'use_latex_citations'  : True   # avoid docutils future warning
       }
 
+      # -- check if files need to be excluded from computation
+      listExcludes = self.__dictPackageDocConfig['TOC'].get('EXCLUDE', [])
+
       # -- check existence of document parts and parse the content
 
       listDocumentParts = self.__dictPackageDocConfig['TOC']['DOCUMENTPARTS']
@@ -679,8 +682,6 @@ The meaning of clean is: *delete*, followed by *create*.
 
             for sModule in listModules:
 
-               print(f"* Module : '{sModule}'")
-
                listLinesRST = [] # the module/chapter specific subset
 
                # -- get informations about the source file and derive further information
@@ -691,6 +692,12 @@ The meaning of clean is: *delete*, followed by *create*.
                sModuleFilePath     = dModuleFileInfo['sFilePath']
                sModuleFileNameOnly = dModuleFileInfo['sFileNameOnly']
                sModuleFileSubPath  = sModuleFilePath[len(sRootPath)+1:]
+
+               if sModuleFileNameOnly in listExcludes:
+                  print(f"* Skipping module : '{sModule}'")
+                  continue
+
+               print(f"* Module : '{sModule}'")
 
                # -- prepare the scope of the module file (used for labels within LaTeX code and for the names of LaTeX files generated out of rst code)
                sModuleFileScope = ""
