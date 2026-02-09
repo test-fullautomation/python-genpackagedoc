@@ -29,7 +29,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 #
-# 29.01.2026
+# 09.02.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -173,12 +173,9 @@ class CRepositoryConfig():
 
         # ====== 2. PIP/TOML/setuptools
 
-        self.__dictRepositoryConfig['SETUPBUILDFOLDER']           = CString.NormalizePath(f"{self.__sReferencePath}/build")
-        # TODO: check if still required: self.__dictRepositoryConfig['SETUPBUILDLIBFOLDER']        = CString.NormalizePath(f"{self.__sReferencePath}/build/lib")
-        # TODO: check if still required: self.__dictRepositoryConfig['SETUPBUILDLIBPACKAGEFOLDER'] = CString.NormalizePath(f"{self.__sReferencePath}/build/lib/{self.__dictRepositoryConfig['PACKAGENAME']}")
-        # deprecated: self.__dictRepositoryConfig['SETUPDISTFOLDER']            = CString.NormalizePath(f"{self.__sReferencePath}/dist")
+        self.__dictRepositoryConfig['SETUPBUILDFOLDER'] = CString.NormalizePath(f"{self.__sReferencePath}/build")
         EGGINFOFOLDER = self.__dictRepositoryConfig['PACKAGENAME'].replace('-', '_')
-        self.__dictRepositoryConfig['EGGINFOFOLDER']              = CString.NormalizePath(f"{self.__sReferencePath}/{EGGINFOFOLDER}.egg-info")
+        self.__dictRepositoryConfig['EGGINFOFOLDER'] = CString.NormalizePath(f"{self.__sReferencePath}/{EGGINFOFOLDER}.egg-info")
 
         print()
         print(f"Running under {sPlatformSystem} ({sOSName})")

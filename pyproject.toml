@@ -18,7 +18,7 @@
 #
 # TOML file used for component installation
 #
-# Version 0.1.0 / 19.01.2026
+# Version 0.1.0 / 09.02.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -33,7 +33,7 @@
 #
 [build-system]
 # 'requires' specifies the dependencies necessary for the build process (meaning the conversion of source code into an installable distribution)
-requires      = ["setuptools>=80.9.0", "wheel", "docutils>=0.22.4", "colorama", "PythonExtensionsCollection"]
+requires      = ["setuptools>=80.9.0", "wheel", "build", "docutils>=0.22.4", "colorama", "PythonExtensionsCollection"]
 build-backend = "build_backend"
 backend-path  = ["."] # the repository main folder
 

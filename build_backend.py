@@ -44,8 +44,6 @@ from setuptools.build_meta import (
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from config.CRepositoryConfig import CRepositoryConfig # provides repository and environment specific information
-
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 logger = logging.getLogger(__name__)
 
@@ -62,66 +60,21 @@ Custom Build Backend
     """
     
     def __init__(self):
-        self.project_root = Path(__file__).parent
+        pass
 
-        # setup of repository configuration
-        self.repository_config = None
-        try:
-            self.repository_config = CRepositoryConfig(f"{__file__}")
-        except Exception as ex:
-            logger.critical(str(ex))
-            raise Exception(str(ex))
-
-    def genpackagedoc(self):
-        """
-Executes the documentation builder
-        """
-
-        DOCUMENTATIONBUILDER = self.repository_config.Get('DOCUMENTATIONBUILDER')
-        PYTHON = self.repository_config.Get('PYTHON')
-
-        listCmdLineParts = []
-        listCmdLineParts.append(f"\"{PYTHON}\"")
-        listCmdLineParts.append(f"\"{DOCUMENTATIONBUILDER}\"")
-        sCmdLine = " ".join(listCmdLineParts)
-        del listCmdLineParts
-        listCmdLineParts = shlex.split(sCmdLine)
-        # -- debug
-        sCmdLine = " ".join(listCmdLineParts)
-        logger.info(f"Executing: '{sCmdLine}'")
-        nReturn = ERROR
-        try:
-            nReturn = subprocess.call(listCmdLineParts)
-        except Exception as ex:
-            logger.error(str(ex))
-            return ERROR
-        return nReturn
-    # eof def genpackagedoc():
-    
     def run_pre_build_steps(self) -> None:
         """
 Custom build steps
         """
-        logger.info("Entering pre build process")
-
-        logger.info("Rendering documentation")
-        returnval = None
-        try:
-            returnval = self.genpackagedoc()
-            logger.info(f"Documentation renderer returned '{returnval}'")
-        except Exception as ex:
-            logger.error(str(ex))
-            return ERROR
-        if returnval != SUCCESS:
-            return returnval
-
-        logger.info("Leaving pre build process")
+        # logger.info("Entering pre build process")
+        # !!! reserved for future development !!!
+        # logger.info("Leaving pre build process")
 
         return SUCCESS
 
 # eof class BuildManager:
 
-_manager = BuildManager()
+build_backend = BuildManager()
 
 def build_wheel(
     wheel_directory: str,
@@ -129,7 +82,7 @@ def build_wheel(
     metadata_directory: Optional[str] = None
 ) -> str:
     logger.info("Entering build_wheel")
-    returnval = _manager.run_pre_build_steps()
+    returnval = build_backend.run_pre_build_steps()
     if returnval != SUCCESS:
         raise Exception(f"Execution of pre_build_steps failed with error code {returnval}. Premature end of build_wheel.") 
     build_wheel_return = _build_wheel(wheel_directory, config_settings, metadata_directory)
@@ -142,7 +95,7 @@ def build_sdist(
     config_settings: Optional[Dict] = None
 ) -> str:
     logger.info("Entering build_sdist")
-    returnval = _manager.run_pre_build_steps()
+    returnval = build_backend.run_pre_build_steps()
     if returnval != SUCCESS:
         raise Exception(f"Execution of pre_build_steps failed with error code {returnval}. Premature end of build_sdist.") 
     build_sdist_return = _build_sdist(sdist_directory, config_settings)
