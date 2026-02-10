@@ -31,9 +31,6 @@ import sys
 import logging
 import shutil
 
-from pathlib import Path
-from typing import Dict, Optional
-
 from config.CRepositoryConfig import CRepositoryConfig # provides repository and environment specific information
 
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
