@@ -92,10 +92,10 @@ class CRepositoryConfig():
         self.__dictRepositoryConfig['TOMLCONFIGURATIONFILE'] = toml_file
         with open(toml_file, "rb") as f:
             toml_data = tomllib.load(f)
-        authors = toml_data["project"]["authors"]
-        author = authors[0] if authors else "(not found)"
-        self.__dictRepositoryConfig['AUTHOR'] = author['name']
-        self.__dictRepositoryConfig['AUTHOREMAIL'] = author['email']
+        authors = toml_data.get("project", {}).get("authors") or []
+        author = authors[0] if isinstance(authors, list) and authors else {}
+        self.__dictRepositoryConfig['AUTHOR'] = author.get('name', "(not found)") if isinstance(author, dict) else "(not found)"
+        self.__dictRepositoryConfig['AUTHOREMAIL'] = author.get('email', "(not found)") if isinstance(author, dict) else "(not found)"
         self.__dictRepositoryConfig['PACKAGENAME'] = toml_data["project"]["name"]
         self.__dictRepositoryConfig['DESCRIPTION'] = toml_data["project"]["description"]
         self.__dictRepositoryConfig['BUILDREQUIRES'] = toml_data["build-system"]["requires"]
