@@ -80,16 +80,44 @@ How to install
 
         python -m pip install .
 
-     In case you want to have a really clean installation (without any outdated or not used files left from previous installations),
-     extend the installation to:
+     or:
 
      .. code::
 
-        python "./cleanup_installation.py"
-        python -m pip install .
+        python -m pip install --proxy <proxy> .
 
-     ``cleanup_installation.py`` explicitly deletes all files and folders within the component installation folder under
-     ``site-packages`` and also deletes local build artefacts.
+     This command will also download and install all dependencies that are required to work with the source files in the current repository.
+     After the initial installation of **GenPackageDoc** is done, you have the following two possibilities:
+
+     1. *Clean the previous installation*:
+
+        .. code::
+
+           python "./cleanup_installation.py"
+
+       ``cleanup_installation.py`` explicitly deletes all files and folders within the component installation folder under
+       ``site-packages`` and also deletes local build artefacts.
+
+     2. *Render the component documentation*:
+
+        .. code::
+
+           python "./genpackagedoc.py"
+
+        This would e.g. be required in case of changes in the interface of **GenPackageDoc**.
+
+   * Use the following command to build **GenPackageDoc** (executed in repository main folder):
+
+     .. code::
+
+        python -m build .
+
+     Or:
+
+     .. code::
+
+        python -m pip config set global.proxy <proxy>
+        python -m build .
 
 
 How to use
