@@ -59,9 +59,6 @@ Documentation build process
 
 * The process starts with the execution of ``genpackagedoc.py`` within the repository root folder.
 
-  ``genpackagedoc.py`` can be used stand alone - but this script is also called by ``build_backend.py```. The impact is that every installation
-  includes an update of the documentation.
-
 * ``genpackagedoc.py`` creates a repository configuration object
 
      ``config/CRepositoryConfig.py``

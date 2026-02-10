@@ -17,12 +17,9 @@
 # **************************************************************************************************************
 #
 """
-Custom Build Backend including additional installation steps like
+Custom Build Backend
 
-* Documentation rendering
-
-All data needed to do this are taken from the repository configuration.
-No define of any paths here.
+Currently reserved for future development
 """
 
 import sys
@@ -56,7 +53,7 @@ Custom Build Backend
     def __init__(self):
         pass
 
-    def run_pre_build_steps(self) -> None:
+    def run_pre_build_steps(self) -> int:
         """
 Custom build steps
         """

@@ -49,7 +49,7 @@
 # It is strongly recommended to place all additional RST files flat into one single folder (and not in any further sub folder).
 # Reason is that currently the tex files generated out of the RST files are also placed flat into only one single output folder
 # (see section "OUTPUT") and the relative paths to possibly imported pictures (see section "PICTURES") must be kept valid!
-# The optional key "EXCLUDE" contain a list of file names (without extension!) that will be excluded from computation.
+# The optional key "EXCLUDE" contains a list of file names (without extension!) that will be excluded from computation.
 # The content of the docstrings of the files within this list will not be part of the PDF documentation.
 
    "TOC" : {
