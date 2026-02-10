@@ -95,8 +95,8 @@ How to install
 
            python "./cleanup_installation.py"
 
-       ``cleanup_installation.py`` explicitly deletes all files and folders within the component installation folder under
-       ``site-packages`` and also deletes local build artefacts.
+        ``cleanup_installation.py`` explicitly deletes all files and folders within the component installation folder under
+        ``site-packages`` and also deletes local build artefacts.
 
      2. *Render the component documentation*:
 
