@@ -22,7 +22,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 #
-# Accordingly to the TOML specification:
+# According to the TOML specification:
 # * Names in square brackets (e.g. [build-system]) are called 'table'.
 # * Names located to the left of the equal sign (e.g. 'requires') are called 'key'.
 #
@@ -50,7 +50,7 @@ authors         = [{name = "Holger Queckenstedt", email = "Holger.Queckenstedt@d
 readme          = "README.rst"
 license         = "Apache-2.0"
 keywords        = ["documentation", "docstring"]
-# 'classifiers' need to be choosen accordingly to: https://pypi.org/classifiers/
+# 'classifiers' need to be choosen according to: https://pypi.org/classifiers/
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

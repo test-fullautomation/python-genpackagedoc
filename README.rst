@@ -80,7 +80,7 @@ How to install
 
         python -m pip install .
 
-     or:
+     Or:
 
      .. code::
 
