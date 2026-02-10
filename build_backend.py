@@ -25,17 +25,11 @@ All data needed to do this are taken from the repository configuration.
 No define of any paths here.
 """
 
-import os
 import sys
 import logging
-import subprocess
-import shlex
 
 from pathlib import Path
 from typing import Dict, Optional
-
-import wheel.wheelfile
-
 from setuptools.build_meta import (
     build_wheel as _build_wheel,
     build_sdist as _build_sdist,
