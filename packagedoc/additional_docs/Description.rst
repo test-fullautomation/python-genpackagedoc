@@ -38,8 +38,7 @@ Repository content
 
   - ``build_backend.py``
 
-    Custom build backend to execute additional installation steps. This includes the execution of ``genpackagedoc.py``
-    and the deletion of previous build artefacts and installation folders.
+    Custom build backend to execute additional installation steps. Currently this is a pattern only reserved for future development.
 
   - ``pyproject.toml``
 
@@ -72,8 +71,6 @@ Documentation build process
      ``GenPackageDoc/version.py``
 
 * The repository configuration object adds dynamic values (like operating system specific settings and paths) to the repository configuration.
-  Not all of them are required for the documentation build process, but the repository configuration also supports the installation process
-  (``build_backend.py``).
 
 * The configuration file ``packagedoc_config.json`` contains settings like
 

@@ -43,12 +43,12 @@ backend-path  = ["."] # the repository main folder
 # Status: Required
 #
 [project]
-name            = "GenPackageDoc" # the official PyPi packet name (must be unique worldwide), not necessarily the import name
+name            = "GenPackageDoc" # the official PyPi package name (must be unique worldwide), not necessarily the import name
 description     = "Documentation builder for Python packages"
 requires-python = ">=3.11"
 authors         = [{name = "Holger Queckenstedt", email = "Holger.Queckenstedt@de.bosch.com"}]
 readme          = "README.rst"
-license         = "Apache-2.0"
+license         = { text = "Apache-2.0" }
 keywords        = ["documentation", "docstring"]
 # 'classifiers' need to be choosen according to: https://pypi.org/classifiers/
 classifiers = [

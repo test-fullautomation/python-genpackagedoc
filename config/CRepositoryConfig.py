@@ -29,7 +29,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 #
-# 09.02.2026
+# 10.02.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -101,7 +101,7 @@ class CRepositoryConfig():
         self.__dictRepositoryConfig['BUILDREQUIRES'] = toml_data["build-system"]["requires"]
         self.__dictRepositoryConfig['EXECUTIONREQUIRES'] = toml_data["project"]["dependencies"]
         self.__dictRepositoryConfig['PYTHON_REQUIRED'] = toml_data["project"]["requires-python"]
-        self.__dictRepositoryConfig['LICENSE'] = toml_data["project"]["license"]
+        self.__dictRepositoryConfig['LICENSE'] = toml_data["project"]["license"]["text"]
         self.__dictRepositoryConfig['KEYWORDS'] = toml_data["project"]["keywords"]
         # currently skipped because too much content for nice console output:
         # self.__dictRepositoryConfig['classifiers'] = toml_data["project"]["classifiers"]
@@ -116,7 +116,7 @@ class CRepositoryConfig():
         self.__dictRepositoryConfig['URL_DOCUMENTATION'] = urls.get("Documentation", "")             # documentation URL as string
         self.__dictRepositoryConfig['URL_README'] = urls.get("Readme", "")                           # readme URL as string
         self.__dictRepositoryConfig['URL_REPOSITORY'] = urls.get("Repository", "")                   # repository URL as string
-        self.__dictRepositoryConfig['URL'] = urls.get("Repository", "") # !!! downward compatibility to older version of GenpackageDoc / to be removed later
+        self.__dictRepositoryConfig['URL'] = urls.get("Repository", "") # !!! downward compatibility to older version of GenPackageDoc / to be removed later
         self.__dictRepositoryConfig['URL_ISSUES'] = urls.get("Issues", "")                           # issues URL as string
         tool = toml_data.get("tool", {})
         setuptools = tool.get("setuptools", {})
@@ -176,6 +176,7 @@ class CRepositoryConfig():
         self.__dictRepositoryConfig['SETUPBUILDFOLDER'] = CString.NormalizePath(f"{self.__sReferencePath}/build")
         EGGINFOFOLDER = self.__dictRepositoryConfig['PACKAGENAME'].replace('-', '_')
         self.__dictRepositoryConfig['EGGINFOFOLDER'] = CString.NormalizePath(f"{self.__sReferencePath}/{EGGINFOFOLDER}.egg-info")
+        self.__dictRepositoryConfig['SETUPDISTFOLDER'] = CString.NormalizePath(f"{self.__sReferencePath}/dist")
 
         print()
         print(f"Running under {sPlatformSystem} ({sOSName})")
