@@ -55,7 +55,7 @@ Methods to tidy up the installation
             self.repository_config = CRepositoryConfig(f"{__file__}")
         except Exception as ex:
             logger.critical(str(ex))
-            raise Exception(str(ex))
+            raise
 
 
     def delete_previous_build(self):
