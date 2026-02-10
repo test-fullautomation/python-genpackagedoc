@@ -121,7 +121,7 @@ class CRepositoryConfig():
         tool = toml_data.get("tool", {})
         setuptools = tool.get("setuptools", {})
         package_data = setuptools.get("package-data", {})
-        self.__dictRepositoryConfig['PACKAGE_DATA'] = package_data.get(self.__dictRepositoryConfig['PACKAGENAME'], {})
+        self.__dictRepositoryConfig['PACKAGE_DATA'] = package_data.get(self.__dictRepositoryConfig['PACKAGENAME'], [])
 
         # compute dynamic configuration values
         bSuccess, sResult = self.__InitConfig()
