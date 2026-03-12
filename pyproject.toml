@@ -117,7 +117,7 @@ packages = ["GenPackageDoc", "GenPackageDoc.styles"]
 # Status: Optional (but required if 'dynamic' is used within the [project] block!)
 #
 [tool.setuptools.dynamic]
-version = {attr = "GenPackageDoc.version.__version__"} # not defined here; we take the version from source code
+version = {attr = "GenPackageDoc.version.VERSION"} # not defined here; we take the version from source code
 
 
 

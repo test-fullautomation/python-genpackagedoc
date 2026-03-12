@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 13.01.2026
+# 12.03.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -38,8 +38,8 @@ from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
 from PythonExtensionsCollection.Utils.CUtils import *
 
-from GenPackageDoc.version import __version__ as GPD_VERSION
-from GenPackageDoc.version import _version_date as GPD_VERSION_DATE
+from GenPackageDoc.version import VERSION as GPD_VERSION
+from GenPackageDoc.version import VERSION_DATE as GPD_VERSION_DATE
 
 col.init(autoreset=True)
 COLBR = col.Style.BRIGHT + col.Fore.RED
