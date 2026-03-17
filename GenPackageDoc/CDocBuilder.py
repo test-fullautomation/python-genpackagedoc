@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 06.02.2026
+# 17.03.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -32,10 +32,14 @@ Python module containing all methods to generate tex sources.
 
 import os, sys, time, shlex, subprocess, platform, shutil, re, json
 import colorama as col
+
 from docutils.core import publish_parts
+from docutils import nodes
 
 from GenPackageDoc.CSourceParser import CSourceParser
 from GenPackageDoc.CPatterns import CPatterns
+
+from GenPackageDoc.markdown_extensions import CustomLaTeXWriter
 
 from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
@@ -838,7 +842,7 @@ The meaning of clean is: *delete*, followed by *create*.
                del oRSTCodeFile
 
                # -- convert the complete rst content of the current source file to tex format
-               latex_parts = publish_parts(source=sRSTCode, writer_name='latex', settings_overrides=settings_overrides)
+               latex_parts = publish_parts(source=sRSTCode, writer=CustomLaTeXWriter(), settings_overrides=settings_overrides)
                definition_names = ("requirements", "fallbacks", "pdfsetup", "stylesheet")
                for definition_name in definition_names:
                   definition = latex_parts.get(definition_name, "").strip()
@@ -903,7 +907,7 @@ The meaning of clean is: *delete*, followed by *create*.
                sRSTCode = "\n".join(listLinesProcessed)
 
                # -- convert the complete rst content of the current source file to tex format
-               latex_parts = publish_parts(source=sRSTCode, writer_name='latex', settings_overrides=settings_overrides)
+               latex_parts = publish_parts(source=sRSTCode, writer=CustomLaTeXWriter(), settings_overrides=settings_overrides)
                definition_names = ("requirements", "fallbacks", "pdfsetup", "stylesheet")
                for definition_name in definition_names:
                   definition = latex_parts.get(definition_name, "").strip()

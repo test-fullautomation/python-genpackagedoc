@@ -393,6 +393,208 @@ These syntax extensions can currently be used in separate RST files only and are
 
 //
 
+Listings
+========
+
+**GenPackageDoc** supports code listings and console listings. These listings are available as text block and as inline text also.
+You can use these listings in RST files and also in LaTeX files immediately. The RST elements for listings are mapped to the corresponding
+LaTeX commands when **GenPackageDoc** internally converts the RST files in LaTeX files.
+
+Text blocks are realized by markdown directives. Inline text is realized by markdown rules.
+
+/
+
+**Examples:**
+
+/
+
+----
+
+This is a markdown directive :pcode:`pythoncode` code example:
+
+.. pythoncode::
+
+   for index in list:
+       print("index")
+
+Written in RST format:
+
+.. code::
+
+   .. pythoncode::
+
+      for index in list:
+          print("index")
+
+Written in LaTeX format:
+
+.. code::
+
+   \begin{pythoncode}
+       for index in list:
+           print("index")
+   \end{pythoncode}
+
+----
+
+This is a markdown directive :rcode:`robotcode` code example:
+
+.. robotcode::
+
+   FOR    ${index}    IN RANGE    0    ${max}
+       log    index: ${index}    console=yes
+   END
+
+Written in RST format:
+
+.. code::
+
+   .. robotcode::
+
+      FOR    ${index}    IN RANGE    0    ${max}
+          log    index: ${index}    console=yes
+      END
+
+Written in LaTeX format:
+
+.. code::
+
+   \begin{robotcode}
+      FOR    ${index}    IN RANGE    0    ${max}
+          log    index: ${index}    console=yes
+      END
+   \end{robotcode}
+
+//
+
+This is a markdown directive :pcode:`pythonlog` code example:
+
+.. pythonlog::
+
+   index: 0
+   index: 1
+   index: 2
+
+Written in RST format:
+
+.. code::
+
+   .. pythonlog::
+
+      index: 0
+      index: 1
+      index: 2
+
+Written in LaTeX format:
+
+.. code::
+
+   \begin{pythonlog}
+      index: 0
+      index: 1
+      index: 2
+   \end{pythonlog}
+
+----
+
+This is a markdown directive :rcode:`robotlog` code example:
+
+.. robotlog::
+
+   index: 0
+   index: 1
+   index: 2
+
+Written in RST format:
+
+.. code::
+
+   .. robotlog::
+
+      index: 0
+      index: 1
+      index: 2
+
+Written in LaTeX format:
+
+.. code::
+
+   \begin{robotlog}
+      index: 0
+      index: 1
+      index: 2
+   \end{robotlog}
+
+//
+
+This is inline Python code: :pcode:`print("Hello Python")`
+
+Written in RST format:
+
+.. code::
+
+   :pcode:`print("Hello Python")`
+
+Written in LaTeX format:
+
+.. code::
+
+   \pcode{print("Hello Python")}
+
+----
+
+This is inline Robot code: :rcode:`log~~~~Hello RobotFramework AIO`
+
+Written in RST format:
+
+.. code::
+
+   :rcode:`log~~~~Hello RobotFramework AIO`
+
+Written in LaTeX format:
+
+.. code::
+
+   \rcode{log~~~~Hello RobotFramework AIO}
+
+Be aware of the tilde '``~``'!
+LaTeX per default reduces multiple blanks to one single blank.
+**The tilde is required here to keep multiple blanks.**
+
+----
+
+This is inline Python log: :plog:`Hello Python`
+
+Written in RST format:
+
+.. code::
+
+   :plog:`Hello Python`
+
+Written in LaTeX format:
+
+.. code::
+
+   \plog{Hello Python}
+
+----
+
+This is inline Robot log: :rlog:`Hello RobotFramework AIO`
+
+Written in RST format:
+
+.. code::
+
+   :rlog:`Hello RobotFramework AIO`
+
+Written in LaTeX format:
+
+.. code::
+
+   \rlog{Hello RobotFramework AIO}
+
+//
+
 Diagrams
 ========
 

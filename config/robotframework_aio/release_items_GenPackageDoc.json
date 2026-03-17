@@ -47,10 +47,18 @@
    "RELEASES"  : {
                    "1.0.0.;1.1.0." : [
 "
-* Usage of **pandoc/pypandoc** replaced by usage of **docutils** (conversion of RST content to LaTeX format).
-* Usage of **Setuptools** replaced by usage of **PIP/TOML/Setuptools**.
+*Maintenance:*
 
-  Details about how to install the component with PIP, can be found in the `README <https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/README.rst>`__
+* Usage of **pandoc/pypandoc** replaced by usage of **docutils** (conversion of RST content to LaTeX format)
+* Usage of **Setuptools** replaced by usage of **PIP/TOML/Setuptools**
+* History reworked (youngest verion on top now) and migrated from LaTeX format to RST format
+
+*Added:*
+
+* Possibility to exclude interface files from computation
+* Markdown directives to support Python and **Robot Framework** code listings and log listings
+
+Details about how to install the component with PIP, can be found in the `README <https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/README.rst>`__
 "
                                      ]
                  }

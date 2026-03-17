@@ -22,7 +22,7 @@
 % - RobotFramework AIO code and console listings
 % - Python code and console listings
 %
-% 21.11.2022
+% 16.03.2026
 %
 % --------------------------------------------------------------------------------------------------------------
 
@@ -265,7 +265,9 @@
    }
 }{}
 
+
 \newcommand{\rcode}[1]{
+   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \rcode is executed!
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_code_frame,
@@ -321,6 +323,7 @@
 }{}
 
 \newcommand{\rlog}[1]{
+   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \rlog is executed!
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_log_frame,
@@ -386,6 +389,7 @@
 }{}
 
 \newcommand{\pcode}[1]{
+   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \pcode is executed!
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_code_frame,
@@ -440,6 +444,7 @@
 }{}
 
 \newcommand{\plog}[1]{
+   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \plog is executed!
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_log_frame,
