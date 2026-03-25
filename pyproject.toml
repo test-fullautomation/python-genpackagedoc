@@ -18,7 +18,7 @@
 #
 # TOML file used for component installation
 #
-# Version 0.1.0 / 12.02.2026
+# Version 0.1.0 / 19.03.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -108,7 +108,7 @@ packages = ["GenPackageDoc", "GenPackageDoc.styles"]
 # Status: Optional
 #
 [tool.setuptools.package-data]
-"GenPackageDoc" = ["*.pdf", "styles/*.sty", "styles/*.tex"]
+"GenPackageDoc" = ["*.pdf", "styles/*.sty", "styles/*.tex", "styles/*.css"]
 
 
 # --------------------------------------------------------------------------------------------------------------

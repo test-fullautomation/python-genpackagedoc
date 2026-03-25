@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 21.11.2022
+# 25.03.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -124,7 +124,6 @@ The method ``ParseSourceFile`` parses the content of a Python module.
       bIsFirstExpressionConstant = True
 
       for node in astModule.body:
-
          if isinstance(node, ast.Expr):
             if bIsFirstExpressionConstant is True:
                oExpression = node.value
@@ -132,7 +131,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                   bIsFirstExpressionConstant = False
                   sFileDescription = oExpression.value
 
-         if isinstance(node, ast.FunctionDef):
+         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             sFunctionName = f"{node.name}"
             sFunctionDocString = ast.get_docstring(node)
             bTakeIt = True
@@ -152,7 +151,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                dictFunction['sFunctionDocString'] = sFunctionDocString
                listofdictFunctions.append(dictFunction)
             # eof if bTakeIt is True:
-         # eof if isinstance(node, ast.FunctionDef):
+         # eof if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
 
          if isinstance(node, ast.ClassDef):
             # is class => bIncludeUndocumented has no relevance
@@ -165,7 +164,8 @@ The method ``ParseSourceFile`` parses the content of a Python module.
             listofdictMethods = []
 
             for subnode in node.body:
-               if isinstance(subnode, ast.FunctionDef):
+               if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
+               
                   sMethodName = f"{subnode.name}"
                   sMethodDocString = ast.get_docstring(subnode)
 
@@ -195,7 +195,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                      dictMethod['sMethodDocString'] = sMethodDocString
                      listofdictMethods.append(dictMethod)
                   # eof if bTakeIt is True
-               # eof if isinstance(subnode, ast.FunctionDef):
+               # eof if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
             # eof for subnode in node.body:
 
             dictClass['listofdictMethods'] = listofdictMethods

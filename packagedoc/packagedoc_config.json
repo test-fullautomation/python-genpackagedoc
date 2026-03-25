@@ -53,12 +53,13 @@
 # The content of the docstrings of the files within this list will not be part of the PDF documentation.
 
    "TOC" : {
+            "test"  : "./examples/example2.rst",
             "introduction"  : "./additional_docs/Introduction.rst",
             "description"   : "./additional_docs/Description.rst",
             "INTERFACE"     : "../###PACKAGENAME###",
             "appendix"      : "./additional_docs/Appendix.rst",
             "history"       : "../History.rst",
-            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","appendix","history"],
+            "DOCUMENTPARTS" : ["test","introduction","description","INTERFACE","appendix","history"],
             "EXCLUDE"       : ["short_description"]
            },
 

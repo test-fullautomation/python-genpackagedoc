@@ -34,12 +34,15 @@ import os, sys, time, shlex, subprocess, platform, shutil, re, json
 import colorama as col
 
 from docutils.core import publish_parts
+from docutils.core import publish_file
 from docutils import nodes
 
 from GenPackageDoc.CSourceParser import CSourceParser
 from GenPackageDoc.CPatterns import CPatterns
 
 from GenPackageDoc.markdown_extensions import CustomLaTeXWriter
+from GenPackageDoc.markdown_extensions import CustomHTMLWriter
+
 
 from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
@@ -874,6 +877,20 @@ The meaning of clean is: *delete*, followed by *create*.
                dictChapterInfo['sLabel']       = sModuleFileScope
                listofdictChapterInfo.append(dictChapterInfo)
 
+               # -- convert the complete rst content of the current source file to html format
+               sHTMLCodeFileName = os.path.basename(sModule) + ".html"
+               sHTMLCodeFile = f"{sBuildFolder}/{sHTMLCodeFileName}"
+               html_content = publish_file(
+                   source_path=sRSTCodeFile,
+                   destination_path=sHTMLCodeFile,
+                   writer=CustomHTMLWriter(),
+                   settings_overrides={
+                           'stylesheet': './styles/pythoncode_friendly.css,./styles/robotcode_default.css,./styles/jsoncode_friendly.css',
+                           'stylesheet_path': None,
+                           'embed_stylesheet': False
+                       })
+
+
             # eof for sModule in listModules:
 
          # eof if sDocumentPart.startswith("INTERFACE"):
@@ -937,6 +954,19 @@ The meaning of clean is: *delete*, followed by *create*.
                dictChapterInfo['sTeXFileName'] = f"{sRSTFileNameOnly}.tex"
                dictChapterInfo['sLabel']       = self.__ConvertToScopeFormat(f"{sRSTFileNameOnly}")
                listofdictChapterInfo.append(dictChapterInfo)
+
+               # -- convert the complete rst content of the current source file to html format
+               sHTMLCodeFileName = f"{sRSTFileNameOnly}.html"
+               sHTMLCodeFile = f"{sBuildFolder}/{sHTMLCodeFileName}"
+               html_content = publish_file(
+                   source_path=sRSTFile,
+                   destination_path=sHTMLCodeFile,
+                   writer=CustomHTMLWriter(),
+                   settings_overrides={
+                           'stylesheet': './styles/pythoncode_friendly.css,./styles/robotcode_default.css,./styles/jsoncode_friendly.css',
+                           'stylesheet_path': None,
+                           'embed_stylesheet': False
+                       })
 
             # eof if sDocumentPartPath.lower().endswith('rst'):
 
