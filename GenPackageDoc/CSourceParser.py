@@ -165,7 +165,6 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
             for subnode in node.body:
                if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
-               
                   sMethodName = f"{subnode.name}"
                   sMethodDocString = ast.get_docstring(subnode)
 
