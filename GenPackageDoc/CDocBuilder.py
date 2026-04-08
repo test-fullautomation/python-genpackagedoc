@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 17.03.2026
+# 07.04.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -123,7 +123,8 @@ Constructor of class ``CDocBuilder``.
    #TM***
 
    def __ConvertToScopeFormat(self, sString=""):
-      """Converts a string to 'scope' format.
+      """
+Converts a string to 'scope' format.
       """
       sString = sString.replace(' ', '-')
       sString = sString.replace('_', '-')
@@ -136,7 +137,8 @@ Constructor of class ``CDocBuilder``.
    #TM***
 
    def __GetModulesList(self, sRootPath=None):
-      """Computes a list of all Python modules found recursively within ``sRootPath``.
+      """
+Computes a list of all Python modules found recursively within ``sRootPath``.
       """
 
       sMethod = "CDocBuilder.__GetModulesList"
@@ -175,7 +177,8 @@ Constructor of class ``CDocBuilder``.
    #TM***
 
    def __ResolvePlaceholders(self, listLines=[]):
-      """Resolves placeholders used in packagedoc configuration (json file)
+      """
+Resolves placeholders used in packagedoc configuration (json file)
       """
 
       sMethod = "CDocBuilder.__ResolvePlaceholders"
@@ -204,7 +207,8 @@ Constructor of class ``CDocBuilder``.
    #TM***
 
    def __PostprocessRST(self, listLinesRST=[]):
-      """Postprocessing of rst text after reading from rst file or parsing from doctrings and after replacement
+      """
+Postprocessing of rst text after reading from rst file or parsing from doctrings and after replacement
 of placeholders. This covers e.g. the computation of syntax extensions.
 
 Extensions to the syntax of rst (newline, newpage and vspace) will be masked (by replacement strings, that do no contain
@@ -213,11 +217,11 @@ characters belonging to syntax of rst and LaTeX.
 
       listLinesProcessed = []
       for sLine in listLinesRST:
-         if sLine == "/":
+         if sLine == "/VS":
             sLine = self.__dictPlaceholder['vspace']
-         elif sLine == "//":
+         elif sLine == "/NP":
             sLine = self.__dictPlaceholder['newpage']
-         elif ( (len(sLine) > 1) and sLine.endswith('/') and not sLine.endswith('//') ):
+         elif ( (len(sLine) > 1) and sLine.endswith('/NL') ):
             sLine = sLine[:-1] + self.__dictPlaceholder['newline']
          listLinesProcessed.append(sLine)
 
@@ -229,7 +233,8 @@ characters belonging to syntax of rst and LaTeX.
    #TM***
 
    def __PostprocessTEX(self, listLinesTEX=[]):
-      """Postprocessing of TEX text. This covers e.g. the computation of rst syntax extensions and also
+      """
+Postprocessing of TEX text. This covers e.g. the computation of rst syntax extensions and also
 the recovery of the original headlines out of the intermediately used full scope strings.
 
 The masking of newline, newpage and vspace (rst syntax extensions) are replaced by the corresponding LaTeX commands.
@@ -273,7 +278,8 @@ The masking of newline, newpage and vspace (rst syntax extensions) are replaced 
    #TM***
 
    def __CleanBuildFolder(self):
-      """Cleans the build folder (to a avoid a mixture of current and previous results).
+      """
+Cleans the build folder (to a avoid a mixture of current and previous results).
 The meaning of clean is: *delete*, followed by *create*.
       """
 
@@ -313,7 +319,8 @@ The meaning of clean is: *delete*, followed by *create*.
    #TM***
 
    def __CopyPictures(self):
-      """Copies the pictures folder to the output folder (required to keep relative paths valid also in created tex files)
+      """
+Copies the pictures folder to the output folder (required to keep relative paths valid also in created tex files)
       """
 
       sMethod = "CDocBuilder.__CopyPictures"
@@ -352,7 +359,8 @@ The meaning of clean is: *delete*, followed by *create*.
    #TM***
 
    def __RenderDiagrams(self):
-      """Render all diagrams in 'DIAGRAMS' folder (with PlantUML). Diagram files are expected to have the extension '.puml'.
+      """
+Render all diagrams in 'DIAGRAMS' folder (with PlantUML). Diagram files are expected to have the extension '.puml'.
       """
 
       sMethod = "CDocBuilder.__RenderDiagrams"
@@ -456,7 +464,8 @@ The meaning of clean is: *delete*, followed by *create*.
    #TM***
 
    def __CopyDiagrams(self):
-      """Copies the diagrams folder to the output folder (required to keep relative paths valid also in created tex files)
+      """
+Copies the diagrams folder to the output folder (required to keep relative paths valid also in created tex files)
       """
 
       sMethod = "CDocBuilder.__CopyDiagrams"
@@ -495,7 +504,8 @@ The meaning of clean is: *delete*, followed by *create*.
    #TM***
 
    def __GenDocPDF(self):
-      """Executes the LaTeX compiler to create the PDF file out of the generated source tex files
+      """
+Executes the LaTeX compiler to create the PDF file out of the generated source tex files
       """
 
       sMethod = "CDocBuilder.__GenDocPDF"
@@ -880,13 +890,23 @@ The meaning of clean is: *delete*, followed by *create*.
                # -- convert the complete rst content of the current source file to html format
                sHTMLCodeFileName = os.path.basename(sModule) + ".html"
                sHTMLCodeFile = f"{sBuildFolder}/{sHTMLCodeFileName}"
+               tuplestylesheets = ("./styles/pythoncode.css",
+                                   "./styles/pcode.css",
+                                   "./styles/robotcode.css",
+                                   "./styles/rcode.css",
+                                   "./styles/jsoncode.css",
+                                   "./styles/jcode.css",
+                                   "./styles/consolelog.css",
+                                   "./styles/filesystem.css",
+                                   "./styles/anycontent.css")
+               stylesheets = ",".join(tuplestylesheets)
                html_content = publish_file(
                    source_path=sRSTCodeFile,
                    destination_path=sHTMLCodeFile,
                    writer=CustomHTMLWriter(),
                    settings_overrides={
-                           'stylesheet': './styles/pythoncode_friendly.css,./styles/robotcode_default.css,./styles/jsoncode_friendly.css',
-                           'stylesheet_path': None,
+                           'stylesheet'      : stylesheets,
+                           'stylesheet_path' : None,
                            'embed_stylesheet': False
                        })
 
@@ -958,13 +978,23 @@ The meaning of clean is: *delete*, followed by *create*.
                # -- convert the complete rst content of the current source file to html format
                sHTMLCodeFileName = f"{sRSTFileNameOnly}.html"
                sHTMLCodeFile = f"{sBuildFolder}/{sHTMLCodeFileName}"
+               tuplestylesheets = ("./styles/pythoncode.css",
+                                   "./styles/pcode.css",
+                                   "./styles/robotcode.css",
+                                   "./styles/rcode.css",
+                                   "./styles/jsoncode.css",
+                                   "./styles/jcode.css",
+                                   "./styles/consolelog.css",
+                                   "./styles/filesystem.css",
+                                   "./styles/anycontent.css")
+               stylesheets = ",".join(tuplestylesheets)
                html_content = publish_file(
                    source_path=sRSTFile,
                    destination_path=sHTMLCodeFile,
                    writer=CustomHTMLWriter(),
                    settings_overrides={
-                           'stylesheet': './styles/pythoncode_friendly.css,./styles/robotcode_default.css,./styles/jsoncode_friendly.css',
-                           'stylesheet_path': None,
+                           'stylesheet'      : stylesheets,
+                           'stylesheet_path' : None,
                            'embed_stylesheet': False
                        })
 

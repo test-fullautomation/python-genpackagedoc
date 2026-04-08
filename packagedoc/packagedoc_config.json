@@ -59,7 +59,8 @@
             "INTERFACE"     : "../###PACKAGENAME###",
             "appendix"      : "./additional_docs/Appendix.rst",
             "history"       : "../History.rst",
-            "DOCUMENTPARTS" : ["test","introduction","description","INTERFACE","appendix","history"],
+            # incl test: "DOCUMENTPARTS" : ["test","introduction","description","INTERFACE","appendix","history"],
+            "DOCUMENTPARTS" : ["introduction","description","INTERFACE","appendix","history"],
             "EXCLUDE"       : ["short_description"]
            },
 

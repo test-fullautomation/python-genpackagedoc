@@ -1,3 +1,15 @@
+
+
+
+
+
+
+
+
+
+
+----
+
 This is a standard Python code example
 
 .. code:: python
@@ -30,7 +42,7 @@ This is inline Robot code (2): :rcode:`log~~~~Hello RobotFramework AIO`
 
 
 
----
+----
 
 
 This method executes the version check at high level.

@@ -3,8 +3,26 @@ td.linenos .normal { color: #666666; background-color: transparent; padding-left
 span.linenos { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+/* box text, background and border */
+.pythoncode {
+  /* color: #4169E1; */ /* global font color would overrule the specific color definitions below => no syntax highlighting */
+  background: #FFF7F1;
+  border: 1.5px solid #FFF1E2;
+  border-radius: 6px;
+  padding-left: 2.5px;
+  padding-right: 2.5px;
+}
+.pythoncode code {
+  display: block;
+  padding: 6px;
+  background: inherit;
+}
+/* deactivate border around every separate line */
+.pythoncode span, .pythoncode code, .pythoncode pre, .pythoncode td, .pythoncode tr {
+  border: none !important;
+  background: transparent;
+}
 .pythoncode .hll { background-color: #ffffcc }
-.pythoncode { background: #f0f0f0; }
 .pythoncode .c { color: #60A0B0; font-style: italic } /* Comment */
 .pythoncode .err { border: 1px solid #F00 } /* Error */
 .pythoncode .k { color: #007020; font-weight: bold } /* Keyword */
