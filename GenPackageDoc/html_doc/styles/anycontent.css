@@ -1,0 +1,25 @@
+pre { line-height: 125%; }
+td.linenos .normal { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+/* box text, background and border */
+.anycontent {
+  color: #000000;
+  background: #F5F5F5;
+  border: 1.5px solid #DCDCDC;
+  border-radius: 3px;
+  padding-left: 2.5px;
+  padding-right: 2.5px;
+}
+.anycontent code {
+  display: block;
+  padding: 6px;
+  background: inherit;
+}
+/* deactivate border around every separate line */
+/* still required? */
+.anycontent span, .anycontent code, .anycontent pre, .anycontent td, .anycontent tr {
+  border: none !important;
+  background: transparent;
+}

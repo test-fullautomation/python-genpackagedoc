@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Command Line</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<!-- Copyright 2020-2026 Robert Bosch GmbH -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+<pre class="highlight"><code class="highlight">Which command line parameters are available to influence the behavior of the application?</code></pre><p>Some configuration parameter predefined within <code class="filesystem">packagedoc_config.json</code>, can be overwritten in command line.<span style="display:block; height:1ex;"></span></p>
+<p><code class="filesystem">--output</code></p>
+<blockquote>
+<p>Path and name of folder containing all output files.</p>
+<p><strong>Caution: GenPackageDoc deletes this folder!</strong></p>
+</blockquote>
+<!-- TODO: use admonition -->
+<p><code class="filesystem">--pdfdest</code></p>
+<blockquote>
+<p>Path and name of folder in which the generated PDF file will be copied to (after this file has been created within the output folder).</p>
+<p><em>Caution</em>: The generated PDF file will per default be copied to the package folder within the repository. This is defined in <code class="filesystem">packagedoc_config.json</code>.
+The version of the PDF file within the package folder will be part of the installation. When you change the PDF destination,
+then you get this file at another location - but this file will not be part of the installation any more. Installed will be the version,
+that is still present within the package folder of the repository.</p>
+</blockquote>
+<p><code class="filesystem">--htmldest</code></p>
+<blockquote>
+<p>Path and name of folder in which the generated HTML files will be copied to (after this file has been created within the output folder).</p>
+<p><strong>Caution: GenPackageDoc deletes this folder!</strong></p>
+</blockquote>
+<!-- TODO: use admonition
+
+*Caution*: The generated HTML files will per default be copied to the package folder within the repository. This is defined in :fsystem:`packagedoc_config.json`.
+The version of the HTML files within the package folder will be part of the installation. When you change the HTML destination,
+then you get this file at another location - but this file will not be part of the installation any more. Installed will be the version,
+that is still present within the package folder of the repository. -->
+<p><code class="filesystem">--configdest</code></p>
+<blockquote>
+<p>Path and name of folder in which a dump of the current configuration will be copied to.</p>
+<p>The configuration dump is part of the build output (section <code class="anycontent">'OUTPUT'</code>) and available in txt and in json format.
+It might be useful for further processes to have access to all details regarding the current
+documentation build.</p>
+</blockquote>
+<p><code class="filesystem">--strict</code></p>
+<blockquote>
+<p>If <code class="anycontent">True</code>, a missing LaTeX compiler aborts the process, otherwise the process continues.</p>
+</blockquote>
+<p></p>
+<p><code class="filesystem">--simulateonly</code></p>
+<blockquote>
+<p>If <code class="anycontent">True</code>, the LaTeX compiler is switched off. No new PDF output will be generated. Already existing PDF output will not be updated.
+This is not handled as error and also not handled as warning. Only the source files will be parsed. This switch is useful
+to do a pre check for possible syntax issues within the source files without spending time for rendering PDF files.</p>
+</blockquote>
+<p><strong>Example</strong></p>
+<pre class="filesystem"><code class="filesystem">genpackagedoc.py --output="../any/other/location" --pdfdest="../any/other/location" --htmldest="../any/other/location" --configdest="../any/other/location" --strict=True</code></pre><p></p>
+</main>
+</body>
+</html>

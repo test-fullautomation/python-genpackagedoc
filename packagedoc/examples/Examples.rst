@@ -1,3 +1,288 @@
+text text text text text text text text text text text text text text text text text text text text text text text text 
+text text text text text text text text text text text text text text text text text text text text text text text text 
+
+.. hrstar::
+
+text text text text text text text text text text text text text text text text text text text text text text text text 
+text text text text text text text text text text text text text text text text text text text text text text text text 
+
+----
+
+
+**Distances:**
+
+This Robot Framework code prints a string to log: :acontent:`log    Hello`.
+This Robot Framework code prints another string to log: :acontent:`log    World`.
+
+This Robot Framework code prints a string to log: :acontent:`log/IHS/IHS/IHS/IHSHello`./NL
+This Robot Framework code prints another string to log: :acontent:`log/IHS/IHS/IHS/IHSWorld`./VVVS
+
+Some distances between   strings/HS/HSstrings/HS/HS/HS/HSstrings/VS
+and lines/VS
+and lines/VVS
+and lines/VVVS
+and lines
+
+----
+
+This is :acontent:`robotcode`:
+
+.. robotcode::
+
+   *** Test Cases ***
+
+   PrettyPrintTest_2
+       [Documentation]    Test 2 of keyword 'pretty_print': list with prefix
+
+       set_test_variable    @{aItems}    TestString
+       ...                               ${25}
+       ...                               ${True}
+       ...                               ${None}
+
+       set_test_variable    @{aItemsExpected}    (PREFIX) : [LIST] (4/1) > [STR]\ \ :\ \ 'TestString'
+       ...                                       (PREFIX) : [LIST] (4/2) > [INT]\ \ :\ \ 25
+       ...                                       (PREFIX) : [LIST] (4/3) > [BOOL]\ \ :\ \ True
+       ...                                       (PREFIX) : [LIST] (4/4) > [NONE]\ \ :\ \ None
+
+       ${aOutput}    rf.extensions.pretty_print    ${aItems}    sPrefix=(PREFIX)
+
+       set_test_variable    ${nIndex}    ${0}
+       FOR    ${sOutput}    IN    @{aOutput}
+           log    ** Output\ \ \ : ${sOutput}    console=yes
+           log    ** Expected\ : ${aItemsExpected}[${nIndex}]    console=yes
+           should_be_equal    ${sOutput}    ${aItemsExpected}[${nIndex}]
+           ${nIndex}    Evaluate    ${nIndex} + 1
+       END
+
+.. hrstar::
+
+This is :acontent:`robotscode`:
+
+.. robotscode::
+
+   *** Test Cases ***
+
+   PrettyPrintTest_2
+       [Documentation]    Test 2 of keyword 'pretty_print': list with prefix
+
+       set_test_variable    @{aItems}    TestString
+       ...                               ${25}
+       ...                               ${True}
+       ...                               ${None}
+
+       set_test_variable    @{aItemsExpected}    (PREFIX) : [LIST] (4/1) > [STR]\ \ :\ \ 'TestString'
+       ...                                       (PREFIX) : [LIST] (4/2) > [INT]\ \ :\ \ 25
+       ...                                       (PREFIX) : [LIST] (4/3) > [BOOL]\ \ :\ \ True
+       ...                                       (PREFIX) : [LIST] (4/4) > [NONE]\ \ :\ \ None
+
+       ${aOutput}    rf.extensions.pretty_print    ${aItems}    sPrefix=(PREFIX)
+
+       set_test_variable    ${nIndex}    ${0}
+       FOR    ${sOutput}    IN    @{aOutput}
+           log    ** Output\ \ \ : ${sOutput}    console=yes
+           log    ** Expected\ : ${aItemsExpected}[${nIndex}]    console=yes
+           should_be_equal    ${sOutput}    ${aItemsExpected}[${nIndex}]
+           ${nIndex}    Evaluate    ${nIndex} + 1
+       END
+
+This is :acontent:`robotcode` without required token string :acontent:`*** Test Cases ***`:
+
+.. robotcode::
+
+   PrettyPrintTest_2
+       [Documentation]    Test 2 of keyword 'pretty_print': list with prefix
+
+       set_test_variable    @{aItems}    TestString
+       ...                               ${25}
+       ...                               ${True}
+       ...                               ${None}
+
+       set_test_variable    @{aItemsExpected}    (PREFIX) : [LIST] (4/1) > [STR]\ \ :\ \ 'TestString'
+       ...                                       (PREFIX) : [LIST] (4/2) > [INT]\ \ :\ \ 25
+       ...                                       (PREFIX) : [LIST] (4/3) > [BOOL]\ \ :\ \ True
+       ...                                       (PREFIX) : [LIST] (4/4) > [NONE]\ \ :\ \ None
+
+       ${aOutput}    rf.extensions.pretty_print    ${aItems}    sPrefix=(PREFIX)
+
+       set_test_variable    ${nIndex}    ${0}
+       FOR    ${sOutput}    IN    @{aOutput}
+           log    ** Output\ \ \ : ${sOutput}    console=yes
+           log    ** Expected\ : ${aItemsExpected}[${nIndex}]    console=yes
+           should_be_equal    ${sOutput}    ${aItemsExpected}[${nIndex}]
+           ${nIndex}    Evaluate    ${nIndex} + 1
+       END
+
+----
+
+This is :acontent:`robotcode`:
+
+.. robotcode::
+
+   *** Test Cases ***
+
+   SystemTest
+
+       ${system_config}    ${number_of_parameters}    compute_system_parameter
+       log    Number of parameters: ${number_of_parameters}
+       log    aparam..............: ${system_config}[aparam]
+
+       THREAD    THREAD-1     False
+           FOR    ${index}    IN RANGE    0    1000
+               ${COUNTER1}=    Evaluate    ${COUNTER1} + 1
+           END
+           send_thread_notification    THREAD-1-DONE     params=${COUNTER1}
+       END
+       ${thread_1_return}=    wait_thread_notification    THREAD-1-DONE    timeout=5
+
+       PASS
+
+       FAIL
+
+       UNKNOWN
+
+This is :acontent:`robotscode`:
+
+.. robotscode::
+
+   *** Test Cases ***
+
+   SystemTest
+
+       ${system_config}    ${number_of_parameters}    compute_system_parameter
+       log    Number of parameters: ${number_of_parameters}
+       log    aparam..............: ${system_config}[aparam]
+
+       THREAD    THREAD-1     False
+           FOR    ${index}    IN RANGE    0    1000
+               ${COUNTER1}=    Evaluate    ${COUNTER1} + 1
+           END
+           send_thread_notification    THREAD-1-DONE     params=${COUNTER1}
+       END
+       ${thread_1_return}=    wait_thread_notification    THREAD-1-DONE    timeout=5
+
+       PASS
+
+       FAIL
+
+       UNKNOWN
+
+----
+
+.. raw:: latex
+
+   \begin{tabular}{|c|c|c|}
+   \hline
+   \cellcolor[HTML]{05F5F5} 1 A & \cellcolor[HTML]{05F5F5} BB & \cellcolor[HTML]{05F5F5} CCCC \\ \hline
+   \cellcolor[HTML]{F5F5F5} DDDDD & \cellcolor[HTML]{F5F5F5} CC & \cellcolor[HTML]{F5F5F5} EEE \\ \hline
+   \cellcolor[HTML]{F5F5F5} 12 & \cellcolor[HTML]{F5F5F5} 456 & \cellcolor[HTML]{F5F5F5} 789 \\ \hline
+   \end{tabular}
+
+.. raw:: html
+
+   <hr class="docutils" />
+   <pre class="simpletable"><code class="simpletable"><table class="simpletable">
+     <tr>
+       <td style="color: red; background-color: #ccffcc;">2 A</td>
+       <td style="color: red; background-color: #ccffcc;">BB</td>
+       <td style="color: red; background-color: #ccffcc;">CCCC</td>
+     </tr>
+     <tr>
+       <td>DDDDD</td>
+       <td>CC</td>
+       <td>EEE</td>
+     </tr>
+     <tr>
+       <td>12</td>
+       <td>456</td>
+       <td>789</td>
+     </tr>
+   </table></code></pre>
+
+----
+
+.. simpletable::
+
+   3 A | BB | CCCC
+   DDDDD | CC | EEE
+   12 | 456 | 789
+
+----
+
++-------+-----+------+
+| 4 A   | BB  | CCCC |
++-------+-----+------+
+| DDDDD | CC  | EEE  |
++-------+-----+------+
+| 12    | 456 | 789  |
++-------+-----+------+
+
+----
+
+1( 2) 3[ 4] 5{ 6} 7< 8> 9~ 10$ 11# 12% 13& 14^ 15: 16/US
+
+:acontent:`1( 2) 3[ 4] 5{ 6} 7< 8> 9~ 10$ 11# 12% 13& 14^ 15: 16_`
+
+.. anycontent::
+
+   1( 2) 3[ 4] 5{ 6} 7< 8> 9~ 10$ 11# 12% 13& 14^ 15: 16_
+
+----
+
+AA    BB/HS/HS/HS/HSDD/NL
+AA    BB /HS /HS /HS /HSDD
+
+:acontent:`AA    BB/IHS/IHS/IHS/IHSDD`/NL
+:pcode:`AA    BB /IHS /IHS /IHS /IHS DD`
+
+.. anycontent::
+
+   AA    BB    DD
+   AA    BB    DD
+
+----
+
+1/BS 2/BS/BS 3$ 4( 5) 6[ 7] 8{ 9} 10~
+
+:acontent:`1/IBS 2/IBS/IBS 3$ 4( 5) 6[ 7] 8{ 9} 10~`
+
+:pcode:`1/IBS 2/IBS/IBS 3$ 4( 5) 6[ 7] 8{ 9} 10~`
+
+
+.. anycontent::
+
+   1\ 2\\ 3$ 4( 5) 6[ 7] 8{ 9} 10/~/~/~/~|~~~|\~\~\~|&   |
+
+----
+
+1 \ 2 \ 3
+
+1 /BS 2 /BS 3
+
+:acontent:`1 \ 2 \ 3`
+
+:pcode:`1 /IBS 2 /IBS 3`
+
+.. anycontent::
+
+   1 \ 2 \ 3
+
+----
+
+[A] AAA AAA AAA AAA AAA AAA/NL
+[B] BBB BBB BBB BBB BBB BBB
+
+[C] CCC CCC CCC CCC CCC CCC
+/VS
+[D] DDD DDD DDD DDD DDD DDD
+/VVS
+[E] EEE EEE EEE EEE EEE EEE
+/VVVS
+[F] FFF FFF FFF FFF FFF FFF
+/NP
+[G] GGG GGG GGG GGG GGG GGG
+
+----
+
 In the system configuration file, the parameter :acontent:`aparam` and :acontent:`bparam` are defined in the following way:
 
 .. jsoncode::
@@ -253,10 +538,18 @@ You import another JSON file by using the reserved key :jcode:`[import]`:
 
    "[import]" : "${common_config_dir}/common.jsonp",
 
+----
 
-
-
-:jcode:``
+text text text text text text text text text text text text text text text text text text 
+text text text text text text text text text text text text text text text text text text 
+text text text text text text text text text text text text text text text text text text 
+text text text text text text text text text text text text text text text text text text 
+Some :acontent:`JSONP code`: :acontent:`"Maximum_version" : "1.0.0"` and :acontent:`<<[1,2]>>`
+and :acontent:`b'/IBSx52/IBSx6f/IBSx62/IBSx6f/IBSx74/IBSx46/IBSx72/IBSx61/IBSx6d/IBSx65/IBSx77/IBSx6f/IBSx72/IBSx6b/IBSx20/IBSx41/IBSx49/IBSx4f'`
+and also :acontent:`${params}['global']['test_dict']['tdv_key_1'] : {}`
+text text text text text text text text text text text text text text text text text text 
+and also :acontent:`"[import]" : "./folder2/file2.jsonp"`
+text text text text text text text text text text text text text text text text text text 
 
 ----
 
@@ -270,6 +563,8 @@ and also :jcode:`${params}['global']['test_dict']['tdv_key_1'] : {}`
 text text text text text text text text text text text text text text text text text text 
 and also :jcode:`"[import]" : "./folder2/file2.jsonp"`
 text text text text text text text text text text text text text text text text text text 
+
+----
 
 And now in entire textblock:
 
@@ -483,4 +778,25 @@ This is a :clog:`jsonscode` example
 * Role :plog:`plog` example
 * Role :rcode:`rcode` example
 * Role :rlog:`rlog` example
+
+----
+
+AAAAAAAAAAAAAAAAA/NL
+BBBBBBBBBBBBBBBBB
+
+CCCCCCCCCCCCCCCCC
+/VS
+CCCCCCCCCCCCCCCCC
+
+/VS
+
+DDDDDDDDDDDDDDDDD
+/VVS
+EEEEEEEEEEEEEEEEE
+/VVVS
+FFFFFFFFFFFFFFFFF
+
+
+
+
 

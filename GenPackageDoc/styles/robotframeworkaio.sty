@@ -186,6 +186,10 @@
 \newcommand{\inlinecomment}[1]{\color{col_comment}\normalfont$\langle$\textit{#1}$\rangle$}
 
 
+
+\definecolor{col_robotflowcontrol}{RGB}{0,0,255}
+\definecolor{col_robotidentifierstyle}{RGB}{220, 20, 60}
+\definecolor{col_robotmoredelim}{RGB}{34, 139, 34}
 %
 % environment for robot code listings
 %
@@ -225,27 +229,42 @@
          And,
          Then,
          FOR,
+         IF,
+         ELSE,
          WITH,
          NAME,
          IN,
          RANGE,
          END,
          CONTINUE,
+         THREAD,
+      },
+      morekeywords=[3]{
+         PASS,
+      },
+      morekeywords=[4]{
+         FAIL,
+      },
+      morekeywords=[5]{
+         UNKNOWN,
       },
       keywordstyle=\color{cyan},
       keywordstyle=[1]\color{col_syntax},
-      keywordstyle=[2]\color{col_flowcontrol},
+      keywordstyle=[2]\color{col_robotflowcontrol},
+      keywordstyle=[3]\color{col_robotmoredelim},
+      keywordstyle=[4]\color{red},
+      keywordstyle=[5]\color{blue},
       comment=[l][\color{col_comment}]{\#},
       commentstyle=\color{col_comment}\upshape,
       moredelim=[s][\color{col_section}]{***}{***},
-      moredelim=[s][\color{ForestGreen}]{$\{}{\}},
-      moredelim=[s][\color{ForestGreen}]{@\{}{\}},
-      moredelim=[s][\color{ForestGreen}]{\%\{}{\}},
-      moredelim=[s][\color{ForestGreen}]{\&\{}{\}},
+      moredelim=[s][\color{col_robotmoredelim}]{$\{}{\}},
+      moredelim=[s][\color{col_robotmoredelim}]{@\{}{\}},
+      moredelim=[s][\color{col_robotmoredelim}]{\%\{}{\}},
+      moredelim=[s][\color{col_robotmoredelim}]{\&\{}{\}},
       morestring=*[b]{"},
       % morestring=[s][\color{gray}]{<}{>},
       stringstyle=\color{red},
-      identifierstyle=\color{blue},
+      identifierstyle=\color{col_robotidentifierstyle},
       rulesepcolor=\color{color_code_frame},
       rulecolor=\color{color_code_frame},
       backgroundcolor=\color{color_code_background},
@@ -280,7 +299,18 @@
 
 
 \newcommand{\rcode}[1]{%
-   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \rcode is executed!
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_code_frame,
@@ -346,7 +376,18 @@
 }{}
 
 \newcommand{\rlog}[1]{%
-   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \rlog is executed!
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_log_frame,
@@ -465,7 +506,18 @@
 }{}
 
 \newcommand{\pcode}[1]{%
-   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \pcode is executed!
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_pythoncode_border,
@@ -530,7 +582,18 @@
 }{}
 
 \newcommand{\plog}[1]{%
-   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \plog is executed!
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_log_frame,
@@ -642,7 +705,18 @@
 }{}
 
 \newcommand{\jcode}[1]{%
-   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \jcode is executed!
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_jsoncode_border,
@@ -711,7 +785,18 @@
 }{}
 
 \newcommand{\clog}[1]{%
-   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \clog is executed!
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_log_frame,
@@ -779,7 +864,18 @@
 }{}
 
 \newcommand{\fsystem}[1]{%
-   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \fsystem is executed!
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_log_frame,
@@ -851,10 +947,62 @@
 }{}
 
 \newcommand{\acontent}[1]{%
-   \lstset{literate={~}{\ }1} % use the tilde to define a protected blank; standard blanks are removed by LaTeX BEFORE \fsystem is executed!
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_anycontent_frame,
          backgroundcolor=color_anycontent_background,
          font=\ttfamily\small]{\lstinline[language=Any_Content]!#1!}}
 
+
+
+
+% Grau
+% \definecolor{color_highlight_background}{RGB}{245, 245, 245}
+% \definecolor{color_highlight_frame}{RGB}{220, 220, 220}
+
+% Orange
+\definecolor{color_highlight_background}{RGB}{255, 245, 225}
+\definecolor{color_highlight_frame}{RGB}{255, 213, 154}
+
+% Hintergrund:
+% Hex:#FFF5E1
+% RGB:(255, 245, 225)
+
+% Rahmen:
+% Hex:#FFD59A
+% RGB:(255, 213, 154)
+
+%
+% environment for highlighted content
+%
+
+\newtcolorbox{cbox_highlight}[1][]{%
+  enhanced,
+  before skip=2mm,
+  after skip=3mm,
+  boxrule=2pt,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm,
+  colback=color_highlight_background,
+  colframe=color_highlight_frame,
+  fontupper=\color{black}\itshape,
+  #1
+}
+
+\newenvironment{highlight}
+  {\begin{cbox_highlight}}
+  {\end{cbox_highlight}}

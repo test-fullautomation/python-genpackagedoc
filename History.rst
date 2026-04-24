@@ -13,7 +13,7 @@
    limitations under the License.
 
 
-**Version 0.43.0 (08.04.2026)**
+**Version 0.43.0 (16.04.2026)**
 
     *Maintenance:*
 
@@ -27,13 +27,14 @@
     * Markdown directives to support JSONP code listings
     * Markdown directives to support common console and log listings
     * Markdown directives to support listings of file system contents
+    * Markdown directives to support a simple highlighting in gray color
     * Support od **async** functions and methods
 
 **Version 0.42.0 (12.01.2026)**
 
     *Maintenance:*
 
-    * Usage of **pandoc/pypandoc** replaced by usage of **docutils**
+    * Usage of **pandoc/pypandoc** replaced by usage of **docutils** (conversion of RST content to LaTeX format)
 
 **Version 0.41.0 (11.07.2023)**
 

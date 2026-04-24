@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 07.04.2026
+# 23.04.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -41,14 +41,72 @@ from docutils.writers.html5_polyglot import Writer as htmlWriter
 from docutils.writers.html5_polyglot import HTMLTranslator
 
 from pygments import highlight
-from pygments.lexer import RegexLexer
-from pygments.lexers import PythonLexer
-from pygments.lexers import JsonLexer
-from pygments.lexers import RobotFrameworkLexer
+from pygments.lexers.python import PythonLexer
+from pygments.lexers.data import JsonLexer
+from pygments.lexers.robotframework import RobotFrameworkLexer
 
+from pygments.lexer import RegexLexer
 from pygments.formatters import HtmlFormatter
 
-from pygments.token import Keyword, Name, String, Comment, Number, Punctuation, Operator, Text
+from pygments.token import Keyword, Name, Token, String, Comment, Number, Punctuation, Operator, Text
+
+def latex_inline_escape(text):
+    # >>> needs to be verified (characters commented out not accepted by inline literal (LaTeX listings))
+    replacements = [
+        ('{',  r'\{'),
+        ('}',  r'\}'),
+        ('$',  r'\$'),
+        ('[',  r'{[}'),
+        (']',  r'{]}'),
+        ('#',  r'\#'),
+        ('%',  r'\%'),
+        ('&',  r'\&'),
+        ('_',  r'\_'),
+        # ('^',  r'\^{}')
+        # ('~',  r'\~{}')
+        # ('\\', r'\textbackslash{}') # must be the last
+        # ('\\', r'\texttt{\textbackslash}') # must be the last
+    ]
+    for old, new in replacements:
+        text = text.replace(old, new)
+    return text
+
+
+def table_to_latex(table):
+    lines = [line.strip() for line in table.strip().splitlines() if line.strip() and not line.strip().startswith('#')]
+    rows = [ [cell.strip() for cell in line.split('|')] for line in lines ]
+    ncols = max(len(row) for row in rows)
+
+    # LaTeX Tabellenkopf
+    latex = []
+    latex.append(r'\begin{tabular}{|' + '|'.join(['c']*ncols) + '|}')
+    latex.append(r'\hline')
+
+    for row in rows:
+        row += [''] * (ncols - len(row))
+        colored_row = [r'\cellcolor[HTML]{F5F5F5} ' + cell for cell in row]
+        latex.append(' & '.join(colored_row) + r' \\ \hline')
+
+    latex.append(r'\end{tabular}')
+    return '\n'.join(latex)
+
+
+
+def table_to_html(table, css_class="simpletable"):
+    lines = [line.strip() for line in table.strip().splitlines() if line.strip() and not line.strip().startswith('#')]
+    rows = [ [cell.strip() for cell in line.split('|')] for line in lines ]
+
+    html = []
+    html.append(f'<table class="{css_class}">')
+    for row in rows:
+        html.append('  <tr>')
+        for cell in row:
+            html.append(f'    <td>{cell}</td>')
+        html.append('  </tr>')
+    html.append('</table>')
+    return '\n'.join(html)
+
+
 
 class CustomJsonLexer(RegexLexer):
     name = 'CustomJson'
@@ -73,7 +131,25 @@ class CustomJsonLexer(RegexLexer):
     }
 
 
-# TODO: CustomRobotFrameworkLexer (because of RobotFramework AIO syntax extensions)
+class CustomRobotFrameworkLexer(RobotFrameworkLexer):
+    """
+CustomRobotFrameworkLexer: extends RobotFrameworkLexer with extra keywords (case-sensitive)
+    """
+    name    = 'CustomRobotFramework'
+    aliases = ['customrobotframework']
+    EXTRA_KEYWORDS = {
+        'PASS': Token.Pass,
+        'FAIL': Token.Fail,
+        'UNKNOWN': Token.Unknown,
+    }
+
+    def get_tokens_unprocessed(self, text):
+        for index, token, value in super().get_tokens_unprocessed(text):
+            if token is Name.Function and value in self.EXTRA_KEYWORDS:
+                yield index, self.EXTRA_KEYWORDS[value], value
+            else:
+                yield index, token, value
+
 
 
 class CustomLaTeXTranslator(LaTeXTranslator):
@@ -150,6 +226,11 @@ Mapping between markdown and LaTeX w.r.t.:
             self.body.append(node.astext())
             self.body.append('\n\\end{anyscontent}\n')
             raise nodes.SkipNode
+        elif node.get('custom_code') == 'highlight':
+            self.body.append('\\begin{highlight}\n')
+            self.body.append(node.astext())
+            self.body.append('\n\\end{highlight}\n')
+            raise nodes.SkipNode
         # log listings and file system paths
         elif node.get('custom_code') == 'pythonlog': # DEPRECATED, mapping: old name -> new name
             self.body.append('\\begin{consolelog}\n')
@@ -171,39 +252,56 @@ Mapping between markdown and LaTeX w.r.t.:
             self.body.append(node.astext())
             self.body.append('\n\\end{consoleslog}\n')
             raise nodes.SkipNode
+        # under construction
+        elif node.get('custom_code') == 'simpletable':
+            self.body.append('\n')
+            self.body.append(table_to_latex(node.astext()))
+            self.body.append('\n')
+            raise nodes.SkipNode
         else:
             super().visit_literal_block(node)
     # markdown roles
     def visit_literal(self, node):
         # code listings
         if node.get('custom_code') == 'pcode':
-            self.body.append('\\pcode{' + node.astext() + '}')
+            self.body.append('\\pcode{' + latex_inline_escape(node.astext()) + '}')
             raise nodes.SkipNode
         elif node.get('custom_code') == 'rcode':
-            self.body.append('\\rcode{' + node.astext() + '}')
+            self.body.append('\\rcode{' + latex_inline_escape(node.astext()) + '}')
             raise nodes.SkipNode
         elif node.get('custom_code') == 'jcode':
-            self.body.append('\\jcode{' + node.astext() + '}')
+            self.body.append('\\jcode{' + latex_inline_escape(node.astext()) + '}')
             raise nodes.SkipNode
         # log listings and file system paths (new)
         elif node.get('custom_code') == 'clog':
-            self.body.append('\\clog{' + node.astext() + '}')
+            self.body.append('\\clog{' + latex_inline_escape(node.astext()) + '}')
             raise nodes.SkipNode
         elif node.get('custom_code') == 'fsystem':
-            self.body.append('\\fsystem{' + node.astext() + '}')
+            self.body.append('\\fsystem{' + latex_inline_escape(node.astext()) + '}')
             raise nodes.SkipNode
         elif node.get('custom_code') == 'acontent':
-            self.body.append('\\acontent{' + node.astext() + '}')
+            self.body.append('\\acontent{' + latex_inline_escape(node.astext()) + '}')
             raise nodes.SkipNode
         # log listings and file system paths
         elif node.get('custom_code') == 'plog': # DEPRECATED, mapping: old name -> new name
-            self.body.append('\\clog{' + node.astext() + '}')
+            self.body.append('\\clog{' + latex_inline_escape(node.astext()) + '}')
             raise nodes.SkipNode
         elif node.get('custom_code') == 'rlog': # DEPRECATED, mapping: old name -> new name
-            self.body.append('\\clog{' + node.astext() + '}')
+            self.body.append('\\clog{' + latex_inline_escape(node.astext()) + '}')
             raise nodes.SkipNode
         else:
             super().visit_literal(node)
+
+    # raw stuff
+    def visit_raw(self, node):
+        if node.get('format') == 'hrstar':
+            self.body.append(r'\hrstar')
+            raise nodes.SkipNode
+
+    # 'visit_raw' counterpart; required - even if empty
+    def depart_raw(self, node):
+        pass
+
 
 class CustomLaTeXWriter(Writer):
     def __init__(self):
@@ -389,6 +487,53 @@ class AnySContentDirective(Directive):
 
 directives.register_directive('anyscontent', AnySContentDirective)
 
+class HighlightDirective(Directive):
+    has_content = True
+    def run(self):
+        code = '\n'.join(self.content)
+        node = nodes.literal_block(code, code)
+        node['language']    = 'text'      # name must be supported by Pygments
+        node['custom_code'] = 'highlight' # custom environments realized by additional attribute inside node
+        return [node]
+
+directives.register_directive('highlight', HighlightDirective)
+
+
+# under construction
+class SimpleTable(Directive):
+    has_content = True
+    def run(self):
+        code = '\n'.join(self.content)
+        node = nodes.literal_block(code, code)
+        node['language']    = 'text'        # name must be supported by Pygments
+        node['custom_code'] = 'simpletable' # custom environments realized by additional attribute inside node
+        return [node]
+
+directives.register_directive('simpletable', SimpleTable)
+
+# >> orig version
+# # class HrStarDirective(Directive):
+    # # has_content = False
+    # # def run(self):
+        # # node = nodes.raw('', '', format='html')
+        # # node['latex'] = r'\hrstar'
+        # # node['html'] = (
+            # # '<div class="hrstar">'
+            # # '<span class="hrstar-line"></span>'
+            # # '<span class="hrstar-star">&#9733;</span>'
+            # # '<span class="hrstar-line"></span>'
+            # # '</div>'
+        # # )
+        # # return [node]
+
+class HrStarDirective(Directive):
+    has_content = False
+    def run(self):
+        node = nodes.raw('', '', format='hrstar')
+        return [node]
+
+directives.register_directive('hrstar', HrStarDirective)
+
 # markdown roles (inline)
 
 def pcode_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
@@ -461,6 +606,7 @@ Mapping between markdown and HTML w.r.t.:
 * Python log listings
 * Robot log listings
     """
+
     # markdown directives
     def visit_literal_block(self, node):
         """
@@ -479,13 +625,13 @@ Description of method ``visit_literal_block``
             raise nodes.SkipNode
         elif node.get('custom_code') == 'robotcode':
             code = node.astext()
-            highlighted = highlight(code, RobotFrameworkLexer(), HtmlFormatter(full=True, linenos=True, nowrap=True))
+            highlighted = highlight(code, CustomRobotFrameworkLexer(), HtmlFormatter(full=True, linenos=True, nowrap=True))
             self.body.append(f'<pre class="robotcode"><code class="robotcode">{highlighted}</code></pre>')
             raise nodes.SkipNode
         elif node.get('custom_code') == 'robotscode':
             # no decrease of font size in HTML (robotscode is for PDF output only)
             code = node.astext()
-            highlighted = highlight(code, RobotFrameworkLexer(), HtmlFormatter(full=True, linenos=True, nowrap=True))
+            highlighted = highlight(code, CustomRobotFrameworkLexer(), HtmlFormatter(full=True, linenos=True, nowrap=True))
             self.body.append(f'<pre class="robotcode"><code class="robotcode">{highlighted}</code></pre>')
             raise nodes.SkipNode
         elif node.get('custom_code') == 'jsoncode':
@@ -554,8 +700,17 @@ Description of method ``visit_literal_block``
             # no syntax highlighting, box background and border still defined by 'anycontent'
             self.body.append(f'<pre class="anycontent"><code class="anycontent">{code}</code></pre>')
             raise nodes.SkipNode
+        elif node.get('custom_code') == 'highlight':
+            code = node.astext()
+            self.body.append(f'<pre class="highlight"><code class="highlight">{code}</code></pre>')
+            raise nodes.SkipNode
+        elif node.get('custom_code') == 'simpletable':
+            code = table_to_html(node.astext())
+            self.body.append(f'<pre class="highlight"><code class="highlight">{code}</code></pre>')
+            raise nodes.SkipNode
         else:
             super().visit_literal_block(node)
+
     # markdown roles
     def visit_literal(self, node):
         code = node.astext()
@@ -570,7 +725,7 @@ Description of method ``visit_literal_block``
             # without syntax highlighting
             self.body.append(f'<code class="rcode">{code}</code>')
             # with syntax highlighting
-            # highlighted = highlight(code, RobotFrameworkLexer()(), HtmlFormatter(nowrap=True))
+            # highlighted = highlight(code, CustomRobotFrameworkLexer()(), HtmlFormatter(nowrap=True))
             # self.body.append(f'<code class="rcode">{highlighted}</code>')
             raise nodes.SkipNode
         elif node.get('custom_code') == 'jcode':
@@ -597,6 +752,22 @@ Description of method ``visit_literal_block``
             raise nodes.SkipNode
         else:
             super().visit_literal(node)
+
+    # raw stuff
+    def visit_raw(self, node):
+        if node.get('format') == 'hrstar':
+            self.body.append(
+                '<div class="hrstar">'
+                '<span class="hrstar-line"></span>'
+                '<span class="hrstar-star">&#9733;</span>'
+                '<span class="hrstar-line"></span>'
+                '</div>'
+            )
+            raise nodes.SkipNode
+
+    # 'visit_raw' counterpart; required - even if empty
+    def depart_raw(self, node):
+        pass
 
 
 class CustomHTMLWriter(htmlWriter):

@@ -130,6 +130,15 @@
 
    "PDFDEST" : "../###PACKAGENAME###",
 
+# Section "HTMLDEST":
+# -------------------
+# Defines the path to a folder in which the HTML files will be copied after creation
+# (originally they are created in the "OUTPUT" folder).
+# This key is optional. In case of it is not required to copy the HTML files to another location,
+# this key can be removed or set to null.
+
+   "HTMLDEST" : "../###PACKAGENAME###/html_doc",
+
 # Section "CONFIGDEST":
 # ---------------------
 # Defines the path to a folder in which a dump of the current configuration will be copied to.
@@ -161,7 +170,7 @@
 # this key can be removed or set to null.
 
    "JAVA" : {
-             "WINDOWS" : "%JAVA_HOME%/bin/java.exe",
+             "WINDOWS" : "%PROGRAMFILES%/Java/jre8/bin/java.exe",
              "LINUX"   : "${JAVA_HOME}/bin/java"
             },
 
