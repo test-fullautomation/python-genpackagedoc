@@ -20,16 +20,8 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 23.04.2026
+# 18.05.2026
 #
-# --------------------------------------------------------------------------------------------------------------
-
-"""
-.. highlight::
-
-   CDocBuilder is a Python module containing all methods to generate files in TEX and HTML format.
-"""
-
 # --------------------------------------------------------------------------------------------------------------
 
 import os, sys, time, shlex, subprocess, platform, shutil, re, json
@@ -61,6 +53,14 @@ COLBW = col.Style.BRIGHT + col.Fore.WHITE
 
 SUCCESS = 0
 ERROR   = 1
+
+# --------------------------------------------------------------------------------------------------------------
+
+"""
+.. highlight::
+
+   CDocBuilder is a Python module containing all methods to generate files in TEX and HTML format.
+"""
 
 # --------------------------------------------------------------------------------------------------------------
 #TM***
@@ -140,6 +140,9 @@ Constructor of class :pcode:`CDocBuilder`.
    def __ConvertToScopeFormat(self, sString=""):
       """
 Converts a string to 'scope' format.
+The scope is a string containing the full import path
+(from package folder to method name).
+This is used to resolve ambiguous Python file names in different subfolders.
       """
       sString = sString.replace(' ', '-')
       sString = sString.replace('_', '-')
@@ -147,6 +150,41 @@ Converts a string to 'scope' format.
       sString = sString.replace('/', '-')
       sString = sString.lower()
       return sString
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def __filename_to_html_id(self, filename: str) -> str:
+      """
+Converts file names to strings that can be used as id inside HTML content.
+This is used to generate the index.html files of the documentation
+in HTML format.
+      """
+      # Remove invalid characters (everything except letters, digits, -, _, :)
+      # Replace spaces and dots with underscores
+      id_str = re.sub(r'[\s\.]+', '_', filename)
+      # Remove all characters not allowed for id
+      id_str = re.sub(r'[^a-zA-Z0-9\-\_\:\.]', '', id_str)
+      # id must not start with a digit
+      if id_str and id_str[0].isdigit():
+         id_str = '_' + id_str
+      return id_str
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def __replace_in_array(self, arr, search, replace):
+       """
+Returns a new array where every occurrence of 'search' in any element is replaced by 'replace'.
+       """
+       new_arr = []
+       for elem in arr:
+           if search in elem:
+               new_elem = elem.replace(search, replace)
+               new_arr.append(new_elem)
+           else:
+               new_arr.append(elem)
+       return new_arr
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
@@ -807,12 +845,14 @@ Creates the corresponding index.html file also.
          prev_is_pyhtml = is_pyhtml
          name, _ = os.path.splitext(basename)
          html_row = html_index_file_pattern.html_list_row
+         file_id_name = self.__filename_to_html_id(basename)
+         html_row = html_row.replace("###FILE_ID_NAME###", file_id_name)
          html_row = html_row.replace("###FILE_NAME###", basename)
          html_row = html_row.replace("###FILE_NAME_ONLY###", name) # means: without extension .html
          html_file_list_code.append(html_row)
 
       index_file_code = html_index_file_pattern.html_index_file_pattern
-# >>> check if elements
+      # TODO: check index [0]
       first_file_name = os.path.basename(self.__listHTMLFiles[0])
       index_file_code = index_file_code.replace("###ON_OPEN_SHOW_FILE###", first_file_name)
       index_file_code = index_file_code.replace("###APP_NAME###", self.__dictPackageDocConfig['PACKAGENAME'])
@@ -1181,6 +1221,8 @@ Creates the corresponding index.html file also.
                        })
 
                listLinesHTML = html_content.decode('utf-8').splitlines()
+               # add headline to HTML file
+               listLinesHTML = self.__replace_in_array(listLinesHTML, "<main>", f"<main>\n\n<h1>{sFileName}</h1>")
 
                # -- html postprocessing (extended syntax and multiply-defined labels)
                listLinesProcessed = self.__PostprocessHTML(listLinesHTML)
@@ -1287,6 +1329,8 @@ Creates the corresponding index.html file also.
                        })
 
                listLinesHTML = html_content.decode('utf-8').splitlines()
+               # add headline to HTML file
+               listLinesHTML = self.__replace_in_array(listLinesHTML, "<main>", f"<main>\n\n<h1>{sChaptername}</h1>")
 
                # -- html postprocessing (extended syntax and multiply-defined labels)
                listLinesProcessed = self.__PostprocessHTML(listLinesHTML)
