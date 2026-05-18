@@ -12,6 +12,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+.. highlight::
+
+   What is the meaning of this Python package?
+
 The Python package **GenPackageDoc** generates the documentation of Python modules. The content of this documentation is taken out of
 the docstrings of functions, classes and their methods. All docstrings have to be written in reStructuredText (reST) format, that is a
 certain markdown dialect.

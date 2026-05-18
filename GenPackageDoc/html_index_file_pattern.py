@@ -96,6 +96,5 @@ html_index_file_pattern = """
 </html>
 """
 
-# <li><a href="#" id="file2link" onclick="showFile('History.html', this);return false;">GenPackageDoc History</a></li>
-html_list_row = """<li><a href="#" id="file2link" onclick="showFile('###FILE_NAME###', this);return false;">###FILE_NAME_ONLY###</a></li>"""
+html_list_row = """<li><a href="#" id="###FILE_ID_NAME###" onclick="showFile('###FILE_NAME###', this);return false;">###FILE_NAME_ONLY###</a></li>"""
 
