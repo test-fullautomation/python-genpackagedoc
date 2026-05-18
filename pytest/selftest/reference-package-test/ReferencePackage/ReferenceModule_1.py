@@ -111,7 +111,47 @@ class CAmbiguousClass():
    #TM***
 
    def Method_1(self):
-      """ReferenceModule_1.py / CAmbiguousClass / Method_1
+      """
+ReferenceModule_1.py / CAmbiguousClass / Method_1
+/NP
+      """
+      bSuccess = True
+      sResult  = "passed"
+      return bSuccess, sResult
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def ExampleInterface(self):
+      """
+Description of ExampleInterface
+
+**Arguments:**
+
+* :acontent:`arg1`
+
+  / *Condition*: mandatory / *Type*: :acontent:`int` /
+
+  arg1 description
+
+* :acontent:`arg2`
+
+  / *Condition*: optional / *Type*: :acontent:`bool` / *Default*: :acontent:`True` /
+
+  arg2 description
+
+**Returns:**
+
+* :acontent:`ack`
+
+  / *Type*: :acontent:`bool` /
+
+  Indicates if the computation was successful or not.
+
+* :acontent:`result`
+
+  / *Type*: :acontent:`str` /
+
+  Returned value
       """
       bSuccess = True
       sResult  = "passed"

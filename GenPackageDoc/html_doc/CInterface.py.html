@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CInterface.py</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<p>Python module containing an interface for <strong>GenPackageDoc</strong>. This interface can be used to get access to the
+LaTeX stylesheets that are part of the <strong>GenPackageDoc</strong> installation.</p>
+<section id="genpackagedoc-cinterface-cinterface">
+<h2>Class: CInterface</h2>
+<section id="genpackagedoc-cinterface-cinterface-getlatexstyles">
+<h3>Method: GetLaTeXStyles</h3>
+<p>The LaTeX stylesheets are part of the installation of <strong>GenPackageDoc</strong>. In case of anyone else than <strong>GenPackageDoc</strong>
+needs these stylesheets, this method can be used to copy them to any other folder.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p><span class="docutils literal">sDestination</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>Path and name of a folder in which the styles folder from <strong>GenPackageDoc</strong> will be copied.</p>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><p><span class="docutils literal">bSuccess</span></p>
+<p>/ <em>Type</em>: bool /</p>
+<p>Indicates if the computation of the method <span class="docutils literal">sMethod</span> was successful or not.</p>
+</li>
+<li><p><span class="docutils literal">sResult</span></p>
+<p>/ <em>Type</em>: str /</p>
+<p>The result of the computation of the method <span class="docutils literal">sMethod</span>.</p>
+</li>
+</ul>
+</section>
+</section>
+</main>
+</body>
+</html>

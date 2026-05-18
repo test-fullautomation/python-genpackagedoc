@@ -1,0 +1,59 @@
+pre.pythoncode {
+  background: #f5f7fa;
+  color: #222;
+  border: 1px solid #b3b3b3;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-family: "Fira Mono", "Consolas", "Menlo", "Monaco", monospace;
+  font-size: 1em;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 1em 0;
+  white-space: pre;
+}
+
+pre.pythoncode code.pythoncode {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  border-radius: 0;
+}
+
+code.pythoncode {
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  font-size: 0.97em;
+}
+
+/* Kräftiges Blau für Schlüsselwörter */
+.pythoncode .k, .pythoncode .kc, .pythoncode .kd, .pythoncode .kn, .pythoncode .kp, .pythoncode .kr, .pythoncode .kt {
+  color: #0050b3;
+  font-weight: bold;
+}
+/* Kräftiges Rot für Strings */
+.pythoncode .s, .pythoncode .sa, .pythoncode .sb, .pythoncode .sc, .pythoncode .se, .pythoncode .sh, .pythoncode .si, .pythoncode .sr, .pythoncode .ss {
+  color: #d60000;
+}
+/* Kräftiges Orange für Docstrings (String.Doc) */
+.pythoncode .sd {
+  color: #ff8800;
+  font-style: italic;
+}
+/* Sattes Grün für Kommentare */
+.pythoncode .c, .pythoncode .cm, .pythoncode .cp, .pythoncode .c1, .pythoncode .cs {
+  color: #228b22;
+  font-style: italic;
+}
+.pythoncode .n { color: #222; }
+.pythoncode .nf, .pythoncode .nb, .pythoncode .nv, .pythoncode .nn {
+  color: #795e26;
+}
+.pythoncode .m, .pythoncode .mi, .pythoncode .mf, .pythoncode .mh, .pythoncode .mo {
+  color: #098658;
+}
+.pythoncode .o, .pythoncode .ow { color: #222; }
+.pythoncode .p { color: #222; }
+.pythoncode .err { background: #ffcccc; color: #a00; }

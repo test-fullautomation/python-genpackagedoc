@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Repository Structure</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<!-- Copyright 2020-2026 Robert Bosch GmbH -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+<pre class="highlight"><code class="highlight">What is the structure of the application repository?</code></pre><ul>
+<li><p>Folder <code class="filesystem">GenPackageDoc</code></p>
+<p>Contains the package code.</p>
+<p><em>This folder is specific for the package.</em></p>
+</li>
+<li><p>Folder <code class="filesystem">packagedoc</code></p>
+<p>Contains all package documentation related files, e.g. the <strong>GenPackageDoc</strong> configuration, additional input files
+and the generated documentation itself.</p>
+<p><em>This folder is specific for the documentation.</em></p>
+</li>
+<li><p>Repository root folder</p>
+<ul>
+<li><p><code class="filesystem">genpackagedoc.py</code></p>
+<p>Python script to start the documentation build</p>
+</li>
+<li><p><code class="filesystem">build_backend.py</code></p>
+<p>Custom build backend to execute additional installation steps. Currently this is a pattern only reserved for future development.</p>
+</li>
+<li><p><code class="filesystem">pyproject.toml</code></p>
+<p>Main configuration file for the installation of the component</p>
+</li>
+<li><p><code class="filesystem">dump_repository_config.py</code></p>
+<p>Little helper to dump the repository configuration to console</p>
+</li>
+</ul>
+</li>
+</ul>
+<p></p>
+</main>
+</body>
+</html>

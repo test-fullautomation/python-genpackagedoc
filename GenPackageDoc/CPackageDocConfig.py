@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 08.01.2026
+# 16.04.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -141,6 +141,7 @@ Responsible for:
                                             "DIAGRAMS",
                                             "OUTPUT",
                                             "PDFDEST",
+                                            "HTMLDEST",
                                             "CONFIGDEST",
                                             "TEX",
                                             "JAVA",
@@ -242,6 +243,12 @@ Responsible for:
          self.__dictPackageDocConfig['PDFDEST'] = None
 
       # optional
+      if 'HTMLDEST' in dictJsonValues:
+         self.__dictPackageDocConfig['HTMLDEST'] = dictJsonValues['HTMLDEST']
+      else:
+         self.__dictPackageDocConfig['HTMLDEST'] = None
+
+      # optional
       if 'CONFIGDEST' in dictJsonValues:
          self.__dictPackageDocConfig['CONFIGDEST'] = dictJsonValues['CONFIGDEST']
       else:
@@ -317,7 +324,7 @@ Responsible for:
          self.__dictPackageDocConfig['TOC'][sDocumentPart] = CString.NormalizePath(sPath=self.__dictPackageDocConfig['TOC'][sDocumentPart], sReferencePathAbs=sReferencePathAbs)
 
       # -- set further config keys (to enable the resolve of placeholders and the normalizing of paths running in a loop)
-      tupleFurtherConfigKeys = ('PICTURES', 'DIAGRAMS', 'OUTPUT', 'PDFDEST', 'CONFIGDEST') # values contain paths and can contain placeholders; some of them are optional
+      tupleFurtherConfigKeys = ('PICTURES', 'DIAGRAMS', 'OUTPUT', 'PDFDEST', 'HTMLDEST', 'CONFIGDEST') # values contain paths and can contain placeholders; some of them are optional
       # -- resolve placeholder and normalize paths
       for sConfigKey in tupleFurtherConfigKeys:
          sPackageDocValue = self.__dictPackageDocConfig[sConfigKey]
@@ -545,6 +552,7 @@ Get values fom command linwe and add them to **GenPackageDoc** configuration. Al
       # -- configuration parameter, that can be overwritten in command line (where it makes sense)
       oCmdLineParser.add_argument('--output', type=str, help='Path and name of folder containing all output files.')
       oCmdLineParser.add_argument('--pdfdest', type=str, help='Path and name of folder in which the generated PDF file will be copied to.')
+      oCmdLineParser.add_argument('--htmldest', type=str, help='Path and name of folder in which the generated HTML files will be copied to.')
       oCmdLineParser.add_argument('--configdest', type=str, help='Path and name of folder in which the configuration files will be copied to.')
       oCmdLineParser.add_argument('--strict', help='If True, a missing LaTeX compiler aborts the process, otherwise the process continues.')
       oCmdLineParser.add_argument('--simulateonly', action='store_true', help='If True, the LaTeX compiler is switched off; a syntax check only remains in this case. Default: False')
@@ -556,46 +564,58 @@ Get values fom command linwe and add them to **GenPackageDoc** configuration. Al
          OUTPUT = oCmdLineArgs.output
          if OUTPUT == "":
             bSuccess = False
-            sResult  = "Empty command line argument: -output."
+            sResult  = "Empty command line argument: --output."
             return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
          else:
             OUTPUT = CString.NormalizePath(sPath=OUTPUT, sReferencePathAbs=sReferencePathAbs)
             self.__dictPackageDocConfig['OUTPUT'] = OUTPUT
-            print(COLNY + f"<'OUTPUT' redirected to '{OUTPUT}'>\n")
+            print(COLNY + f"'OUTPUT' redirected to\n'{OUTPUT}'\n")
 
       PDFDEST = None
       if oCmdLineArgs.pdfdest != None:
          PDFDEST = oCmdLineArgs.pdfdest
          if PDFDEST == "":
             bSuccess = False
-            sResult  = "Empty command line argument: -pdfdest."
+            sResult  = "Empty command line argument: --pdfdest."
             return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
          else:
             PDFDEST = CString.NormalizePath(sPath=PDFDEST, sReferencePathAbs=sReferencePathAbs)
             self.__dictPackageDocConfig['PDFDEST'] = PDFDEST
-            print(COLNY + f"<'PDFDEST' redirected to '{PDFDEST}'>\n")
+            print(COLNY + f"'PDFDEST' redirected to\n'{PDFDEST}'\n")
+
+      HTMLDEST = None
+      if oCmdLineArgs.htmldest != None:
+         HTMLDEST = oCmdLineArgs.htmldest
+         if HTMLDEST == "":
+            bSuccess = False
+            sResult  = "Empty command line argument: --htmldest."
+            return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+         else:
+            HTMLDEST = CString.NormalizePath(sPath=HTMLDEST, sReferencePathAbs=sReferencePathAbs)
+            self.__dictPackageDocConfig['HTMLDEST'] = HTMLDEST
+            print(COLNY + f"'HTMLDEST' redirected to\n'{HTMLDEST}'\n")
 
       CONFIGDEST = None
       if oCmdLineArgs.configdest != None:
          CONFIGDEST = oCmdLineArgs.configdest
          if CONFIGDEST == "":
             bSuccess = False
-            sResult  = "Empty command line argument: -configdest."
+            sResult  = "Empty command line argument: --configdest."
             return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
          else:
             CONFIGDEST = CString.NormalizePath(sPath=CONFIGDEST, sReferencePathAbs=sReferencePathAbs)
             self.__dictPackageDocConfig['CONFIGDEST'] = CONFIGDEST
-            print(COLNY + f"<'CONFIGDEST' redirected to '{CONFIGDEST}'>\n")
+            print(COLNY + f"'CONFIGDEST' redirected to\n'{CONFIGDEST}'\n")
 
       STRICT = None
       if oCmdLineArgs.strict != None:
          STRICT = oCmdLineArgs.strict
          if ( (STRICT == "true") or (STRICT == "True") ):
             self.__dictPackageDocConfig['CONTROL']['STRICT'] = True
-            print(COLNY + "<'STRICT' set to True>\n")
+            print(COLNY + "'STRICT' set to True\n")
          elif ( (STRICT == "false") or (STRICT == "False") ):
             self.__dictPackageDocConfig['CONTROL']['STRICT'] = False
-            print(COLNY + "<'STRICT' set to False>\n")
+            print(COLNY + "'STRICT' set to False\n")
 
       bSimulateOnly = False
       if oCmdLineArgs.simulateonly is not None:

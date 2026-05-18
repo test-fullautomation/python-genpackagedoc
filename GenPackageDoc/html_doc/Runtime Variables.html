@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Runtime Variables</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<!-- Copyright 2020-2026 Robert Bosch GmbH -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+<pre class="highlight"><code class="highlight">What are "runtime variables" and how to use them in reST content?</code></pre><p>All configuration parameters of <strong>GenPackageDoc</strong> are taken out of four sources:</p>
+<ol class="arabic">
+<li><p>the static repository configuration</p>
+<p><code class="filesystem">pyproject.toml</code></p>
+</li>
+<li><p>the dynamic repository configuration</p>
+<p><code class="filesystem">config/CRepositoryConfig.py</code></p>
+</li>
+<li><p>the static <strong>GenPackageDoc</strong> configuration</p>
+<p><code class="filesystem">packagedoc/packagedoc_config.json</code></p>
+</li>
+<li><p>the dynamic <strong>GenPackageDoc</strong> configuration</p>
+<p><code class="filesystem">GenPackageDoc/CPackageDocConfig.py</code></p>
+</li>
+</ol>
+<p>Some of them are runtime variables and can be accessed within reST content (within docstrings of Python modules and also within separate reST files).</p>
+<p>This means it is possible to add configuration values automatically to the documentation.</p>
+<p>This happens by encapsulating the runtime variable name in triple hashes. This &quot;triple hash&quot; syntax is introduced to make it easier
+to distinguish between the json syntax (mostly based on curly brackets) and additional syntax elements used within values of json keys.</p>
+<p>The name of the repository e.g. can be added to the documentation with the following reST content:</p>
+<img alt="./pictures/RST01.png" src="./pictures/RST01.png" />
+<p>This document contains a chapter &quot;Appendix&quot; at the end. This chapter is used to make the repository configuration a part of this documentation
+and can be used as example.</p>
+<p>Additionally to the predefined runtime variables a user can add own ones.<br>
+See <code class="anycontent">"PARAMS"</code> within <code class="filesystem">packagedoc_config.json</code>.</p>
+<p>All predefined runtime variables are written in capital letters. To make it easier for a developer to distinguish between predefined
+and user defined runtime variables, all user defined runtime variables have to be written in small letters completely.</p>
+<p>Also the <code class="anycontent">"DOCUMENT"</code> keys within <code class="filesystem">packagedoc_config.json</code> are runtime variables.</p>
+<p>Also within <code class="filesystem">packagedoc_config.json</code> the triple hash syntax can be used to access repository configuration values.</p>
+<p>With this mechanism it is e.g. possible to give the output PDF document automatically the name of the package:</p>
+<img alt="./pictures/RST02.png" src="./pictures/RST02.png" />
+<p></p>
+</main>
+</body>
+</html>

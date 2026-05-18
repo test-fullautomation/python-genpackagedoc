@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>ReferencePackage Documentation</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    #container { display: flex; height: 100vh; }
+    #sidebar {
+      width: 220px;
+      background: #f5f5f5;
+      border-right: 1px solid #ccc;
+      padding: 1em 0.5em;
+      box-sizing: border-box;
+    }
+    #sidebar ul { list-style: none; padding: 0; }
+    #sidebar li { margin: 0.5em 0; }
+    #sidebar a {
+      color: #333;
+      text-decoration: none;
+      display: block;
+      padding: 0.3em 0.5em;
+      border-radius: 4px;
+    }
+    #sidebar a:hover, #sidebar a.active {
+      background: #e0e0e0;
+      color: #1976d2;
+    }
+    #content {
+      flex: 1;
+      border: none;
+      height: 100vh;
+    }
+  </style>
+  <script>
+    function showFile(file, el) {
+      document.getElementById('content').src = file;
+      // Mark active
+      document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+    window.onload = function() {
+      showFile('Introduction.html', document.getElementById('file1link'));
+    }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <nav id="sidebar">
+      <strong>ReferencePackage</strong>
+      <ul>
+<li><a href="#" id="file2link" onclick="showFile('Introduction.html', this);return false;">Introduction</a></li>
+<li><a href="#" id="file2link" onclick="showFile('RST_test_1.html', this);return false;">RST_test_1</a></li>
+<li><a href="#" id="file2link" onclick="showFile('RST_test_2.html', this);return false;">RST_test_2</a></li>
+<li><a href="#" id="file2link" onclick="showFile('ReferenceModule_1.py.html', this);return false;">ReferenceModule_1.py</a></li>
+<li><a href="#" id="file2link" onclick="showFile('ReferenceModule_2.py.html', this);return false;">ReferenceModule_2.py</a></li>
+<li><a href="#" id="file2link" onclick="showFile('ReferenceModule_sub_1.py.html', this);return false;">ReferenceModule_sub_1.py</a></li>
+<li><a href="#" id="file2link" onclick="showFile('ReferenceModule_sub_sub_1_1.py.html', this);return false;">ReferenceModule_sub_sub_1_1.py</a></li>
+<li><a href="#" id="file2link" onclick="showFile('ReferenceModule_sub_2.py.html', this);return false;">ReferenceModule_sub_2.py</a></li>
+<li><a href="#" id="file2link" onclick="showFile('Appendix.html', this);return false;">Appendix</a></li>
+      </ul>
+    </nav>
+    <iframe id="content"></iframe>
+  </div>
+</body>
+</html>
+

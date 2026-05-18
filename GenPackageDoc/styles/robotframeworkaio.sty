@@ -21,8 +21,9 @@
 % includes:
 % - RobotFramework AIO code and console listings
 % - Python code and console listings
+% - JSON(P) code listings
 %
-% 21.11.2022
+% 07.04.2026
 %
 % --------------------------------------------------------------------------------------------------------------
 
@@ -185,21 +186,23 @@
 \newcommand{\inlinecomment}[1]{\color{col_comment}\normalfont$\langle$\textit{#1}$\rangle$}
 
 
+
+\definecolor{col_robotflowcontrol}{RGB}{0,0,255}
+\definecolor{col_robotidentifierstyle}{RGB}{220, 20, 60}
+\definecolor{col_robotmoredelim}{RGB}{34, 139, 34}
 %
 % environment for robot code listings
 %
 \lstdefinelanguage{Robot_code}{
       alsoletter={-,[,],{,},$,@,\%,\&},
-      basicstyle=\ttfamily\small,
-      columns=fixed,
       showstringspaces=false,
       frame=single,
       framesep=5pt,
       breaklines=true,
-      breakatwhitespace=true,
+      breakatwhitespace=false,
       prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
       postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
-      escapeinside={<}{>},
+      escapeinside={§}{§},
       captionpos=b,
       keywords={
          Library,
@@ -226,27 +229,42 @@
          And,
          Then,
          FOR,
+         IF,
+         ELSE,
          WITH,
          NAME,
          IN,
          RANGE,
          END,
          CONTINUE,
+         THREAD,
+      },
+      morekeywords=[3]{
+         PASS,
+      },
+      morekeywords=[4]{
+         FAIL,
+      },
+      morekeywords=[5]{
+         UNKNOWN,
       },
       keywordstyle=\color{cyan},
       keywordstyle=[1]\color{col_syntax},
-      keywordstyle=[2]\color{col_flowcontrol},
+      keywordstyle=[2]\color{col_robotflowcontrol},
+      keywordstyle=[3]\color{col_robotmoredelim},
+      keywordstyle=[4]\color{red},
+      keywordstyle=[5]\color{blue},
       comment=[l][\color{col_comment}]{\#},
       commentstyle=\color{col_comment}\upshape,
       moredelim=[s][\color{col_section}]{***}{***},
-      moredelim=[s][\color{ForestGreen}]{$\{}{\}},
-      moredelim=[s][\color{ForestGreen}]{@\{}{\}},
-      moredelim=[s][\color{ForestGreen}]{\%\{}{\}},
-      moredelim=[s][\color{ForestGreen}]{\&\{}{\}},
+      moredelim=[s][\color{col_robotmoredelim}]{$\{}{\}},
+      moredelim=[s][\color{col_robotmoredelim}]{@\{}{\}},
+      moredelim=[s][\color{col_robotmoredelim}]{\%\{}{\}},
+      moredelim=[s][\color{col_robotmoredelim}]{\&\{}{\}},
       morestring=*[b]{"},
-      morestring=[s][\color{gray}]{<}{>},
+      % morestring=[s][\color{gray}]{<}{>},
       stringstyle=\color{red},
-      identifierstyle=\color{blue},
+      identifierstyle=\color{col_robotidentifierstyle},
       rulesepcolor=\color{color_code_frame},
       rulecolor=\color{color_code_frame},
       backgroundcolor=\color{color_code_background},
@@ -260,18 +278,44 @@
    \lstset{%
       xleftmargin=5pt,
       xrightmargin=5pt,
+      basicstyle=\ttfamily\small,
       alsolanguage=Robot_code,
       #1
    }
 }{}
 
-\newcommand{\rcode}[1]{
+% Font increased to \scriptsize (to prevent users from implementing complicated parameter passings on LaTeX level,
+% we keep it simple for users and provide an alternative definition with name adapted also - even in case of this
+% duplicates code and is less elegant)
+\lstnewenvironment{robotscode}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\scriptsize,
+      alsolanguage=Robot_code,
+      #1
+   }
+}{}
+
+
+\newcommand{\rcode}[1]{%
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_code_frame,
          backgroundcolor=color_code_background,
-         font=\ttfamily\small]{\lstinline[language=Robot_code]!#1!}
-}
+         font=\ttfamily\small]{\lstinline[language=Robot_code]!#1!}}
 
 
 %
@@ -279,17 +323,14 @@
 %
 \lstdefinelanguage{Robot_log}{
       alsoletter=-,
-      basicstyle=\ttfamily\small,
-      columns=fixed,
       showstringspaces=false,
       commentstyle=\color{gray}\upshape,
       frame=single,
       framesep=5pt,
       breaklines=true,
-      breakatwhitespace=true,
+      breakatwhitespace=false,
       prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
       postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
-      escapeinside={<}{>},
       captionpos=b,
       moredelim=[is][\bfseries]{[*}{*]},
       morestring=[m][\color{red}]{'},
@@ -315,18 +356,43 @@
    \lstset{%
       xleftmargin=5pt,
       xrightmargin=5pt,
+      basicstyle=\ttfamily\small,
       alsolanguage=Robot_log,
       #1
    }
 }{}
 
-\newcommand{\rlog}[1]{
+% Font increased to \scriptsize (to prevent users from implementing complicated parameter passings on LaTeX level,
+% we keep it simple for users and provide an alternative definition with name adapted also - even in case of this
+% duplicates code and is less elegant)
+\lstnewenvironment{robotslog}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\scriptsize,
+      alsolanguage=Robot_log,
+      #1
+   }
+}{}
+
+\newcommand{\rlog}[1]{%
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_log_frame,
          backgroundcolor=color_log_background,
-         font=\ttfamily\small]{\lstinline[language=Robot_log]!#1!}
-}
+         font=\ttfamily\small]{\lstinline[language=Robot_log]!#1!}}
 
 \usepackage{multirow}
 
@@ -339,23 +405,27 @@
 \tikzstyle{arrow} = [thick,->,>=stealth]
 
 
+
+\definecolor{color_pythoncode_background}{RGB}{255, 247, 241}
+\definecolor{color_pythoncode_border}{RGB}{255,241,226}
+\definecolor{color_pythoncode_inlinetext}{RGB}{65, 105, 225}
+
 %
 % environment for Python code listings
 %
 \lstdefinelanguage{Python_code}{
-      basicstyle=\ttfamily\small,
       columns=fixed,
       showstringspaces=false,
       frame=single,
       framesep=5pt,
       breaklines=true,
-      breakatwhitespace=true,
+      breakatwhitespace=false,
       keepspaces=true,
       abovecaptionskip=15pt,
       captionpos=b,
       prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
       postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
-      escapeinside={<}{>},
+      escapeinside={§}{§},
       alsoletter={@},
       keywords={
                   and, as, assert, async, await, break, class, continue, def, del, elif, else, except, False, finally,
@@ -371,44 +441,102 @@
       morestring=[b][\color{red}]{'},
       stringstyle=\color{red},
       identifierstyle=\color{blue},
-      rulesepcolor=\color{color_code_frame},
-      rulecolor=\color{color_code_frame},
-      backgroundcolor=\color{color_code_background}
+      rulesepcolor=\color{color_pythoncode_border},
+      rulecolor=\color{color_pythoncode_border},
+      backgroundcolor=\color{color_pythoncode_background}
+}
+
+%
+% environment for Python code listings (inline, without syntax highlighting)
+%
+\lstdefinelanguage{Python_code_inline}{
+      columns=fixed,
+      showstringspaces=false,
+      frame=single,
+      framesep=5pt,
+      breaklines=true,
+      breakatwhitespace=false,
+      keepspaces=true,
+      abovecaptionskip=15pt,
+      captionpos=b,
+      prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
+      postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
+      escapeinside={§}{§},
+      alsoletter={@},
+      keywords={
+                  and, as, assert, async, await, break, class, continue, def, del, elif, else, except, False, finally,
+                  for, from, global, if, import, in, is, lambda, None, nonlocal, not, or, pass, raise, return, self,
+                  True, try, while, with, yield,
+                  __init__, __del__,
+                  @library, @keyword, @not_keyword
+               },%keywords with spaces can not be defined in keywords
+      keywordstyle=\color{color_pythoncode_inlinetext},
+      comment=[l][\color{color_pythoncode_inlinetext}]{\#},
+      commentstyle=\color{color_pythoncode_inlinetext}\upshape,
+      morestring=[b][\color{color_pythoncode_inlinetext}]{"},
+      morestring=[b][\color{color_pythoncode_inlinetext}]{'},
+      stringstyle=\color{color_pythoncode_inlinetext},
+      identifierstyle=\color{color_pythoncode_inlinetext},
+      rulesepcolor=\color{color_pythoncode_border},
+      rulecolor=\color{color_pythoncode_border},
+      backgroundcolor=\color{color_pythoncode_background}
 }
 
 \lstnewenvironment{pythoncode}[1][]{%
    \lstset{%
       xleftmargin=5pt,
       xrightmargin=5pt,
+      basicstyle=\ttfamily\small,
       alsolanguage=Python_code,
       #1
    }
 }{}
 
-\newcommand{\pcode}[1]{
+% Font increased to \scriptsize (to prevent users from implementing complicated parameter passings on LaTeX level,
+% we keep it simple for users and provide an alternative definition with name adapted also - even in case of this
+% duplicates code and is less elegant)
+\lstnewenvironment{pythonscode}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\scriptsize,
+      alsolanguage=Python_code,
+      #1
+   }
+}{}
+
+\newcommand{\pcode}[1]{%
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
-         linecolor=color_code_frame,
-         backgroundcolor=color_code_background,
-         font=\ttfamily\small]{\lstinline[language=Python_code]!#1!}
-}
+         linecolor=color_pythoncode_border,
+         backgroundcolor=color_pythoncode_background,
+         font=\ttfamily\small]{\lstinline[language=Python_code_inline]!#1!}} % without syntax highlighting
 
 %
 % environment for Python log listings
 %
 \lstdefinelanguage{Python_log}{
       alsoletter=-,
-      basicstyle=\ttfamily\small,
-      columns=fixed,
       showstringspaces=false,
       commentstyle=\color{gray}\upshape,
       frame=single,
       framesep=5pt,
       breaklines=true,
-      breakatwhitespace=true,
+      breakatwhitespace=false,
       prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
       postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
-      escapeinside={<}{>},
       captionpos=b,
       moredelim=[is][\bfseries]{[*}{*]},
       morestring=[m][\color{red}]{'},
@@ -434,15 +562,447 @@
    \lstset{%
       xleftmargin=5pt,
       xrightmargin=5pt,
+      basicstyle=\ttfamily\small,
       alsolanguage=Python_log,
       #1
    }
 }{}
 
-\newcommand{\plog}[1]{
+% Font increased to \scriptsize (to prevent users from implementing complicated parameter passings on LaTeX level,
+% we keep it simple for users and provide an alternative definition with name adapted also - even in case of this
+% duplicates code and is less elegant)
+\lstnewenvironment{pythonslog}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\scriptsize,
+      alsolanguage=Python_log,
+      #1
+   }
+}{}
+
+\newcommand{\plog}[1]{%
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
    \efbox[margin=2pt,
          linewidth=1pt,
          linecolor=color_log_frame,
          backgroundcolor=color_log_background,
-         font=\ttfamily\small]{\lstinline[language=Python_log]!#1!}
+         font=\ttfamily\small]{\lstinline[language=Python_log]!#1!}}
+
+%
+% environment for JSON(P) listings
+%
+
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{darkgray}{RGB}{180,180,180}
+\definecolor{brickred}{RGB}{203,65,84}
+\definecolor{myred}{RGB}{255,0,0}
+\definecolor{navyblue}{RGB}{0,0,128}
+\definecolor{darkmagenta}{RGB}{139,0,139}
+
+\definecolor{color_jsoncode_background}{RGB}{240, 255, 255}
+\definecolor{color_jsoncode_border}{RGB}{214, 236, 243}
+\definecolor{color_jsoncode_inlinetext}{RGB}{65, 105, 225}
+
+\lstdefinelanguage{JSON_code}{
+    columns=fixed,
+    showstringspaces=false,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    keepspaces=true,
+    abovecaptionskip=15pt,
+    captionpos=b,
+    prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
+    postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
+    escapeinside={§}{§},
+    alsoletter={[,],{,},<,>,$},
+    % numberstyle=\color{black}\bfseries,
+    numbers=none,
+    keywordstyle=\color{ForestGreen},
+    comment=[l][\color{col_comment}]{//},
+    morecomment=[s][\color{gray}]{/*}{*/},
+    commentstyle=\color{col_comment}\upshape,
+    backgroundcolor=\color{color_jsoncode_background},
+    rulecolor=\color{color_jsoncode_border},
+    rulesepcolor=\color{color_jsoncode_border},
+    morestring=[b][\color{red}]{"},
+    morestring=[b][\color{red}]{'},
+    stringstyle=\color{red},
+    identifierstyle=\color{blue},
+    literate={"[import]"}{{\textcolor{ForestGreen}{"[import]"}}}8
+             {\\x}{{\textcolor{darkmagenta}{\textbackslash x}}}2
+    }
+
+
+%
+% environment for JSON code listings (inline, without syntax highlighting)
+%
+\lstdefinelanguage{JSON_code_inline}{
+    columns=fixed,
+    showstringspaces=false,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    keepspaces=true,
+    abovecaptionskip=15pt,
+    captionpos=b,
+    prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
+    postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
+    escapeinside={§}{§},
+    alsoletter={[,],{,},<,>,$},
+    % numberstyle=\color{black}\bfseries,
+    numbers=none,
+    keywordstyle=\color{color_jsoncode_inlinetext},
+    comment=[l][\color{color_jsoncode_inlinetext}]{//},
+    morecomment=[s][\color{color_jsoncode_inlinetext}]{/*}{*/},
+    commentstyle=\color{color_jsoncode_inlinetext}\upshape,
+    backgroundcolor=\color{color_jsoncode_background},
+    rulecolor=\color{color_jsoncode_border},
+    rulesepcolor=\color{color_jsoncode_border},
+    morestring=[b][\color{color_jsoncode_inlinetext}]{"},
+    morestring=[b][\color{color_jsoncode_inlinetext}]{'},
+    stringstyle=\color{color_jsoncode_inlinetext},
+    identifierstyle=\color{color_jsoncode_inlinetext},
+    literate={"[import]"}{{\textcolor{color_jsoncode_inlinetext}{"[import]"}}}8
+             {\\x}{{\textcolor{color_jsoncode_inlinetext}{\textbackslash x}}}2
+    }
+
+\lstnewenvironment{jsoncode}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\small,
+      alsolanguage=JSON_code,
+      #1
+   }
+}{}
+
+% Font increased to \scriptsize (to prevent users from implementing complicated parameter passings on LaTeX level,
+% we keep it simple for users and provide an alternative definition with name adapted also - even in case of this
+% duplicates code and is less elegant)
+\lstnewenvironment{jsonscode}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\scriptsize,
+      alsolanguage=JSON_code,
+      #1
+   }
+}{}
+
+\newcommand{\jcode}[1]{%
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
+   \efbox[margin=2pt,
+         linewidth=1pt,
+         linecolor=color_jsoncode_border,
+         backgroundcolor=color_jsoncode_background,
+         font=\ttfamily\small]{\lstinline[language=JSON_code_inline]!#1!}} % without syntax highlighting
+
+
+
+
+
+%
+% environment for console log listings
+%
+\lstdefinelanguage{Console_log}{
+      % alsoletter=-,
+      showstringspaces=false,
+      % commentstyle=\color{gray}\upshape,
+      frame=single,
+      framesep=5pt,
+      breaklines=true,
+      breakatwhitespace=false,
+      prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
+      postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
+      captionpos=b,
+      % moredelim=[is][\bfseries]{[*}{*]},
+      % morestring=[m][\color{red}]{'},
+      % morestring=[m][\color{red}]{"},
+      stringstyle=\color{black},
+      identifierstyle=\color{black},
+      keywordstyle=\color{black},
+      % morekeywords=[1]{PASS, passed},
+      % morekeywords=[2]{FAIL, failed},
+      % morekeywords=[3]{UNKNOWN, unknown},
+      % keywordstyle=[1]\color{ForestGreen},
+      % keywordstyle=[2]\color{red},
+      % keywordstyle=[3]\color{blue},
+      rulesepcolor=\color{color_log_frame},
+      rulecolor=\color{color_log_frame},
+      backgroundcolor=\color{color_log_background},
+      columns=fixed,
+      keepspaces=true,
+      abovecaptionskip=15pt
 }
+
+\lstnewenvironment{consolelog}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\small,
+      alsolanguage=Console_log,
+      #1
+   }
+}{}
+
+% Font increased to \scriptsize (to prevent users from implementing complicated parameter passings on LaTeX level,
+% we keep it simple for users and provide an alternative definition with name adapted also - even in case of this
+% duplicates code and is less elegant)
+\lstnewenvironment{consoleslog}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\scriptsize,
+      alsolanguage=Console_log,
+      #1
+   }
+}{}
+
+\newcommand{\clog}[1]{%
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
+   \efbox[margin=2pt,
+         linewidth=1pt,
+         linecolor=color_log_frame,
+         backgroundcolor=color_log_background,
+         font=\ttfamily\small]{\lstinline[language=Console_log]!#1!}}
+
+
+
+
+%
+% environment for filesystem listings
+%
+\lstdefinelanguage{File_System}{
+      % alsoletter=-,
+      showstringspaces=false,
+      % commentstyle=\color{gray}\upshape,
+      frame=single,
+      framesep=5pt,
+      breaklines=true,
+      breakatwhitespace=false,
+      prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
+      postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
+      captionpos=b,
+      % moredelim=[is][\bfseries]{[*}{*]},
+      % morestring=[m][\color{red}]{'},
+      % morestring=[m][\color{red}]{"},
+      stringstyle=\color{black},
+      identifierstyle=\color{black},
+      keywordstyle=\color{black},
+      % morekeywords=[1]{PASS, passed},
+      % morekeywords=[2]{FAIL, failed},
+      % morekeywords=[3]{UNKNOWN, unknown},
+      % keywordstyle=[1]\color{ForestGreen},
+      % keywordstyle=[2]\color{red},
+      % keywordstyle=[3]\color{blue},
+      rulesepcolor=\color{color_log_frame},
+      rulecolor=\color{color_log_frame},
+      backgroundcolor=\color{color_log_background},
+      columns=fixed,
+      keepspaces=true,
+      abovecaptionskip=15pt
+}
+
+\lstnewenvironment{filesystem}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\small,
+      alsolanguage=File_System,
+      #1
+   }
+}{}
+
+% Font increased to \scriptsize (to prevent users from implementing complicated parameter passings on LaTeX level,
+% we keep it simple for users and provide an alternative definition with name adapted also - even in case of this
+% duplicates code and is less elegant)
+\lstnewenvironment{filessystem}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\scriptsize,
+      alsolanguage=File_System,
+      #1
+   }
+}{}
+
+\newcommand{\fsystem}[1]{%
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
+   \efbox[margin=2pt,
+         linewidth=1pt,
+         linecolor=color_log_frame,
+         backgroundcolor=color_log_background,
+         font=\ttfamily\small]{\lstinline[language=File_System]!#1!}}
+
+
+
+
+\definecolor{color_anycontent_background}{RGB}{245, 245, 245}
+\definecolor{color_anycontent_frame}{RGB}{220, 220, 220}
+
+%
+% environment for listings of any content
+%
+
+\lstdefinelanguage{Any_Content}{
+      % alsoletter=-,
+      showstringspaces=false,
+      % commentstyle=\color{gray}\upshape,
+      frame=single,
+      framesep=5pt,
+      breaklines=true,
+      breakatwhitespace=false,
+      prebreak=\mbox{\textcolor{Red}{$\hookleftarrow$}\space},
+      postbreak=\mbox{\textcolor{ForestGreen}{$\hookrightarrow$}\space},
+      captionpos=b,
+      % moredelim=[is][\bfseries]{[*}{*]},
+      % morestring=[m][\color{red}]{'},
+      % morestring=[m][\color{red}]{"},
+      stringstyle=\color{black},
+      identifierstyle=\color{black},
+      keywordstyle=\color{black},
+      % morekeywords=[1]{PASS, passed},
+      % morekeywords=[2]{FAIL, failed},
+      % morekeywords=[3]{UNKNOWN, unknown},
+      % keywordstyle=[1]\color{ForestGreen},
+      % keywordstyle=[2]\color{red},
+      % keywordstyle=[3]\color{blue},
+      rulesepcolor=\color{color_anycontent_frame},
+      rulecolor=\color{color_anycontent_frame},
+      backgroundcolor=\color{color_anycontent_background},
+      columns=fixed,
+      keepspaces=true,
+      abovecaptionskip=15pt
+}
+
+\lstnewenvironment{anycontent}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\small,
+      alsolanguage=Any_Content,
+      #1
+   }
+}{}
+
+% Font increased to \scriptsize (to prevent users from implementing complicated parameter passings on LaTeX level,
+% we keep it simple for users and provide an alternative definition with name adapted also - even in case of this
+% duplicates code and is less elegant)
+\lstnewenvironment{anyscontent}[1][]{%
+   \lstset{%
+      xleftmargin=5pt,
+      xrightmargin=5pt,
+      basicstyle=\ttfamily\scriptsize,
+      alsolanguage=Any_Content,
+      #1
+   }
+}{}
+
+\newcommand{\acontent}[1]{%
+   \lstset{
+      literate={
+        % Per default, in LaTeX a tilde is a non-breaking space.
+        % Here we redefine the tilde to be a tilde (additionally with some layout settings)
+        % And we use a (masked) blank to define a fix horizontal space (that is used as blank).
+        % Standard blanks are removed by LaTeX BEFORE the command is executed!
+        {~}{{\raisebox{0.1ex}{\ttfamily\char`\~}}}1
+        {\ }{{{\ttfamily\hspace{0.6em}}}}1
+        % Alternative: A masked blank becomes a ttfamily blank (can happen that this is mapped to the 'Figure Space' character internally)
+        % {\ }{{{\ttfamily\char`\ }}}1
+      }
+   }
+   \efbox[margin=2pt,
+         linewidth=1pt,
+         linecolor=color_anycontent_frame,
+         backgroundcolor=color_anycontent_background,
+         font=\ttfamily\small]{\lstinline[language=Any_Content]!#1!}}
+
+
+
+
+% Grau
+% \definecolor{color_highlight_background}{RGB}{245, 245, 245}
+% \definecolor{color_highlight_frame}{RGB}{220, 220, 220}
+
+% Orange
+\definecolor{color_highlight_background}{RGB}{255, 245, 225}
+\definecolor{color_highlight_frame}{RGB}{255, 213, 154}
+
+% Hintergrund:
+% Hex:#FFF5E1
+% RGB:(255, 245, 225)
+
+% Rahmen:
+% Hex:#FFD59A
+% RGB:(255, 213, 154)
+
+%
+% environment for highlighted content
+%
+
+\newtcolorbox{cbox_highlight}[1][]{%
+  enhanced,
+  before skip=2mm,
+  after skip=3mm,
+  boxrule=2pt,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm,
+  colback=color_highlight_background,
+  colframe=color_highlight_frame,
+  fontupper=\color{black}\itshape,
+  #1
+}
+
+\newenvironment{highlight}
+  {\begin{cbox_highlight}}
+  {\end{cbox_highlight}}

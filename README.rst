@@ -1,4 +1,4 @@
-.. Copyright 2020-2024 Robert Bosch GmbH
+.. Copyright 2020-2026 Robert Bosch GmbH
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -53,17 +53,9 @@ How to install
 
    * Install dependencies
 
-     **GenPackageDoc** requires some additional Python libraries. Before you install the cloned repository sources
-     you have to install the dependencies manually. The names of all related packages you can find in the file ``requirements.txt``
-     in the repository root folder. Use pip to install them:
+     Install **LaTeX** (recommended: TeX Live). This is required.
 
-     .. code::
-
-        pip install -r requirements.txt
-
-     Additionally install **LaTeX** (recommended: TeX Live). This is required.
-
-     Additionally install **PlantUML**. This is an option.
+     Install **PlantUML**. This is an option.
 
    * Configure dependencies
 
@@ -82,11 +74,51 @@ How to install
      - ``GENDOC_PLANTUML_PATH`` : path to ``plantuml`` executable (optional)
      - ``JAVA_HOME`` : path to ``java`` executable (optional, only in case of **PlantUML** is used)
 
-   * Use the following command to install **GenPackageDoc**:
+   * Use the following command to install **GenPackageDoc** (executed in repository main folder):
 
      .. code::
 
-        setup.py install
+        python -m pip install .
+
+     Or:
+
+     .. code::
+
+        python -m pip install --proxy <proxy> .
+
+     This command will also download and install all dependencies that are required to work with the source files in the current repository.
+     After the initial installation of **GenPackageDoc** is done, you have the following two possibilities:
+
+     1. *Clean the previous installation*:
+
+        .. code::
+
+           python "./cleanup_installation.py"
+
+        ``cleanup_installation.py`` explicitly deletes all files and folders within the component installation folder under
+        ``site-packages`` and also deletes local build artefacts.
+
+     2. *Render the component documentation*:
+
+        .. code::
+
+           python "./genpackagedoc.py"
+
+        This would e.g. be required in case of changes in the interface of **GenPackageDoc**.
+
+   * Use the following command to build **GenPackageDoc** (executed in repository main folder):
+
+     .. code::
+
+        python -m build .
+
+     Or:
+
+     .. code::
+
+        python -m pip config set global.proxy <proxy>
+        python -m build .
+
 
 How to use
 ----------
@@ -129,7 +161,7 @@ Contributors
 License
 -------
 
-Copyright 2020-2024 Robert Bosch GmbH
+Copyright 2020-2026 Robert Bosch GmbH
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

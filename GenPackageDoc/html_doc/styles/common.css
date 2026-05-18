@@ -1,0 +1,19 @@
+/* horizontal separator line */
+.hrstar {
+  text-align: center;
+  margin: 1em 0;
+  width: 100%;
+}
+.hrstar-line {
+  display: inline-block;
+  vertical-align: middle;
+  width: 30%;
+  border-top: 0.5pt solid #000;
+  height: 0;
+}
+.hrstar-star {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1.5em;
+  margin: 0 0.5em;
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Documents Structure</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<!-- Copyright 2020-2026 Robert Bosch GmbH -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+<pre class="highlight"><code class="highlight">How are the generated documents structured? What causes an entry within the table of content and how does the table of content look like?</code></pre><p>In the following we use terms taken over from the LaTeX world: <em>chapter</em>, <em>section</em> and <em>subsection</em>.</p>
+<p>A <em>chapter</em> is the top level within the PDF document; a <em>section</em> is the level below <em>chapter</em>, a <em>subsection</em> is the level below <em>section</em>.<span style="display:block; height:2ex;"></span></p>
+<p><em>The following assignments happen during the generation of a PDF document:</em></p>
+<ul>
+<li><p>The content of every additionally included separate reST file is a <em>chapter</em>.</p>
+<ul class="simple">
+<li><p>In case of you want to add another chapter to your documentation, you have to include another reST file.</p></li>
+<li><p>The headline of the chapter is the name of the reST file (automatically).<br>
+<em>Therefore, it is not necessary to repeat the headline inside the file.</em></p></li>
+</ul>
+</li>
+<li><p>The content of every included Python module is also a <em>chapter</em>.</p>
+<ul class="simple">
+<li><p>The headline of the chapter is the name of the Python module (automatically).<br>
+This means also that within the PDF document structure every Python module is at the same level as additionally included reST files.</p></li>
+</ul>
+</li>
+<li><p>Within additionally included separate reST files sections and subsections can be defined by the usual reST syntax elements for headings:</p>
+<ul class="simple">
+<li><p>A line underlined with &quot;<code class="anycontent">=</code>&quot;</p></li>
+<li><p>A line underlined with &quot;<code class="anycontent">-</code>&quot;</p></li>
+</ul>
+</li>
+<li><p>Within the docstrings of Python modules the headings are added automatically (for functions, classes and methods)</p>
+<ul class="simple">
+<li><p>Classes and functions are listed at section level (both classes and functions are assumed to be at the same level).</p></li>
+<li><p>Class methods are listed at subesction level.</p></li>
+</ul>
+<p><strong>Further nestings of headings are not supported</strong> (because we do not want to overload the table of content).</p>
+</li>
+</ul>
+<p></p>
+<section id="example-rest-file">
+<h2>Example: reST file</h2>
+<p>This can be the content of a file <code class="filesystem">Example Chapter.rst</code> in reST format:</p>
+<pre class="anycontent"><code class="anycontent">.. highlight::
+
+   This is an example chapter to demonstrate the structure of a PDF document.
+
+Example section 1
+=================
+
+*text text text text text text text text text text text text text text text*
+
+Example subsection 1.1
+----------------------
+
+*text text text text text text text text text text text text text text text*
+
+Example subsection 1.2
+----------------------
+
+*text text text text text text text text text text text text text text text*
+
+Example section 2
+=================
+
+*text text text text text text text text text text text text text text text*
+
+Example subsection 2.1
+----------------------
+
+*text text text text text text text text text text text text text text text*</code></pre><p>In PDF this causes an entry in the table of content:<span style="display:block; height:2ex;"></span></p>
+<img alt="./pictures/toc_01.png" src="./pictures/toc_01.png" />
+<p>
+And this is the content itself:<span style="display:block; height:2ex;"></span></p>
+<img alt="./pictures/toc_content_01.png" src="./pictures/toc_content_01.png" />
+<p>
+The table of contents of the documentation in HTML format is currently limited to the top level (<em>chapters</em>):<span style="display:block; height:2ex;"></span></p>
+<img alt="./pictures/toc_02.png" src="./pictures/toc_02.png" />
+<p></p>
+</section>
+<section id="example-python-module">
+<h2>Example: Python module</h2>
+<p>This can be the content of some docstrings within a Python module <code class="filesystem">example_module.py</code>:</p>
+<pre class="pythoncode"><code class="pythoncode"><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. highlight::</span>
+
+<span class="sd">   The example module is a Python module containing example docstrings</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">example_function</span><span class="p">():</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">:acontent:`example_function` is a simple example function.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CExample</span><span class="p">():</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">:acontent:`CExample` is the main class of the example module.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">example_method_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This is the example method :acontent:`example_method_1` of the example module :fsystem:`example_module.py`.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">pass</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">example_method_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This is the example method :acontent:`example_method_2` of the example module :fsystem:`example_module.py`.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">pass</span>
+</code></pre><p><span style="display:block; height:2ex;"></span>
+In PDF this causes an entry in the table of content:<span style="display:block; height:2ex;"></span></p>
+<img alt="./pictures/toc_03.png" src="./pictures/toc_03.png" />
+<p>
+And this is the content itself:<span style="display:block; height:2ex;"></span></p>
+<img alt="./pictures/toc_content_02.png" src="./pictures/toc_content_02.png" />
+<p>The name of the Python module is placed at <em>chapter</em> level. The names of functions and classes are placed at <em>section</em> level.
+The names of class methods are placed at <em>subsection</em> level.</p>
+<p><strong>Caution: Headings within docstrings of Python module are not supported! Nested function definitions are skipped also.</strong></p>
+<p>The table of contents of the documentation in HTML format is currently limited to the top level (that is the name of the Python module).
+The functions classes and methods are not yet included in the HTML table of content.</p>
+<p></p>
+</section>
+</main>
+</body>
+</html>

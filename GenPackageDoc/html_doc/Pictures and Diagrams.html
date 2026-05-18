@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pictures and Diagrams</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<!-- Copyright 2020-2026 Robert Bosch GmbH -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+<pre class="highlight"><code class="highlight">How to import pictures?
+How to render and import diagrams?</code></pre><section id="pictures-import">
+<h2>Pictures Import</h2>
+<p>Pictures can be imported in the following way:</p>
+<ol class="arabic">
+<li><p>Import in reST content:</p>
+<pre class="anycontent"><code class="anycontent">.. image:: ./pictures/AnyPicture.png</code></pre></li>
+<li><p>Import in LaTeX content:</p>
+<pre class="anycontent"><code class="anycontent">\includegraphics[scale=0.7]{./pictures/AnyPicture.png}</code></pre></li>
+</ol>
+<p>The user needs to adapt the scaling to make the rendered diagrams fit to a page of a PDF document in best way.
+But this scaling only works in LaTeX code, but not in reST code.</p>
+<p><span style="display:block; height:2ex;"></span></p>
+</section>
+<section id="diagrams-rendering-and-import">
+<h2>Diagrams Rendering and Import</h2>
+<p>A <em>diagram</em> in this context is a picture that is rendered out of source code. <strong>GenPackageDoc</strong> supports <strong>PlantUML</strong> that supports a wide range of diagrams.</p>
+<p>To use the <strong>PlantUML</strong> functionality with <strong>GenPackageDoc</strong>, some preconditions have to be fulfilled:</p>
+<ol class="arabic simple">
+<li><p><strong>PlantUML</strong> is installed (either as stand-alone installation or as VSCodium extension)</p></li>
+<li><p><strong>GenPackageDoc</strong> is configured (<code class="filesystem">packagedoc_config.json</code>):</p>
+<ol class="loweralpha simple">
+<li><p>In section <code class="anycontent">"DIAGRAMS"</code> a path to a diagrams folder is defined (containing the diagrams source code).</p></li>
+<li><p>In section <code class="anycontent">"JAVA"</code> path and name of the java interpreter is defined (because <strong>PlantUML</strong> is a java application).</p></li>
+<li><p>In section <code class="anycontent">"PLANT_UML"</code> path and name of the <strong>PlantUML</strong> application is defined.</p></li>
+</ol>
+</li>
+</ol>
+<p>All <strong>PlantUML</strong> source code files within the <code class="anycontent">"DIAGRAMS"</code> folder need to have the extension <code class="filesystem">puml</code>.</p>
+</section>
+<section id="example-sequence-diagram">
+<h2>Example: Sequence diagram</h2>
+<p>The following code of a <code class="filesystem">puml</code> file produces a sequence diagram:</p>
+<pre class="anycontent"><code class="anycontent">@startuml
+GenPackageDoc -> ConstructionWorkerBob: Hello Bob!
+ConstructionWorkerBob --> GenPackageDoc: Hi GenPackageDoc, how are you?
+GenPackageDoc -> ConstructionWorkerBob: Fine, thanks.
+ConstructionWorkerBob --> GenPackageDoc: Have a nice day.
+@enduml</code></pre><p>Result:</p>
+<img alt="./pictures/SequenceDiagram.png" src="./pictures/SequenceDiagram.png" />
+<p></p>
+</section>
+<section id="example-json-diagram">
+<h2>Example: JSON diagram</h2>
+<p>The following code of a <code class="filesystem">puml</code> file produces a sequence diagram:</p>
+<pre class="jsoncode"><code class="jsoncode">@startjson
+<span class="p">{</span>
+  <span class="s">&quot;WelcomeString&quot;</span>   <span class="p">:</span> <span class="s">&quot;Hello World&quot;</span><span class="p">,</span>
+
+  <span class="s">&quot;Maximum_version&quot;</span> <span class="p">:</span> <span class="s">&quot;1.0.0&quot;</span><span class="p">,</span>
+  <span class="s">&quot;Minimum_version&quot;</span> <span class="p">:</span> <span class="s">&quot;0.6.0&quot;</span><span class="p">,</span>
+
+  <span class="s">&quot;Project&quot;</span>         <span class="p">:</span> <span class="s">&quot;Example Project&quot;</span><span class="p">,</span>
+  <span class="s">&quot;TargetName&quot;</span>      <span class="p">:</span> <span class="s">&quot;Example Target&quot;</span><span class="p">,</span>
+
+  <span class="s">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span>
+               <span class="s">&quot;global&quot;</span> <span class="p">:</span> <span class="p">{</span>
+                            <span class="s">&quot;str_val&quot;</span>   <span class="p">:</span> <span class="s">&quot;string value&quot;</span><span class="p">,</span>
+                            <span class="s">&quot;int_val&quot;</span>   <span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
+                            <span class="s">&quot;float_val&quot;</span> <span class="p">:</span> <span class="mf">4.56</span><span class="p">,</span>
+                            <span class="s">&quot;bool_val&quot;</span>  <span class="p">:</span> true<span class="p">,</span>
+                            <span class="s">&quot;null_val&quot;</span>  <span class="p">:</span> null<span class="p">,</span>
+                            <span class="s">&quot;dict_val&quot;</span>  <span class="p">:</span> <span class="p">{</span><span class="s">&quot;keyA&quot;</span> <span class="p">:</span> <span class="s">&quot;keyA_val&quot;</span><span class="p">,</span> <span class="s">&quot;keyB&quot;</span> <span class="p">:</span> <span class="s">&quot;keyB_val&quot;</span><span class="p">},</span>
+                            <span class="s">&quot;list_val&quot;</span>  <span class="p">:</span> <span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> true<span class="p">]}</span>
+              <span class="p">}</span>
+<span class="p">}</span>
+@endjson
+</code></pre><p>Result:</p>
+<img alt="./pictures/JsonDiagram.png" src="./pictures/JsonDiagram.png" />
+<p><span style="display:block; height:2ex;"></span>
+In case of <strong>PlantUML</strong> is configured in the <strong>GenPackageDoc</strong> configuration and in case of <code class="filesystem">puml</code> files are available within the diagrams folder,
+<strong>GenPackageDoc</strong> automatically calls <strong>PlantUML</strong> to render the diagrams. They can be imported in the following way:</p>
+<ol class="arabic">
+<li><p>Import in reST content:</p>
+<pre class="anycontent"><code class="anycontent">.. image:: ./diagrams/SequenceDiagram.png</code></pre></li>
+<li><p>Import in LaTeX content:</p>
+<pre class="anycontent"><code class="anycontent">\includegraphics[scale=0.7]{./diagrams/SequenceDiagram.png}</code></pre></li>
+</ol>
+</section>
+</main>
+</body>
+</html>
