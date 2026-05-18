@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 25.03.2026
+# 26.03.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -133,6 +133,8 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
          if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             sFunctionName = f"{node.name}"
+            if isinstance(node, ast.AsyncFunctionDef):
+               sFunctionName = f"async {sFunctionName}"
             sFunctionDocString = ast.get_docstring(node)
             bTakeIt = True
             if bIncludePrivate is False:
@@ -166,6 +168,8 @@ The method ``ParseSourceFile`` parses the content of a Python module.
             for subnode in node.body:
                if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
                   sMethodName = f"{subnode.name}"
+                  if isinstance(subnode, ast.AsyncFunctionDef):
+                     sMethodName = f"async {sMethodName}"
                   sMethodDocString = ast.get_docstring(subnode)
 
                   # is keyword?

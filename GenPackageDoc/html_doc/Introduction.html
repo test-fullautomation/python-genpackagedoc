@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Introduction</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<!-- Copyright 2020-2026 Robert Bosch GmbH -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+<p>The Python package <strong>GenPackageDoc</strong> generates the documentation of Python modules. The content of this documentation is taken out of
+the docstrings of functions, classes and their methods. All docstrings have to be written in reStructuredText (reST) format, that is a
+certain markdown dialect.</p>
+<p>It is possible to extend the documentation by the content of additional files either in reST format or in LaTeX format.</p>
+<p>The documentation is generated in the following way:</p>
+<ol class="arabic simple">
+<li><p>Files in LaTeX format are taken over immediately.</p></li>
+<li><p>Files in reST format are converted to LaTeX files and to to HTML files.</p></li>
+<li><p>All docstrings of all Python modules in the package are converted to LaTeX files and to HTML files.</p></li>
+<li><p>All LaTeX files together are converted to a single PDF document. This requires a separately installed LaTeX distribution (recommended: TeX Live).
+A LaTeX distribution is <strong>not</strong> part of <strong>GenPackageDoc</strong> and has to be installed separately!</p></li>
+<li><p>All HTML files are colected in a separate folder together with a <code class="filesystem">index.html</code> file as entry point.</p></li>
+</ol>
+<p><strong>Caution: LaTeX files are not converted to HTML files! Therefore, the content of LaTeX files are not part of the
+Documentation in html format.</strong><span style="display:block; height:1ex;"></span></p>
+<p>The sources of <strong>GenPackageDoc</strong> are available in the following GitHub repository:</p>
+<blockquote>
+<p><a class="reference external" href="https://github.com/test-fullautomation/python-genpackagedoc">python-genpackagedoc</a></p>
+</blockquote>
+<p>The repository <strong>python-genpackagedoc</strong> uses it's own functionality to document itself and the contained Python package <strong>GenPackageDoc</strong>.</p>
+<p><strong>Therefore, the complete repository can be used as an example about writing a package documentation.</strong></p>
+<p>It has to be considered, that the main goal of <strong>GenPackageDoc</strong> is to provide a toolchain to generate documentation out of Python sources
+that are stored within a repository, and therefore we have dependencies to the structure of the repository. For example: Configuration files with values
+that are specific for a repository, should not be installed. Such a specific configuration value is e.g. the name of the package or the name of the PDF document.</p>
+<p>The impact is: There is a deep relationship between the repository containing the sources to be documented, and the sources and the configuration
+of <strong>GenPackageDoc</strong> itself. Therefore some manual preparations are necessary to use <strong>GenPackageDoc</strong> also in other repositories.</p>
+<p>How to do this is explained in detail in the next chapters.</p>
+<p>The outcome of all preparations of <strong>GenPackageDoc</strong> in your own repository is a document like the one you are currently reading.</p>
+</main>
+</body>
+</html>

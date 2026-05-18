@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSourceParser.py</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<p>Python module containing all methods to parse the documentation content of Python source files.</p>
+<section id="genpackagedoc-csourceparser-csourceparser">
+<h2>Class: CSourceParser</h2>
+<p>The <span class="docutils literal">CSourceParser</span> class provides a method to parse the functions, classes and their methods
+together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.</p>
+<section id="genpackagedoc-csourceparser-csourceparser-parsesourcefile">
+<h3>Method: ParseSourceFile</h3>
+<p>The method <span class="docutils literal">ParseSourceFile</span> parses the content of a Python module.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p><span class="docutils literal">sFile</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>Path and name of a single Python module.</p>
+</li>
+<li><p><span class="docutils literal">bIncludePrivate</span> (currently not active, is <span class="docutils literal">False</span>)</p>
+<p>/ <em>Condition</em>: optional / <em>Type</em>: bool / <em>Default</em>: False /</p>
+<p>If <span class="docutils literal">False</span>: private methods are skipped, otherwise they are included in documentation.</p>
+</li>
+<li><p><span class="docutils literal">bIncludeUndocumented</span></p>
+<p>/ <em>Condition</em>: optional / <em>Type</em>: bool / <em>Default</em>: True /</p>
+<p>If <span class="docutils literal">True</span>: also classes and methods without docstring are listed in the documentation (together with a hint that information is not available),
+otherwise they are skipped.</p>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><p><span class="docutils literal">dictContent</span></p>
+<p>/ <em>Type</em>: dict /</p>
+<p>A dictionary containing all the information parsed out of <span class="docutils literal">sFile</span>.</p>
+</li>
+<li><p><span class="docutils literal">bSuccess</span></p>
+<p>/ <em>Type</em>: bool /</p>
+<p>Indicates if the computation of the method <span class="docutils literal">sMethod</span> was successful or not.</p>
+</li>
+<li><p><span class="docutils literal">sResult</span></p>
+<p>/ <em>Type</em>: str /</p>
+<p>The result of the computation of the method <span class="docutils literal">sMethod</span>.</p>
+</li>
+</ul>
+</section>
+</section>
+</main>
+</body>
+</html>

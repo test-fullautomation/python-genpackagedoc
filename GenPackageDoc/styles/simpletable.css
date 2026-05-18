@@ -1,0 +1,14 @@
+.simpletable {
+  border-collapse: collapse;
+  table-layout: auto;
+}
+.simpletable td, .simpletable th {
+  border: 1px solid #333;
+  padding: 8px;
+  text-align: center;
+  background-color: #f5f5f5; /* sehr helles Grau */
+  white-space: nowrap;
+}
+.simpletable th {
+  background-color: #eaeaea; /* optional: etwas dunkler für Kopfzeile */
+}

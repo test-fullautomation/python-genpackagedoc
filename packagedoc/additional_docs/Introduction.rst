@@ -1,4 +1,4 @@
-.. Copyright 2020-2024 Robert Bosch GmbH
+.. Copyright 2020-2026 Robert Bosch GmbH
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,18 +13,22 @@
    limitations under the License.
 
 The Python package **GenPackageDoc** generates the documentation of Python modules. The content of this documentation is taken out of
-the docstrings of functions, classes and their methods. All docstrings have to be written in reStructuredText (RST) format, that is a
+the docstrings of functions, classes and their methods. All docstrings have to be written in reStructuredText (reST) format, that is a
 certain markdown dialect.
 
-It is possible to extend the documentation by the content of additional files either in reStructuredText format or in LaTeX format.
+It is possible to extend the documentation by the content of additional files either in reST format or in LaTeX format.
 
-The documentation is generated in four steps:
+The documentation is generated in the following way:
 
 1. Files in LaTeX format are taken over immediately.
-2. Files in reStructuredText format are converted to LaTeX files.
-3. All docstrings of all Python modules in the package are converted to LaTeX files.
+2. Files in reST format are converted to LaTeX files and to to HTML files.
+3. All docstrings of all Python modules in the package are converted to LaTeX files and to HTML files.
 4. All LaTeX files together are converted to a single PDF document. This requires a separately installed LaTeX distribution (recommended: TeX Live).
    A LaTeX distribution is **not** part of **GenPackageDoc** and has to be installed separately!
+5. All HTML files are colected in a separate folder together with a :fsystem:`index.html` file as entry point.
+
+**Caution: LaTeX files are not converted to HTML files! Therefore, the content of LaTeX files are not part of the
+Documentation in html format.**/VS
 
 The sources of **GenPackageDoc** are available in the following GitHub repository:
 
@@ -32,7 +36,7 @@ The sources of **GenPackageDoc** are available in the following GitHub repositor
 
 The repository **python-genpackagedoc** uses it's own functionality to document itself and the contained Python package **GenPackageDoc**.
 
-**Therefore the complete repository can be used as an example about writing a package documentation.**
+**Therefore, the complete repository can be used as an example about writing a package documentation.**
 
 It has to be considered, that the main goal of **GenPackageDoc** is to provide a toolchain to generate documentation out of Python sources
 that are stored within a repository, and therefore we have dependencies to the structure of the repository. For example: Configuration files with values
@@ -43,4 +47,4 @@ of **GenPackageDoc** itself. Therefore some manual preparations are necessary to
 
 How to do this is explained in detail in the next chapters.
 
-The outcome of all preparations of **GenPackageDoc** in your own repository is a PDF document like the one you are currently reading.
+The outcome of all preparations of **GenPackageDoc** in your own repository is a document like the one you are currently reading.

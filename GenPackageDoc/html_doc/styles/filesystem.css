@@ -1,0 +1,93 @@
+pre { line-height: 125%; }
+td.linenos .normal { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+/* box text, background and border */
+.filesystem {
+  color: #000000; /* global font color overrules the specific color definitions below (to be removed later) => no syntax highlighting */
+  background: #F0F4FB;
+  border: 1.5px solid #E3EAF7;
+  border-radius: 6px;
+  padding-left: 2.5px;
+  padding-right: 2.5px;
+}
+.filesystem code {
+  display: block;
+  padding: 6px;
+  background: inherit;
+}
+/* deactivate border around every separate line */
+.filesystem span, .filesystem code, .filesystem pre, .filesystem td, .filesystem tr {
+  border: none !important;
+  background: transparent;
+}
+.filesystem .hll { background-color: #ffffcc }
+.filesystem .c { color: #60A0B0; font-style: italic } /* Comment */
+.filesystem .err { border: 1px solid #F00 } /* Error */
+.filesystem .k { color: #007020; font-weight: bold } /* Keyword */
+.filesystem .o { color: #666 } /* Operator */
+.filesystem .ch { color: #60A0B0; font-style: italic } /* Comment.Hashbang */
+.filesystem .cm { color: #60A0B0; font-style: italic } /* Comment.Multiline */
+.filesystem .cp { color: #007020 } /* Comment.Preproc */
+.filesystem .cpf { color: #60A0B0; font-style: italic } /* Comment.PreprocFile */
+.filesystem .c1 { color: #60A0B0; font-style: italic } /* Comment.Single */
+.filesystem .cs { color: #60A0B0; background-color: #FFF0F0 } /* Comment.Special */
+.filesystem .gd { color: #A00000 } /* Generic.Deleted */
+.filesystem .ge { font-style: italic } /* Generic.Emph */
+.filesystem .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.filesystem .gr { color: #F00 } /* Generic.Error */
+.filesystem .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.filesystem .gi { color: #00A000 } /* Generic.Inserted */
+.filesystem .go { color: #888 } /* Generic.Output */
+.filesystem .gp { color: #C65D09; font-weight: bold } /* Generic.Prompt */
+.filesystem .gs { font-weight: bold } /* Generic.Strong */
+.filesystem .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.filesystem .gt { color: #04D } /* Generic.Traceback */
+.filesystem .kc { color: #007020; font-weight: bold } /* Keyword.Constant */
+.filesystem .kd { color: #007020; font-weight: bold } /* Keyword.Declaration */
+.filesystem .kn { color: #007020; font-weight: bold } /* Keyword.Namespace */
+.filesystem .kp { color: #007020 } /* Keyword.Pseudo */
+.filesystem .kr { color: #007020; font-weight: bold } /* Keyword.Reserved */
+.filesystem .kt { color: #902000 } /* Keyword.Type */
+.filesystem .m { color: #40A070 } /* Literal.Number */
+.filesystem .s { color: #4070A0 } /* Literal.String */
+.filesystem .na { color: #4070A0 } /* Name.Attribute */
+.filesystem .nb { color: #007020 } /* Name.Builtin */
+.filesystem .nc { color: #0E84B5; font-weight: bold } /* Name.Class */
+.filesystem .no { color: #60ADD5 } /* Name.Constant */
+.filesystem .nd { color: #555; font-weight: bold } /* Name.Decorator */
+.filesystem .ni { color: #D55537; font-weight: bold } /* Name.Entity */
+.filesystem .ne { color: #007020 } /* Name.Exception */
+.filesystem .nf { color: #06287E } /* Name.Function */
+.filesystem .nl { color: #002070; font-weight: bold } /* Name.Label */
+.filesystem .nn { color: #0E84B5; font-weight: bold } /* Name.Namespace */
+.filesystem .nt { color: #062873; font-weight: bold } /* Name.Tag */
+.filesystem .nv { color: #BB60D5 } /* Name.Variable */
+.filesystem .ow { color: #007020; font-weight: bold } /* Operator.Word */
+.filesystem .w { color: #BBB } /* Text.Whitespace */
+.filesystem .mb { color: #40A070 } /* Literal.Number.Bin */
+.filesystem .mf { color: #40A070 } /* Literal.Number.Float */
+.filesystem .mh { color: #40A070 } /* Literal.Number.Hex */
+.filesystem .mi { color: #40A070 } /* Literal.Number.Integer */
+.filesystem .mo { color: #40A070 } /* Literal.Number.Oct */
+.filesystem .sa { color: #4070A0 } /* Literal.String.Affix */
+.filesystem .sb { color: #4070A0 } /* Literal.String.Backtick */
+.filesystem .sc { color: #4070A0 } /* Literal.String.Char */
+.filesystem .dl { color: #4070A0 } /* Literal.String.Delimiter */
+.filesystem .sd { color: #4070A0; font-style: italic } /* Literal.String.Doc */
+.filesystem .s2 { color: #4070A0 } /* Literal.String.Double */
+.filesystem .se { color: #4070A0; font-weight: bold } /* Literal.String.Escape */
+.filesystem .sh { color: #4070A0 } /* Literal.String.Heredoc */
+.filesystem .si { color: #70A0D0; font-style: italic } /* Literal.String.Interpol */
+.filesystem .sx { color: #C65D09 } /* Literal.String.Other */
+.filesystem .sr { color: #235388 } /* Literal.String.Regex */
+.filesystem .s1 { color: #4070A0 } /* Literal.String.Single */
+.filesystem .ss { color: #517918 } /* Literal.String.Symbol */
+.filesystem .bp { color: #007020 } /* Name.Builtin.Pseudo */
+.filesystem .fm { color: #06287E } /* Name.Function.Magic */
+.filesystem .vc { color: #BB60D5 } /* Name.Variable.Class */
+.filesystem .vg { color: #BB60D5 } /* Name.Variable.Global */
+.filesystem .vi { color: #BB60D5 } /* Name.Variable.Instance */
+.filesystem .vm { color: #BB60D5 } /* Name.Variable.Magic */
+.filesystem .il { color: #40A070 } /* Literal.Number.Integer.Long */

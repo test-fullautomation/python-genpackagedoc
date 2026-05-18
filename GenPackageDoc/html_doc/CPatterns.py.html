@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.22.4: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CPatterns.py</title>
+<link rel="stylesheet" href="./styles/common.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pythoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/pcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/robotcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/rcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jsoncode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/jcode.css" type="text/css" />
+<link rel="stylesheet" href="./styles/consolelog.css" type="text/css" />
+<link rel="stylesheet" href="./styles/filesystem.css" type="text/css" />
+<link rel="stylesheet" href="./styles/anycontent.css" type="text/css" />
+<link rel="stylesheet" href="./styles/highlight.css" type="text/css" />
+<link rel="stylesheet" href="./styles/simpletable.css" type="text/css" />
+</head>
+<body>
+<main>
+
+
+<p>Python module containing source patterns used to generate the tex file output.</p>
+<section id="genpackagedoc-cpatterns-cpatterns">
+<h2>Class: CPatterns</h2>
+<p>The <span class="docutils literal">CPatterns</span> class provides a set of LaTeX source patterns used to generate the tex file output.</p>
+<p>All source patterns are accessible by corresponding <span class="docutils literal">Get</span> methods. Some source patterns contain placeholder
+that will be replaced by input parameter of the <span class="docutils literal">Get</span> method.</p>
+<section id="genpackagedoc-cpatterns-cpatterns-getheader">
+<h3>Method: GetHeader</h3>
+<p>Defines the header of the main tex file.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p><span class="docutils literal">sTitle</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>The title of the output document (name of the described package)</p>
+</li>
+<li><p><span class="docutils literal">sVersion</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>The version of the output document (version of the described package)</p>
+</li>
+<li><p><span class="docutils literal">sAuthor</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>The author of the output document (author of the described package)</p>
+</li>
+<li><p><span class="docutils literal">sDate</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>The date of the output document (date of the described package)</p>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><p><span class="docutils literal">sHeader</span></p>
+<p>/ <em>Type</em>: str /</p>
+<p>LaTeX code containing the header of main tex file.</p>
+</li>
+</ul>
+</section>
+<section id="genpackagedoc-cpatterns-cpatterns-getchapter">
+<h3>Method: GetChapter</h3>
+<p>Defines single chapter of the main tex file.</p>
+<p>A single chapter is equivalent to an additionally imported text file in rst format or equivalent to a single Python module
+within a Python package.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p><span class="docutils literal">sHeadline</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>The chapter headline (that is either the name of an additional rst file or the name of a Python module).</p>
+</li>
+<li><p><span class="docutils literal">sLabel</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>The chapter label (to enable linking to this chapter)</p>
+</li>
+<li><p><span class="docutils literal">sDocumentName</span></p>
+<p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
+<p>The name of a single tex file containing the chapter content. This file is imported in the main text file after the chapter headline
+that is set by <span class="docutils literal">sHeadline</span>.</p>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><p><span class="docutils literal">sHeader</span></p>
+<p>/ <em>Type</em>: str /</p>
+<p>LaTeX code containing the headline and the input of a single tex file.</p>
+</li>
+</ul>
+</section>
+<section id="genpackagedoc-cpatterns-cpatterns-getfooter">
+<h3>Method: GetFooter</h3>
+<p>Defines the footer of the main tex file.</p>
+<p><strong>Arguments:</strong></p>
+<p>(<em>no arguments</em>)</p>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><p><span class="docutils literal">sFooter</span></p>
+<p>/ <em>Type</em>: str /</p>
+<p>LaTeX code containing the footer of the main tex file.</p>
+</li>
+</ul>
+</section>
+<section id="genpackagedoc-cpatterns-cpatterns-getautodefinedheader">
+<h3>Method: GetAutodefinedHeader</h3>
+<p>Defines the header of the autodefined LaTeX sty file.</p>
+<p><strong>Arguments:</strong></p>
+<p>(<em>no arguments</em>)</p>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><p><span class="docutils literal">sAutodefinedHeader</span></p>
+<p>/ <em>Type</em>: str /</p>
+<p>LaTeX code containing the header of the autodefined LaTeX sty file.</p>
+</li>
+</ul>
+</section>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,27 @@
+pre { line-height: 125%; }
+td.linenos .normal { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+/* box text, background and border */
+.highlight {
+  font-family: inherit;
+  font-style: italic;
+  color: #000000;
+  background: #FFF5E1;         /* Sehr helles Orange */
+  border: 1.5px solid #FFD59A; /* Helles, dezentes Orange */
+  border-radius: 3px;
+  padding-left: 2.5px;
+  padding-right: 2.5px;
+}
+.highlight code {
+  display: block;
+  padding: 6px;
+  background: inherit;
+}
+/* deactivate border around every separate line */
+/* still required? */
+.highlight span, .highlight code, .highlight pre, .highlight td, .highlight tr {
+  border: none !important;
+  background: transparent;
+}

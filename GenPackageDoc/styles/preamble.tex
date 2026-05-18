@@ -20,14 +20,14 @@
 %
 % Common preamble for tex files
 %
-% 12.01.2026
+% 17.03.2026
 %
 % --------------------------------------------------------------------------------------------------------------
 %
 \usepackage[textheight=750pt, textwidth=510pt]{geometry}
 
-
 \usepackage{color}
+\usepackage[table]{xcolor}
 \usepackage{fancyhdr}
 \definecolor{heading}{rgb}{1,0,0}
 \pagestyle{fancy}
@@ -87,6 +87,8 @@
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.3}
 
+% support of horizontal separator lines (restructuredText transition '----')
+\newcommand{\DUtransition}{\noindent\hrulefill\par}
 
 % further individual adaptions
 \setlength{\parindent}{0em}
@@ -102,3 +104,4 @@
 \renewcommand{\l@subsection}{\@dottedtocline{2}{4.4em}{4em}}
 % currently not required % \renewcommand{\l@subsubsection}{\@dottedtocline{3}{7.4em}{4em}}
 \makeatother
+
