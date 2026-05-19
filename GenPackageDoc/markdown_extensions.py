@@ -295,7 +295,7 @@ Mapping between markdown and LaTeX w.r.t.:
     # raw stuff
     def visit_raw(self, node):
         if node.get('format') == 'hrstar':
-            self.body.append(r'\hrstar')
+            self.body.append('\n' + r'\hrstar' + '\n\n' + r'\vspace{1ex}' + '\n\n')
             raise nodes.SkipNode
 
     # 'visit_raw' counterpart; required - even if empty

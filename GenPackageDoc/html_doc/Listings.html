@@ -35,13 +35,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. -->
 <pre class="highlight"><code class="highlight">How to realize listings of code written in Python, Robot Framework and JSON?
-How to realize listings of console content and log file content?</code></pre><p><strong>GenPackageDoc</strong> supports code listings and console listings. These listings are available as text block and as inline text also.
+How to realize listings of console content and log file content?</code></pre><p><strong>GenPackageDoc</strong> supports several code listings and console listings. These listings are available as text block and as inline text also.
 You can use these listings in reST files and also in LaTeX files immediately. The reST elements for listings are mapped to the corresponding
 LaTeX commands when <strong>GenPackageDoc</strong> internally converts the reST files in LaTeX files.</p>
-<p>Text blocks are realized by markdown directives. Inline text is realized by markdown rules.<span style="display:block; height:2ex;"></span></p>
+<p>Text blocks are realized by reST directives. Inline text is realized by reST roles.<span style="display:block; height:2ex;"></span></p>
 <p><strong>Examples:</strong><span style="display:block; height:1ex;"></span></p>
-<hr class="docutils" />
-<p>This is a markdown directive <code class="anycontent">pythoncode</code> code example:</p>
+<p>This is a reST directive <code class="anycontent">pythoncode</code> code example:</p>
 <pre class="pythoncode"><code class="pythoncode"><span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
 </code></pre><p>Written in reST format:</p>
@@ -52,37 +51,211 @@ LaTeX commands when <strong>GenPackageDoc</strong> internally converts the reST 
 <pre class="anycontent"><code class="anycontent">\begin{pythoncode}
     for index in list:
         print("index")
-\end{pythoncode}</code></pre><hr class="docutils" />
-<p>This is a markdown directive <code class="rcode">robotcode</code> code example:</p>
-<pre class="robotcode"><code class="robotcode"><span class="c">FOR</span><span class="p">    </span><span class="c">${index}</span><span class="p">    </span><span class="c">IN RANGE</span><span class="p">    </span><span class="c">0</span><span class="p">    </span><span class="c">${max}</span>
-<span class="p">    </span><span class="c">log</span><span class="p">    </span><span class="c">index: ${index}</span><span class="p">    </span><span class="c">console=yes</span>
-<span class="c">END</span>
-</code></pre><p>Written in reST format:</p>
+\end{pythoncode}</code></pre><div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is a reST directive <code class="anycontent">robotcode</code> code example:</p>
+<pre class="robotcode"><code class="robotcode"><span class="gh">*** Test Cases ***</span>
+
+<span class="gu">Example</span>
+
+<span class="p">    </span><span class="nf">FOR</span><span class="p">    ${</span><span class="nv">index</span><span class="p">}    </span><span class="s">IN RANGE</span><span class="p">    </span><span class="s">0</span><span class="p">    ${</span><span class="nv">max</span><span class="p">}</span>
+<span class="p">        </span><span class="nf">log</span><span class="p">    </span><span class="s">index: </span><span class="p">${</span><span class="nv">index</span><span class="p">}    </span><span class="s">console=yes</span>
+<span class="p">    </span><span class="nf">END</span>
+</code></pre><p>
+Written in reST format:</p>
 <pre class="anycontent"><code class="anycontent">.. robotcode::
 
-   FOR    ${index}    IN RANGE    0    ${max}
-       log    index: ${index}    console=yes
-   END</code></pre><p>
-Written in LaTeX format:</p>
-<pre class="anycontent"><code class="anycontent">\begin{robotcode}
-   FOR    ${index}    IN RANGE    0    ${max}
-       log    index: ${index}    console=yes
-   END
-\end{robotcode}</code></pre><p>This is a markdown directive <code class="anycontent">pythonlog</code> code example:</p>
-<pre class="consolelog"><code class="consolelog">index: 0
-index: 1
-index: 2</code></pre><p>Written in reST format:</p>
-<pre class="anycontent"><code class="anycontent">.. pythonlog::
+   *** Test Cases ***
 
-   index: 0
-   index: 1
-   index: 2</code></pre><p>Written in LaTeX format:</p>
-<pre class="anycontent"><code class="anycontent">\begin{pythonlog}
-   index: 0
-   index: 1
-   index: 2
-\end{pythonlog}</code></pre><p><strong>TODO: to be continued</strong></p>
+   Example
+
+       FOR    ${index}    IN RANGE    0    ${max}
+           log    index: ${index}    console=yes
+       END</code></pre><p>Written in LaTeX format:</p>
+<pre class="anycontent"><code class="anycontent">\begin{robotcode}
+   *** Test Cases ***
+
+   Example
+
+       FOR    ${index}    IN RANGE    0    ${max}
+           log    index: ${index}    console=yes
+       END
+\end{robotcode}</code></pre><div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is a reST directive <code class="anycontent">jsoncode</code> code example:</p>
+<pre class="jsoncode"><code class="jsoncode"><span class="p">{</span>
+    <span class="s">&quot;param_1&quot;</span> <span class="p">:</span> <span class="s">&quot;ABC&quot;</span><span class="p">,</span>
+    <span class="s">&quot;param_2&quot;</span> <span class="p">:</span> true<span class="p">,</span>
+    <span class="s">&quot;param_3&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+    <span class="s">&quot;param_4&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;A&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;B&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre><p>Written in reST format:</p>
+<pre class="anycontent"><code class="anycontent">.. jsoncode::
+
+   {
+       "param_1" : "ABC",
+       "param_2" : true,
+       "param_3" : [1,2,3],
+       "param_4" : {"A" : 1, "B" : 2}
+   }</code></pre><p>Written in LaTeX format:</p>
+<pre class="anycontent"><code class="anycontent">\begin{jsoncode}
+   {
+       "param_1" : "ABC",
+       "param_2" : true,
+       "param_3" : [1,2,3],
+       "param_4" : {"A" : 1, "B" : 2}
+   }
+\end{jsoncode}</code></pre><div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is a reST directive <code class="anycontent">anycontent</code> code example:</p>
+<pre class="anycontent"><code class="anycontent">Any content, no matter if Python, Robot Framework, JSON or something else.
+Any content, no matter if Python, Robot Framework, JSON or something else.
+Any content, no matter if Python, Robot Framework, JSON or something else.</code></pre><p>
+Written in reST format:</p>
+<pre class="code literal-block"><code>.. anycontent::
+
+   Any content, no matter if Python, Robot Framework, JSON or something else.
+   Any content, no matter if Python, Robot Framework, JSON or something else.
+   Any content, no matter if Python, Robot Framework, JSON or something else.</code></pre>
+<p>Written in LaTeX format:</p>
+<pre class="code literal-block"><code>\begin{anycontent}
+   Any content, no matter if Python, Robot Framework, JSON or something else.
+   Any content, no matter if Python, Robot Framework, JSON or something else.
+   Any content, no matter if Python, Robot Framework, JSON or something else.
+\end{anycontent}</code></pre>
+<div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is a reST directive <code class="anycontent">consolelog</code> code example:</p>
+<pre class="consolelog"><code class="consolelog">log index: 0
+log index: 1
+log index: 2</code></pre><p>Written in reST format:</p>
+<pre class="anycontent"><code class="anycontent">.. consolelog::
+
+   log index: 0
+   log index: 1
+   log index: 2</code></pre><p>Written in LaTeX format:</p>
+<pre class="anycontent"><code class="anycontent">\begin{consolelog}
+   log index: 0
+   log index: 1
+   log index: 2
+\end{consolelog}</code></pre><div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is a reST directive <code class="anycontent">filesystem</code> code example:</p>
+<pre class="filesystem"><code class="filesystem">C:\folder_1\file_1.txt
+C:\folder_2\file_2.txt
+C:\folder_3\file_3.txt</code></pre><p>Written in reST format:</p>
+<pre class="anycontent"><code class="anycontent">.. filesystem::
+
+   C:\folder_1\file_1.txt
+   C:\folder_2\file_2.txt
+   C:\folder_3\file_3.txt</code></pre><p>
+Written in LaTeX format:</p>
+<pre class="anycontent"><code class="anycontent">\begin{filesystem}
+   C:\folder_1\file_1.txt
+   C:\folder_2\file_2.txt
+   C:\folder_3\file_3.txt
+\end{filesystem}</code></pre><p><span style="display:block; height:2ex;"></span>
+<strong>Hint:</strong> <code class="anycontent">consolelog</code> <em>and</em> <code class="anycontent">filesystem</code> <em>currently have the same layout.
+Nevertheless, using individual and specific names eases the readability. Maybe later different layouts
+will be realized.</em></p>
+<div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is inline Python code: <code class="pcode">print("Hello Python")</code></p>
+<p>Written in reST format:</p>
+<pre class="anycontent"><code class="anycontent">:pcode:`print("Hello Python")`</code></pre><p>Written in LaTeX format:</p>
+<pre class="anycontent"><code class="anycontent">\pcode{print("Hello Python")}</code></pre><div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is inline Robot Framework code: <code class="rcode">log&nbsp;&nbsp;&nbsp;&nbsp;Hello RobotFramework AIO</code></p>
+<p>Written in reST format:</p>
+<pre class="code literal-block"><code>:rcode:`log/IHS/IHS/IHS/IHSHello RobotFramework AIO`</code></pre>
+<!-- !!! /IHS is the masked version of &nbsp; and will not be replaced by a single blank in output !!! -->
+<p>Written in LaTeX format:</p>
+<pre class="code literal-block"><code>\rcode{log\ \ \ \ Hello RobotFramework AIO}</code></pre>
+<p><span style="display:block; height:2ex;"></span>
+<strong>Hint:</strong> <em>Blanks must be announced explicitly in inline code, because under normal circumstances multiple blanks are collapsed
+to a single blank (in LaTeX and in HTML also).</em></p>
+<div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is inline JSON code: <code class="jcode">"param" : [1,2,3]</code></p>
+<p>Written in reST format:</p>
+<pre class="anycontent"><code class="anycontent">:jcode:`"param" : [1,2,3]`</code></pre><p>Written in LaTeX format:</p>
+<pre class="anycontent"><code class="anycontent">\jcode{"param" : [1,2,3]}</code></pre><div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>This is any inline content: <code class="anycontent">any content</code></p>
+<p>Written in reST format:</p>
+<pre class="anycontent"><code class="anycontent">:acontent:`any content`</code></pre><p>Written in LaTeX format:</p>
+<pre class="anycontent"><code class="anycontent">\acontent{any content}</code></pre><div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>The horizontal separator line with the star in the middle can be inserted with the reST directive <code class="anycontent">.. hrstar::</code>.
+This is a nice possibility to separate smaller parts of the documentation from each other - without introducing a new headline for every part.</p>
 <p></p>
+<p><strong>When we use all of these reST syntax elements to realize a concrete documentation - how does this look like?</strong>
+<strong>The following is a full example:</strong></p>
+<pre class="anycontent"><code class="anycontent">In the system configuration file, the parameter :acontent:`aparam` and :acontent:`bparam` are defined in the following way:
+
+.. jsoncode::
+
+   {
+       // system parameter
+       "aparam" : 1,
+       "bparam" : "hello world"
+   }
+
+This configuration file can be found here:
+
+.. filesystem::
+
+   ${systemroot}/packages/labels/alabel/config.jsonp
+
+Make sure to select the proper label: :acontent:`alabel`.
+
+The **Robot Framework** keyword :acontent:`compute_system_parameter` computes these system parameters in the following way:
+
+* The parameter :acontent:`aparam` is increased by value :acontent:`1`.
+* The parameter :acontent:`bparam` is concatenated with string :acontent:`today` (with a blank in between).
+
+This is the corresponding Python implementation of the keyword :acontent:`compute_system_parameter`:
+
+.. pythoncode::
+
+   system_config = system.get_config()
+   system_config['aparam'] = system_config['aparam'] + 1
+   system_config['bparam'] = system_config['bparam'] + " today"
+   number_of_parameters = len(system_config)
+   return system_config, number_of_parameters
+
+Additionally to the system configuration :acontent:`system_config`, another variable :acontent:`number_of_parameters`
+containing the number of system parameters, is returned.
+
+Within a **Robot Framework** test you call the keyword :acontent:`compute_system_parameter` in the following way:
+
+.. robotcode::
+
+   *** Test Cases ***
+
+   SystemTest
+
+       ${system_config}    ${number_of_parameters}    compute_system_parameter
+       log    Number of parameters: ${number_of_parameters}
+       log    aparam..............: ${system_config}[aparam]
+
+In the log file it can be observed that the value of parameter :acontent:`aparam` is :acontent:`2` now.
+The value of parameter :acontent:`bparam` is :acontent:`hello world today` now.
+With 2 parameters in total.</code></pre><p><span style="display:block; height:2ex;"></span>
+<strong>Result:</strong></p>
+<div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p>In the system configuration file, the parameter <code class="anycontent">aparam</code> and <code class="anycontent">bparam</code> are defined in the following way:</p>
+<pre class="jsoncode"><code class="jsoncode"><span class="p">{</span>
+    <span class="c1">// system parameter</span>
+    <span class="s">&quot;aparam&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;bparam&quot;</span> <span class="p">:</span> <span class="s">&quot;hello world&quot;</span>
+<span class="p">}</span>
+</code></pre><p>This configuration file can be found here:</p>
+<pre class="filesystem"><code class="filesystem">${systemroot}/packages/labels/alabel/config.jsonp</code></pre><p>Make sure to select the proper label: <code class="anycontent">alabel</code>.</p>
+<p>The <strong>Robot Framework</strong> keyword <code class="anycontent">compute_system_parameter</code> computes these system parameters in the following way:</p>
+<ul class="simple">
+<li><p>The parameter <code class="anycontent">aparam</code> is increased by value <code class="anycontent">1</code>.</p></li>
+<li><p>The parameter <code class="anycontent">bparam</code> is concatenated with string <code class="anycontent">today</code> (with a blank in between).</p></li>
+</ul>
+<p>This is the corresponding Python implementation of the keyword <code class="anycontent">compute_system_parameter</code>:</p>
+<pre class="pythoncode"><code class="pythoncode"><span class="n">system_config</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+<span class="n">system_config</span><span class="p">[</span><span class="s1">&#39;aparam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">system_config</span><span class="p">[</span><span class="s1">&#39;aparam&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">system_config</span><span class="p">[</span><span class="s1">&#39;bparam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">system_config</span><span class="p">[</span><span class="s1">&#39;bparam&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; today&quot;</span>
+<span class="n">number_of_parameters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">system_config</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">system_config</span><span class="p">,</span> <span class="n">number_of_parameters</span>
+</code></pre><p>Additionally to the system configuration <code class="anycontent">system_config</code>, another variable <code class="anycontent">number_of_parameters</code>
+containing the number of system parameters, is returned.</p>
+<p>Within a <strong>Robot Framework</strong> test you call the keyword <code class="anycontent">compute_system_parameter</code> in the following way:</p>
+<pre class="robotcode"><code class="robotcode"><span class="gh">*** Test Cases ***</span>
+
+<span class="gu">SystemTest</span>
+
+<span class="p">    ${</span><span class="nv">system_config</span><span class="p">}    ${</span><span class="nv">number_of_parameters</span><span class="p">}    </span><span class="nf">compute_system_parameter</span>
+<span class="p">    </span><span class="nf">log</span><span class="p">    </span><span class="s">Number of parameters: </span><span class="p">${</span><span class="nv">number_of_parameters</span><span class="p">}</span>
+<span class="p">    </span><span class="nf">log</span><span class="p">    </span><span class="s">aparam..............: </span><span class="p">${</span><span class="nv">system_config</span><span class="p">}</span><span class="s">[aparam]</span>
+</code></pre><p>In the log file it can be observed that the value of parameter <code class="anycontent">aparam</code> is <code class="anycontent">2</code> now.
+The value of parameter <code class="anycontent">bparam</code> is <code class="anycontent">hello world today</code> now.
+With 2 parameters in total.</p>
+<div class="hrstar"><span class="hrstar-line"></span><span class="hrstar-star">&#9733;</span><span class="hrstar-line"></span></div><p></p>
 </main>
 </body>
 </html>
