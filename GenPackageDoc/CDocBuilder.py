@@ -279,6 +279,7 @@ characters belonging to syntax of reST, LaTeX and HTML.
          sLine = sLine.replace('/VVVS' , self.__dictPlaceholder['/VVVS']) # vertical space 3
          sLine = sLine.replace('/BS'   , self.__dictPlaceholder['/BS'])   # backslash
          sLine = sLine.replace('/IBS'  , self.__dictPlaceholder['/IBS'])  # inline backslash
+         sLine = sLine.replace('/IBS'  , self.__dictPlaceholder['/IBS'])  # inline backslash
          sLine = sLine.replace('/HS'   , self.__dictPlaceholder['/HS'])   # horizontal space (blank)
          sLine = sLine.replace('/IHS'  , self.__dictPlaceholder['/IHS'])  # inline horizontal space (blank)
          sLine = sLine.replace('/*IHS' , self.__dictPlaceholder['/*IHS']) # inline horizontal space (blank), masked for documentation purposes!!

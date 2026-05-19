@@ -25,7 +25,7 @@ Text blocks are realized by reST directives. Inline text is realized by reST rol
 
 **Examples:**/VS
 
-This is an reST directive :acontent:`pythoncode` code example:
+This is a reST directive :acontent:`pythoncode` code example:
 
 .. pythoncode::
 
@@ -52,7 +52,7 @@ Written in LaTeX format:
 
 .. hrstar::
 
-This is an reST directive :acontent:`robotcode` code example:
+This is a reST directive :acontent:`robotcode` code example:
 
 .. robotcode::
 
@@ -95,7 +95,7 @@ Written in LaTeX format:
 
 .. hrstar::
 
-This is an reST directive :acontent:`jsoncode` code example:
+This is a reST directive :acontent:`jsoncode` code example:
 
 .. jsoncode::
 
@@ -134,7 +134,7 @@ Written in LaTeX format:
 
 .. hrstar::
 
-This is an reST directive :acontent:`anycontent` code example:
+This is a reST directive :acontent:`anycontent` code example:
 
 .. anycontent::
 
@@ -165,7 +165,7 @@ Written in LaTeX format:
 
 .. hrstar::
 
-This is an reST directive :acontent:`consolelog` code example:
+This is a reST directive :acontent:`consolelog` code example:
 
 .. consolelog::
 
@@ -195,7 +195,7 @@ Written in LaTeX format:
 
 .. hrstar::
 
-This is an reST directive :acontent:`filesystem` code example:
+This is a reST directive :acontent:`filesystem` code example:
 
 .. filesystem::
 
