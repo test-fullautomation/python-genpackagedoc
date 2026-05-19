@@ -108,7 +108,7 @@ Constructor of class :pcode:`CDocBuilder`.
       self.__dictPlaceholder['/IBS']  = ("!I!N!L!I!N!E!B!S!L!A!S!H!")
       self.__dictPlaceholder['/HS']   = ("!S!T!A!N!D!A!R!D!H!S!P!A!C!E!")
       self.__dictPlaceholder['/IHS']  = ("!I!N!L!I!N!E!H!S!P!A!C!E!")
-      self.__dictPlaceholder['/*IHS'] = ("!I!N!L!I!N!E!M!H!S!P!A!C!E!")
+      self.__dictPlaceholder['/*IHS'] = ("!I!N!L!I!N!E!M!H!S!P!A!C!E!") # !M! -> 'masked'
       self.__dictPlaceholder['/US']   = ("!U!N!D!E!R!S!C!O!R!E!")
 
 
@@ -278,7 +278,6 @@ characters belonging to syntax of reST, LaTeX and HTML.
          sLine = sLine.replace('/VVS'  , self.__dictPlaceholder['/VVS'])  # vertical space 2
          sLine = sLine.replace('/VVVS' , self.__dictPlaceholder['/VVVS']) # vertical space 3
          sLine = sLine.replace('/BS'   , self.__dictPlaceholder['/BS'])   # backslash
-         sLine = sLine.replace('/IBS'  , self.__dictPlaceholder['/IBS'])  # inline backslash
          sLine = sLine.replace('/IBS'  , self.__dictPlaceholder['/IBS'])  # inline backslash
          sLine = sLine.replace('/HS'   , self.__dictPlaceholder['/HS'])   # horizontal space (blank)
          sLine = sLine.replace('/IHS'  , self.__dictPlaceholder['/IHS'])  # inline horizontal space (blank)
