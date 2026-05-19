@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 18.05.2026
+# 19.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -108,6 +108,7 @@ Constructor of class :pcode:`CDocBuilder`.
       self.__dictPlaceholder['/IBS']  = ("!I!N!L!I!N!E!B!S!L!A!S!H!")
       self.__dictPlaceholder['/HS']   = ("!S!T!A!N!D!A!R!D!H!S!P!A!C!E!")
       self.__dictPlaceholder['/IHS']  = ("!I!N!L!I!N!E!H!S!P!A!C!E!")
+      self.__dictPlaceholder['/*IHS'] = ("!I!N!L!I!N!E!M!H!S!P!A!C!E!")
       self.__dictPlaceholder['/US']   = ("!U!N!D!E!R!S!C!O!R!E!")
 
 
@@ -281,6 +282,7 @@ characters belonging to syntax of reST, LaTeX and HTML.
          sLine = sLine.replace('/IBS'  , self.__dictPlaceholder['/IBS'])  # inline backslash
          sLine = sLine.replace('/HS'   , self.__dictPlaceholder['/HS'])   # horizontal space (blank)
          sLine = sLine.replace('/IHS'  , self.__dictPlaceholder['/IHS'])  # inline horizontal space (blank)
+         sLine = sLine.replace('/*IHS' , self.__dictPlaceholder['/*IHS']) # inline horizontal space (blank), masked for documentation purposes!!
          sLine = sLine.replace('/US'   , self.__dictPlaceholder['/US'])   # underscore (mapping because part of reST syntax)
          listLinesProcessed.append(sLine)
 
@@ -312,6 +314,7 @@ The masking of newline, newpage and vspace (reST syntax extensions) are replaced
          sLine = sLine.replace(self.__dictPlaceholder['/IBS']  , "\\\\")
          sLine = sLine.replace(self.__dictPlaceholder['/HS']   , r"{\ttfamily\hspace{0.6em}}")
          sLine = sLine.replace(self.__dictPlaceholder['/IHS']  , r"\ ") # computed by 'literate' in sty file
+         sLine = sLine.replace(self.__dictPlaceholder['/*IHS'] , "/IHS")
          sLine = sLine.replace(self.__dictPlaceholder['/US']   , r"\_")
 
          # To handle ambiguous names of methods, classes and methods, the original names (= document headlines)
@@ -367,6 +370,7 @@ The masking of newline, newpage and vspace (reST syntax extensions) are replaced
          sLine = sLine.replace(self.__dictPlaceholder['/IBS']  , "\\")
          sLine = sLine.replace(self.__dictPlaceholder['/HS']   , "&nbsp;")
          sLine = sLine.replace(self.__dictPlaceholder['/IHS']  , "&nbsp;")
+         sLine = sLine.replace(self.__dictPlaceholder['/*IHS'] , "/IHS")
          sLine = sLine.replace(self.__dictPlaceholder['/US']   , "_")
 
 # >>> to be verified; most probably outdated:
