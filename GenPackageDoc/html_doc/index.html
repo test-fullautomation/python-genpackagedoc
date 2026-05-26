@@ -5,7 +5,13 @@
   <meta charset="UTF-8">
   <title>GenPackageDoc Documentation</title>
   <style>
-    body { margin: 0; font-family: sans-serif; }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
     #header {
       width: 100%;
       background: #1976d2;
@@ -56,7 +62,11 @@
       display: none;
     }
     #searchresults li { margin: 0.2em 0; }
-    #container { display: flex; height: 100vh; }
+    #container {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
     #sidebar {
       width: 220px;
       background: #f5f5f5;
@@ -429,13 +439,13 @@
 <li><a href="#" id="Syntax_Aspects_html" onclick="showFile('Syntax Aspects.html', this);return false;">Syntax Aspects</a></li>
 <li><a href="#" id="Listings_html" onclick="showFile('Listings.html', this);return false;">Listings</a></li>
 <li><a href="#" id="Pictures_and_Diagrams_html" onclick="showFile('Pictures and Diagrams.html', this);return false;">Pictures and Diagrams</a></li>
-<hr>
+<li><hr></li>
 <li><a href="#" id="CDocBuilder_py_html" onclick="showFile('CDocBuilder.py.html', this);return false;">CDocBuilder.py</a></li>
 <li><a href="#" id="CInterface_py_html" onclick="showFile('CInterface.py.html', this);return false;">CInterface.py</a></li>
 <li><a href="#" id="CPackageDocConfig_py_html" onclick="showFile('CPackageDocConfig.py.html', this);return false;">CPackageDocConfig.py</a></li>
 <li><a href="#" id="CPatterns_py_html" onclick="showFile('CPatterns.py.html', this);return false;">CPatterns.py</a></li>
 <li><a href="#" id="CSourceParser_py_html" onclick="showFile('CSourceParser.py.html', this);return false;">CSourceParser.py</a></li>
-<hr>
+<li><hr></li>
 <li><a href="#" id="Appendix_html" onclick="showFile('Appendix.html', this);return false;">Appendix</a></li>
 <li><a href="#" id="History_html" onclick="showFile('History.html', this);return false;">History</a></li>
       </ul>
