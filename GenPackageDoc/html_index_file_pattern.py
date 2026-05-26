@@ -431,12 +431,13 @@ html_index_file_with_search_pattern = """
     <span id="header-title">###COMPONENTNAME###</span>
     <div id="header-search">
       <input id="searchbox" type="text"
+             aria-label="Search documentation"
              placeholder="Search class, method, function..."
              oninput="searchDocs()">
-      <select id="type-filter">
+      <select id="type-filter" aria-label="Filter by type">
         <!-- Wird dynamisch per populateTypeFilter() befüllt -->
       </select>
-      <button id="clearsearch" title="Suche zurücksetzen"
+      <button id="clearsearch" title="Suche zurücksetzen" aria-label="Clear search"
               style="margin-left:4px;padding:0 8px;font-size:1.1em;line-height:1.5em;cursor:pointer;">
         &#10006;
       </button>
