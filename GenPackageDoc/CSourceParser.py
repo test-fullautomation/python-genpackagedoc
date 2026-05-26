@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 21.05.2026
+# 26.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -44,11 +44,58 @@ COLBY = col.Style.BRIGHT + col.Fore.YELLOW
 
 # --------------------------------------------------------------------------------------------------------------
 
+
+
 class CSourceParser():
    """
 The ``CSourceParser`` class provides a method to parse the functions, classes and their methods
 together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.
    """
+
+   def __is_user_interface_node(self, node: ast.AST) -> bool:
+       """
+Checks whether an AST node is decorated with @is_user_interface.
+
+Handles all common decorator forms:
+  - @is_user_interface          (simple name)
+  - @module.is_user_interface   (attribute access)
+  - @is_user_interface()        (call without arguments)
+  - @module.is_user_interface() (call on attribute)
+
+Note: This is a static code check via AST. The attribute set by the
+decorator does not yet exist at analysis time, so we inspect the
+decorator node itself instead of checking the attribute value.
+
+**Arguments:**
+
+* ``node``
+
+  / *Condition*: required / *Type*: AST node /
+
+  An AST node that has a decorator_list (e.g. ``ast.ClassDef``,
+  ``ast.FunctionDef``, ``ast.AsyncFunctionDef)``.
+
+**Returns:**
+
+``True`` if the node carries the @is_user_interface decorator, ``False`` otherwise.
+       """
+       TARGET = 'is_user_interface'
+
+       for decorator in node.decorator_list:
+           # @is_user_interface
+           if hasattr(decorator, 'id') and decorator.id == TARGET:
+               return True
+           # @module.is_user_interface
+           if hasattr(decorator, 'attr') and decorator.attr == TARGET:
+               return True
+           # @is_user_interface() or @module.is_user_interface()
+           if isinstance(decorator, ast.Call):
+               func = decorator.func
+               if (hasattr(func, 'id') and func.id == TARGET) or \
+                  (hasattr(func, 'attr') and func.attr == TARGET):
+                   return True
+       return False
+
 
    def ParseSourceFile(self, sFile=None, bIncludePrivate=False, bIncludeUndocumented=True):
       """
@@ -149,25 +196,9 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                   bTakeIt = False
             # eof if bIncludeUndocumented is False:
             if bTakeIt is True:
-
-               # Detect '@is_user_interface' decorator
-               is_ui = False
-               for decorator in node.decorator_list:
-                   # Handles both @is_user_interface and @is_user_interface().
-                   # With the usage of ast this is a static code check. The attribute set by the decorator (e.g.: is_ui),
-                   # is not yet existing.
-                   # Therefore, we need to check the existence of the decorator itself, instead of checking
-                   # the attribute value immediately!
-                   if (hasattr(decorator, 'id') and decorator.id == 'is_user_interface') or \
-                       (hasattr(decorator, 'attr') and decorator.attr == 'is_user_interface') or \
-                       (isinstance(decorator, ast.Call) and hasattr(decorator.func, 'id') and decorator.func.id == 'is_user_interface') or \
-                       (isinstance(decorator, ast.Call) and hasattr(decorator.func, 'attr') and decorator.func.attr == 'is_user_interface'):
-                       is_ui = True
-                       break
-
                dictFunction = {}
                dictFunction['sFunctionName']      = sFunctionName
-               dictFunction['is_ui']              = is_ui
+               dictFunction['is_ui']              = self.__is_user_interface_node(node)
                dictFunction['sFunctionDocString'] = sFunctionDocString
                listofdictFunctions.append(dictFunction)
 
@@ -211,30 +242,12 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                         bTakeIt = False
                   # eof if bIncludeUndocumented is False:
                   if bTakeIt is True:
-
-                     # Detect '@is_user_interface' decorator
-                     is_ui = False
-                     for decorator in subnode.decorator_list:
-                         # Handles both @is_user_interface and @is_user_interface().
-                         # With the usage of ast this is a static code check. The atrribute set by the decorator (e.g.: is_ui),
-                         # is not yet existing.
-                         # Therefore, we need to check the existence of the decorator itself, instead of checking
-                         # the attribute value immediately!
-                         if (hasattr(decorator, 'id') and decorator.id == 'is_user_interface') or \
-                             (hasattr(decorator, 'attr') and decorator.attr == 'is_user_interface') or \
-                             (isinstance(decorator, ast.Call) and \
-                              ((hasattr(decorator.func, 'id') and decorator.func.id == 'is_user_interface') or \
-                               (hasattr(decorator.func, 'attr') and decorator.func.attr == 'is_user_interface'))):
-                             is_ui = True
-                             break
-
                      dictMethod = {}
                      dictMethod['sMethodName']      = sMethodName
                      dictMethod['bIsKeyword']       = bIsKeyword
-                     dictMethod['is_ui']            = is_ui
+                     dictMethod['is_ui']            = self.__is_user_interface_node(subnode)
                      dictMethod['sMethodDocString'] = sMethodDocString
                      listofdictMethods.append(dictMethod)
-
 
                   # eof if bTakeIt is True
                # eof if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
