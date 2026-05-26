@@ -859,7 +859,7 @@ Creates the corresponding index.html file also.
              basename = os.path.basename(dictHTMLFileInfo['FILENAME'])
              is_pyhtml = basename.lower().endswith('.py.html')
              if prev_is_pyhtml is not None and is_pyhtml != prev_is_pyhtml:
-                list_htmlfiles_rows.append('<hr>')
+                list_htmlfiles_rows.append('<li><hr></li>')
              prev_is_pyhtml = is_pyhtml
 
              htmlfiles_row = html_index_file_pattern.html_files_row_pattern
