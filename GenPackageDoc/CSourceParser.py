@@ -73,7 +73,7 @@ decorator node itself instead of checking the attribute value.
   / *Condition*: required / *Type*: AST node /
 
   An AST node that has a decorator_list (e.g. ``ast.ClassDef``,
-  ``ast.FunctionDef``, ``ast.AsyncFunctionDef)``.
+  ``ast.FunctionDef``, ``ast.AsyncFunctionDef``).
 
 **Returns:**
 
