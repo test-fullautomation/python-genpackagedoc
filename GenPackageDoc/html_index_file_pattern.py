@@ -38,7 +38,13 @@ html_index_file_with_search_pattern = """
   <meta charset="UTF-8">
   <title>###COMPONENTNAME### Documentation</title>
   <style>
-    body { margin: 0; font-family: sans-serif; }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
     #header {
       width: 100%;
       background: #1976d2;
@@ -89,7 +95,11 @@ html_index_file_with_search_pattern = """
       display: none;
     }
     #searchresults li { margin: 0.2em 0; }
-    #container { display: flex; height: 100vh; }
+    #container {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
     #sidebar {
       width: 220px;
       background: #f5f5f5;
@@ -449,4 +459,3 @@ html_index_file_with_search_pattern = """
 search_index_row_pattern = """{"type": "###SITYPE###", "name": "###SINAME###", "file": "###SIFILE###"}"""
 
 html_files_row_pattern = """<li><a href="#" id="###HTMLID###" onclick="showFile('###FILENAME###', this);return false;">###FILESHORTNAME###</a></li>"""
-
