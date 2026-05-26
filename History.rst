@@ -13,6 +13,12 @@
    limitations under the License.
 
 
+**Version 0.44.0 (26.05.2026)**
+
+    *Added:*
+
+    * Search function
+
 **Version 0.43.0 (18.05.2026)**
 
     *Maintenance:*

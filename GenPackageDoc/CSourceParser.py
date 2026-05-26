@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 26.03.2026
+# 21.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -136,6 +136,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
             if isinstance(node, ast.AsyncFunctionDef):
                sFunctionName = f"async {sFunctionName}"
             sFunctionDocString = ast.get_docstring(node)
+
             bTakeIt = True
             if bIncludePrivate is False:
                if sFunctionName.startswith('_'):
@@ -148,10 +149,27 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                   bTakeIt = False
             # eof if bIncludeUndocumented is False:
             if bTakeIt is True:
+
+               # Detect '@is_user_interface' decorator
+               is_ui = False
+               for decorator in node.decorator_list:
+                   # Handles both @is_user_interface and @is_user_interface().
+                   # With the usage of ast this is a static code check. The atrribute set by the decorator (e.g.: is_ui),
+                   # is not yet existing.
+                   # Therefore, we need to check the existence of the decorator itself, instead of checking
+                   # the attribute value immediately!
+                   if (hasattr(decorator, 'id') and decorator.id == 'is_user_interface') or \
+                       (hasattr(decorator, 'attr') and decorator.attr == 'is_user_interface') or \
+                       (isinstance(decorator, ast.Call) and hasattr(decorator.func, 'id') and decorator.func.id == 'is_user_interface'):
+                       is_ui = True
+                       break
+
                dictFunction = {}
-               dictFunction['sFunctionName'] = sFunctionName
+               dictFunction['sFunctionName']      = sFunctionName
+               dictFunction['is_ui']              = is_ui
                dictFunction['sFunctionDocString'] = sFunctionDocString
                listofdictFunctions.append(dictFunction)
+
             # eof if bTakeIt is True:
          # eof if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
 
@@ -192,11 +210,29 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                         bTakeIt = False
                   # eof if bIncludeUndocumented is False:
                   if bTakeIt is True:
+
+                     # Detect '@is_user_interface' decorator
+                     is_ui = False
+                     for decorator in subnode.decorator_list:
+                         # Handles both @is_user_interface and @is_user_interface().
+                         # With the usage of ast this is a static code check. The atrribute set by the decorator (e.g.: is_ui),
+                         # is not yet existing.
+                         # Therefore, we need to check the existence of the decorator itself, instead of checking
+                         # the attribute value immediately!
+                         if (hasattr(decorator, 'id') and decorator.id == 'is_user_interface') or \
+                             (hasattr(decorator, 'attr') and decorator.attr == 'is_user_interface') or \
+                             (isinstance(decorator, ast.Call) and hasattr(decorator.func, 'id') and decorator.func.id == 'is_user_interface'):
+                             is_ui = True
+                             break
+
                      dictMethod = {}
                      dictMethod['sMethodName']      = sMethodName
                      dictMethod['bIsKeyword']       = bIsKeyword
+                     dictMethod['is_ui']            = is_ui
                      dictMethod['sMethodDocString'] = sMethodDocString
                      listofdictMethods.append(dictMethod)
+
+
                   # eof if bTakeIt is True
                # eof if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
             # eof for subnode in node.body:
