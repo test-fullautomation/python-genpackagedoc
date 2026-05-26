@@ -222,7 +222,9 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                          # the attribute value immediately!
                          if (hasattr(decorator, 'id') and decorator.id == 'is_user_interface') or \
                              (hasattr(decorator, 'attr') and decorator.attr == 'is_user_interface') or \
-                             (isinstance(decorator, ast.Call) and hasattr(decorator.func, 'id') and decorator.func.id == 'is_user_interface'):
+                             (isinstance(decorator, ast.Call) and \
+                              ((hasattr(decorator.func, 'id') and decorator.func.id == 'is_user_interface') or \
+                               (hasattr(decorator.func, 'attr') and decorator.func.attr == 'is_user_interface'))):
                              is_ui = True
                              break
 
