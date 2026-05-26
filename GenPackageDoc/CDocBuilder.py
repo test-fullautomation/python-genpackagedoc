@@ -1028,7 +1028,6 @@ Creates the corresponding index.html file also.
                dModuleFileInfo = oModule.GetFileInfo()
                del oModule
                sModuleFilePath     = dModuleFileInfo['sFilePath']
-               sModuleFileName     = dModuleFileInfo['sFileName']
                sModuleFileNameOnly = dModuleFileInfo['sFileNameOnly']
                sModuleFileSubPath  = sModuleFilePath[len(sRootPath)+1:]
 
