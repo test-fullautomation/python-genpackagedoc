@@ -419,7 +419,7 @@ html_index_file_with_search_pattern = """
 <body>
   <div id="header">
     <span id="header-title">###COMPONENTNAME###</span>
-    <span id="header-search">
+    <div id="header-search">
       <input id="searchbox" type="text"
              placeholder="Search class, method, function..."
              oninput="searchDocs()">
@@ -431,7 +431,7 @@ html_index_file_with_search_pattern = """
         &#10006;
       </button>
       <ul id="searchresults"></ul>
-    </span>
+    </div>
   </div>
 
   <div id="container">
