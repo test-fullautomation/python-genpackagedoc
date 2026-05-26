@@ -321,10 +321,10 @@ html_index_file_with_search_pattern = """
           span.style.color = '#000';
           span.style.borderRadius = '2px';
           // Originalschreibweise aus dem Dokument verwenden
-          span.textContent = current.nodeValue.substr(idx, searchText.length);
+          span.textContent = current.nodeValue.slice(idx, idx + searchText.length);
 
           const after = current.splitText(idx);
-          after.nodeValue = after.nodeValue.substr(searchText.length);
+          after.nodeValue = after.nodeValue.slice(searchText.length);
           current.parentNode.insertBefore(span, after);
 
           if (!firstSpan) firstSpan = span;
