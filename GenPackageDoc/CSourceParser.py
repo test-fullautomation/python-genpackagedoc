@@ -154,7 +154,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                is_ui = False
                for decorator in node.decorator_list:
                    # Handles both @is_user_interface and @is_user_interface().
-                   # With the usage of ast this is a static code check. The atrribute set by the decorator (e.g.: is_ui),
+                   # With the usage of ast this is a static code check. The attribute set by the decorator (e.g.: is_ui),
                    # is not yet existing.
                    # Therefore, we need to check the existence of the decorator itself, instead of checking
                    # the attribute value immediately!
