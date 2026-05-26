@@ -446,7 +446,7 @@ html_index_file_with_search_pattern = """
 </html>
 """
 
-search_index_row_pattern = """{type: "###SITYPE###", name: "###SINAME###", file: "###SIFILE###"},"""
+search_index_row_pattern = """{"type": "###SITYPE###", "name": "###SINAME###", "file": "###SIFILE###"}"""
 
 html_files_row_pattern = """<li><a href="#" id="###HTMLID###" onclick="showFile('###FILENAME###', this);return false;">###FILESHORTNAME###</a></li>"""
 
