@@ -956,7 +956,7 @@ Creates the corresponding index.html file also.
 
       sBuildFolder = self.__dictPackageDocConfig['OUTPUT']
 
-      # Start collecting informations about the search index in HTML documentation file index.html
+      # Start collecting information about the search index in HTML documentation file index.html
       self.__dictIndexFileHTML['COMPONENTNAME'] = self.__dictPackageDocConfig.get('PACKAGENAME')
 
       oSourceParser = CSourceParser()
