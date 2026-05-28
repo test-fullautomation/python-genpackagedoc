@@ -303,10 +303,10 @@
           span.style.color = '#000';
           span.style.borderRadius = '2px';
           // Originalschreibweise aus dem Dokument verwenden
-          span.textContent = current.nodeValue.substr(idx, searchText.length);
+          span.textContent = current.nodeValue.slice(idx, idx + searchText.length);
 
           const after = current.splitText(idx);
-          after.nodeValue = after.nodeValue.substr(searchText.length);
+          after.nodeValue = after.nodeValue.slice(searchText.length);
           current.parentNode.insertBefore(span, after);
 
           if (!firstSpan) firstSpan = span;
@@ -413,14 +413,15 @@
     <span id="header-title">GenPackageDoc</span>
     <div id="header-search">
       <input id="searchbox" type="text"
+             aria-label="Search documentation"
              placeholder="Search class, method, function..."
              oninput="searchDocs()">
-      <select id="type-filter">
+      <select id="type-filter" aria-label="Filter by type">
         <!-- Wird dynamisch per populateTypeFilter() befüllt -->
       </select>
-      <button id="clearsearch" title="Suche zurücksetzen"
+      <button id="clearsearch" title="Suche zurücksetzen" aria-label="Clear search"
               style="margin-left:4px;padding:0 8px;font-size:1.1em;line-height:1.5em;cursor:pointer;">
-        &#10006;
+        &#x1F5D1;
       </button>
       <ul id="searchresults"></ul>
     </div>

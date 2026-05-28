@@ -439,7 +439,7 @@ html_index_file_with_search_pattern = """
       </select>
       <button id="clearsearch" title="Suche zurücksetzen" aria-label="Clear search"
               style="margin-left:4px;padding:0 8px;font-size:1.1em;line-height:1.5em;cursor:pointer;">
-        &#10006;
+        &#x1F5D1;
       </button>
       <ul id="searchresults"></ul>
     </div>
