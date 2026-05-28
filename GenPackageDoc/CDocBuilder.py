@@ -1286,7 +1286,7 @@ Creates the corresponding index.html file also.
                # -- create the corresponding HTML file for the current source file
 
                sHTMLCodeFileName = os.path.basename(sModule) + ".html"
-               sHTMLCodeFile = f"{sBuildFolder}/{sHTMLCodeFileName}"  # TODO: check for ambiguitivity; full scope in name required? (like in tex files?)
+               sHTMLCodeFile = f"{sBuildFolder}/{sHTMLCodeFileName}"  # TODO: check for ambiguity; full scope in name required? (like in tex files?)
                oHTMLCodeFile = CFile(sHTMLCodeFile)
                oHTMLCodeFile.Write(sHTML)
                del oHTMLCodeFile
