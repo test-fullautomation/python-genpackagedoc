@@ -107,7 +107,6 @@ html_index_file_with_search_pattern = """
       padding: 1em 0.5em;
       box-sizing: border-box;
       overflow-y: auto;
-      max-height: 100vh;
     }
     #sidebar ul { list-style: none; padding: 0; }
     #sidebar li { margin: 0.5em 0; }
@@ -130,7 +129,6 @@ html_index_file_with_search_pattern = """
     #content {
       flex: 1;
       border: none;
-      height: 100vh;
     }
 
     /* Type-Filter Dropdown */
