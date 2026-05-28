@@ -198,11 +198,13 @@ html_index_file_with_search_pattern = """
   // -----------------------------------------------------------------------
   function showFile(file, el, searchText) {
     const iframe = document.getElementById('content');
+    iframe.onload = null;
     iframe.src = file;
     document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
     if (el) el.classList.add('active');
     if (searchText) {
       iframe.onload = function() {
+        iframe.onload = null;
         const doc = iframe.contentDocument || iframe.contentWindow.document;
         const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, null, false);
         let node;
