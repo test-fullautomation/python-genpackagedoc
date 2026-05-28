@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 26.05.2026
+# 28.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -250,7 +250,7 @@ html_index_file_with_search_pattern = """
       const li = document.createElement('li');
       li.innerHTML =
         `<span class="result-type-badge">${entry.type}</span>` +
-        `<a href='#' onclick="showFileWithScroll('${entry.file}', this, '${entry.name}');` +
+        `<a href='#' onclick="showFileWithScroll('${entry.file}', this, '${entry.name}', '${entry.sidebarId}');` +
         `document.getElementById('searchresults').style.display='none';return false;">` +
         `${entry.name}</a>`;
       results.appendChild(li);
@@ -267,12 +267,19 @@ html_index_file_with_search_pattern = """
   // showFileWithScroll(): Lädt die Zieldatei im iframe, hebt den
   // Suchbegriff hervor und scrollt zum ersten Treffer.
   // -----------------------------------------------------------------------
-  function showFileWithScroll(file, el, searchText) {
+  function showFileWithScroll(file, el, searchText, sidebarId) {
     const iframe = document.getElementById('content');
 
     // Aktiven Link markieren
     document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
-    if (el) el.classList.add('active');
+
+    // Aktiviere den entsprechenden Sidebar-Link
+    if (sidebarId) {
+      const sidebarLink = document.getElementById(sidebarId);
+      if (sidebarLink) {
+        sidebarLink.classList.add('active');
+      }
+    }
 
     // Zuverlässiger Dateinamen-Vergleich via URL-Objekt
     function getFilename(src) {
@@ -416,10 +423,24 @@ html_index_file_with_search_pattern = """
       const searchbox  = document.getElementById('searchbox');
       const results    = document.getElementById('searchresults');
       const typeFilter = document.getElementById('type-filter');
+      const iframe     = document.getElementById('content');
+
       searchbox.value   = "";
       typeFilter.value  = "";        // Filter auf "All types" zurücksetzen
       results.innerHTML = "";
       results.style.display = 'none';
+
+      // Entferne alle Hervorhebungen im iframe
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      if (doc) {
+        const highlights = doc.querySelectorAll('span.__highlight__');
+        highlights.forEach(span => {
+          const text = doc.createTextNode(span.textContent);
+          span.parentNode.replaceChild(text, span);
+        });
+        doc.body.normalize();
+      }
+
       searchbox.focus();
     };
   };
@@ -457,6 +478,6 @@ html_index_file_with_search_pattern = """
 </html>
 """
 
-search_index_row_pattern = """{type: "###SITYPE###", name: "###SINAME###", file: "###SIFILE###"},"""
+search_index_row_pattern = """{type: "###SITYPE###", name: "###SINAME###", file: "###SIFILE###", sidebarId: "###HTMLID###"},"""
 
 html_files_row_pattern = """<li><a href="#" id="###HTMLID###" onclick="showFile('###FILENAME###', this);return false;">###FILESHORTNAME###</a></li>"""

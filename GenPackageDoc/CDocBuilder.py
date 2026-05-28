@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 26.05.2026
+# 28.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -875,6 +875,7 @@ Creates the corresponding index.html file also.
                    search_index_row = search_index_row.replace("###SITYPE###", dictCodeElement['TYPE'])
                    search_index_row = search_index_row.replace("###SINAME###", dictCodeElement['NAME'])
                    search_index_row = search_index_row.replace("###SIFILE###", dictHTMLFileInfo['FILENAME'])
+                   search_index_row = search_index_row.replace("###HTMLID###", dictHTMLFileInfo['HTMLID'])
                    list_search_index_rows.append(search_index_row)
 
       SEARCH_INDEX_ROWS = "\n".join(list_search_index_rows)
