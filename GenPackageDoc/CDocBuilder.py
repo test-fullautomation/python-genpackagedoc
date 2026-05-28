@@ -841,13 +841,15 @@ Creates the corresponding index.html file also.
                     print(f"* Copied: {src} -> {dst}")
 
       # Get an index.html file pattern and replace placeholders with values collected in self.__dictIndexFileHTML
-      index_file_with_search_code = html_index_file_pattern.html_index_file_with_search_pattern
       COMPONENTNAME = self.__dictIndexFileHTML.get('COMPONENTNAME', 'UNKNOWN')
-      index_file_with_search_code = index_file_with_search_code.replace("###COMPONENTNAME###", COMPONENTNAME)
-      ONLOADFILE = self.__dictIndexFileHTML.get('ONLOADFILE', 'UNKNOWN')
+      ONLOADFILE    = self.__dictIndexFileHTML.get('ONLOADFILE')
+      if not isinstance(ONLOADFILE, dict):
+          ONLOADFILE = {}
       ONLOADFILENAME = ONLOADFILE.get('ONLOADFILENAME', 'UNKNOWN')
+      ONLOADHTMLID   = ONLOADFILE.get('ONLOADHTMLID', 'UNKNOWN')
+      index_file_with_search_code = html_index_file_pattern.html_index_file_with_search_pattern
+      index_file_with_search_code = index_file_with_search_code.replace("###COMPONENTNAME###", COMPONENTNAME)
       index_file_with_search_code = index_file_with_search_code.replace("###ONLOADFILENAME###", ONLOADFILENAME)
-      ONLOADHTMLID = ONLOADFILE.get('ONLOADHTMLID', 'UNKNOWN')
       index_file_with_search_code = index_file_with_search_code.replace("###ONLOADHTMLID###", ONLOADHTMLID)
 
       list_search_index_rows = []
