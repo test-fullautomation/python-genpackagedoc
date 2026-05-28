@@ -227,32 +227,54 @@ html_index_file_with_search_pattern = """
   //   3. Suchbegriff (+ optionaler Typ-Filter) → gefilterte Namenssuche.
   // -----------------------------------------------------------------------
   function searchDocs() {
-    const query      = document.getElementById('searchbox').value.trim().toLowerCase();
-    const typeFilter = document.getElementById('type-filter').value; // "" = alle
-    const results    = document.getElementById('searchresults');
+    const query = document.getElementById('searchbox').value.trim().toLowerCase();
+    const selectedType = document.getElementById('type-filter').value;
+    const results = document.getElementById('searchresults');
     results.innerHTML = "";
 
-    // Modus 1: nichts eingegeben, kein Typ gewählt → ausblenden
-    if (!query && !typeFilter) {
+    if (!query && !selectedType) {
       results.style.display = 'none';
       return;
     }
 
     let found = 0;
     for (const entry of searchIndex) {
-      // Typ-Filter anwenden
-      if (typeFilter && entry.type !== typeFilter) continue;
-
-      // Modus 2: nur Typ-Filter (kein Suchbegriff) → alle Treffer des Typs
-      // Modus 3: Suchbegriff muss im Namen vorkommen
+      // Filter nach Typ
+      if (selectedType && entry.type !== selectedType) continue;
+      // Filter nach Suchbegriff
       if (query && !entry.name.toLowerCase().includes(query)) continue;
 
       const li = document.createElement('li');
-      li.innerHTML =
-        `<span class="result-type-badge">${entry.type}</span>` +
-        `<a href='#' onclick="showFileWithScroll('${entry.file}', this, '${entry.name}', '${entry.sidebarId}');` +
-        `document.getElementById('searchresults').style.display='none';return false;">` +
-        `${entry.name}</a>`;
+
+      // Typ-Badge
+      const badge = document.createElement('span');
+      badge.className = 'result-type-badge';
+      badge.textContent = entry.type;
+      li.appendChild(badge);
+
+      // Link
+      const link = document.createElement('a');
+      link.href = '#';
+      link.textContent = entry.name;
+
+      // Daten in data-* Attributen speichern
+      link.dataset.file = entry.file;
+      link.dataset.searchText = entry.name;
+      link.dataset.sidebarId = entry.sidebarId;
+
+      // Event-Handler mit addEventListener (sicher)
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        showFileWithScroll(
+          this.dataset.file,
+          this,
+          this.dataset.searchText,
+          this.dataset.sidebarId
+        );
+        document.getElementById('searchresults').style.display = 'none';
+      });
+
+      li.appendChild(link);
       results.appendChild(li);
       found++;
     }
