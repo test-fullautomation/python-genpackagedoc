@@ -19,6 +19,10 @@
 
     * Search function
 
+    *Maintenance:*
+
+    * LaTeX preamble (``xcolor`` fix)
+
 **Version 0.43.0 (18.05.2026)**
 
     *Maintenance:*
