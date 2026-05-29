@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 28.05.2026
+# 29.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -865,9 +865,9 @@ Creates the corresponding index.html file also.
              prev_is_pyhtml = is_pyhtml
 
              htmlfiles_row = html_index_file_pattern.html_files_row_pattern
-             htmlfiles_row = htmlfiles_row.replace("###HTMLID###", dictHTMLFileInfo['HTMLID'])
-             htmlfiles_row = htmlfiles_row.replace("###FILENAME###", dictHTMLFileInfo['FILENAME'])
-             htmlfiles_row = htmlfiles_row.replace("###FILESHORTNAME###", dictHTMLFileInfo['FILESHORTNAME'])
+             htmlfiles_row = htmlfiles_row.replace("###HTMLID###", str(dictHTMLFileInfo['HTMLID']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+             htmlfiles_row = htmlfiles_row.replace("###FILENAME###", str(dictHTMLFileInfo['FILENAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+             htmlfiles_row = htmlfiles_row.replace("###FILESHORTNAME###", str(dictHTMLFileInfo['FILESHORTNAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
              list_htmlfiles_rows.append(htmlfiles_row)
 
              if isinstance(dictHTMLFileInfo.get("LISTOFDICTCODEELEMENTS"), list) and dictHTMLFileInfo["LISTOFDICTCODEELEMENTS"]:
