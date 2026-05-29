@@ -33,7 +33,7 @@ The index.html file contains a search function. Therefore the file must be opene
 
 html_index_file_with_search_pattern = """
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>###COMPONENTNAME### Documentation</title>
@@ -85,7 +85,7 @@ html_index_file_with_search_pattern = """
       border-radius: 4px;
       min-width: 300px;
       max-width: 400px;
-      max-height: 70vh;        /* Scrollbar bei vielen Ergebnissen */
+      max-height: 70vh;        /* scrollbar in case of lots of results */
       overflow-y: auto;
       z-index: 1000;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -140,17 +140,17 @@ html_index_file_with_search_pattern = """
       background: #fff;
       color: #333;
       cursor: pointer;
-      height: 32px;               /* gleiche Höhe wie Suchfeld / Clear-Button  */
+      height: 32px;               /* same height as search field and clear button */
       vertical-align: middle;
       min-width: 140px;
     }
 
     #type-filter:focus {
-      outline: 2px solid #005691; /* Fokus-Indikator */
+      outline: 2px solid #005691; /* focus-indikator */
       outline-offset: 1px;
     }
 
-    /* Typ-Badge in den Suchergebnissen */
+    /* Typ-Badge within search results */
     .result-type-badge {
       display: inline-block;
       font-size: 0.75em;
@@ -170,16 +170,16 @@ html_index_file_with_search_pattern = """
   ];
 
   // -----------------------------------------------------------------------
-  // populateTypeFilter(): Befüllt das Dropdown mit allen vorhandenen Typen
-  // Wird einmalig beim Laden aufgerufen (DOMContentLoaded / window.onload).
+  // populateTypeFilter(): Fills dropdown with all available types.
+  // Called once on load (DOMContentLoaded / window.onload).
   // -----------------------------------------------------------------------
   function populateTypeFilter() {
     const select = document.getElementById('type-filter');
 
-    // Alle eindeutigen Typen aus dem Index sammeln und alphabetisch sortieren
+    // Collect all unique types from the index and sort alphabetically
     const types = [...new Set(searchIndex.map(e => e.type))].sort();
 
-    // Erste Option: "Alle Typen" (kein Filter)
+    // First option: "All types" (no  filter)
     const allOption = document.createElement('option');
     allOption.value = "";
     allOption.textContent = "All types";
@@ -194,7 +194,7 @@ html_index_file_with_search_pattern = """
   }
 
   // -----------------------------------------------------------------------
-  // showFile(): Wird vom Sidebar-Menü aufgerufen (ohne Highlight-Bedarf)
+  // showFile(): Called from Sidebar-Menu (without Highlight-Bedarf)
   // -----------------------------------------------------------------------
   function showFile(file, el, searchText) {
     const iframe = document.getElementById('content');
@@ -219,12 +219,12 @@ html_index_file_with_search_pattern = """
   }
 
   // -----------------------------------------------------------------------
-  // searchDocs(): Durchsucht den searchIndex und zeigt Ergebnisse an.
+  // searchDocs(): Searches within searchIndex and displays results.
   //
-  //   Drei Betriebsmodi:
-  //   1. Kein Suchbegriff, kein Typ-Filter  → Ergebnisliste ausblenden.
-  //   2. Kein Suchbegriff, Typ-Filter aktiv → alle Einträge des Typs zeigen.
-  //   3. Suchbegriff (+ optionaler Typ-Filter) → gefilterte Namenssuche.
+  //   Three modes of operation:
+  //   1. No search term, no type filter -> hide results list.
+  //   2. No search term, type filter active -> show all entries of that type.
+  //   3. Search term (+ optional type filter) -> filtered name search.
   // -----------------------------------------------------------------------
   function searchDocs() {
     const query = document.getElementById('searchbox').value.trim().toLowerCase();
@@ -286,16 +286,16 @@ html_index_file_with_search_pattern = """
   }
 
   // -----------------------------------------------------------------------
-  // showFileWithScroll(): Lädt die Zieldatei im iframe, hebt den
-  // Suchbegriff hervor und scrollt zum ersten Treffer.
+  // showFileWithScroll(): Loads the target file in the iframe, highlights the
+  // search term and scrolls to the first match.
   // -----------------------------------------------------------------------
   function showFileWithScroll(file, el, searchText, sidebarId) {
     const iframe = document.getElementById('content');
 
-    // Aktiven Link markieren
+    // mark acrive link
     document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
 
-    // Aktiviere den entsprechenden Sidebar-Link
+    // activate the corresponding Sidebar-Link
     if (sidebarId) {
       const sidebarLink = document.getElementById(sidebarId);
       if (sidebarLink) {
@@ -303,7 +303,7 @@ html_index_file_with_search_pattern = """
       }
     }
 
-    // Zuverlässiger Dateinamen-Vergleich via URL-Objekt
+    // Reliable filename comparison via URL object
     function getFilename(src) {
       try {
         return new URL(src).pathname.split('/').pop();
@@ -316,7 +316,7 @@ html_index_file_with_search_pattern = """
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       if (!doc || !doc.body) return;
 
-      // 1. Vorherige Hervorhebungen entfernen und DOM normalisieren
+      // 1. Remove previous highlights and normalize DOM
       doc.querySelectorAll('span.__highlight__').forEach(span => {
         const text = doc.createTextNode(span.textContent);
         span.parentNode.replaceChild(text, span);
@@ -325,7 +325,7 @@ html_index_file_with_search_pattern = """
 
       if (!searchText) return;
 
-      // 2. Alle passenden Textnodes sammeln (kein DOM-Eingriff während des Walkens!)
+      // 2. Gather all matching text nodes (no DOM changes while walking!)
       const searchLower = searchText.toLowerCase();
       const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, null, false);
       const matchingNodes = [];
@@ -336,7 +336,7 @@ html_index_file_with_search_pattern = """
         }
       }
 
-      // 3. DOM manipulieren (außerhalb des Walkers)
+      // 3. DOM manipulation (outside walker)
       let firstSpan = null;
       for (const textNode of matchingNodes) {
         let current = textNode;
@@ -349,7 +349,7 @@ html_index_file_with_search_pattern = """
           span.style.background = '#ffff66';
           span.style.color = '#000';
           span.style.borderRadius = '2px';
-          // Originalschreibweise aus dem Dokument verwenden
+          // Use original spelling from the document
           span.textContent = current.nodeValue.slice(idx, idx + searchText.length);
 
           const after = current.splitText(idx);
@@ -361,8 +361,8 @@ html_index_file_with_search_pattern = """
         }
       }
 
-      // 4. Scrollen via contentWindow.scrollTo() mit setTimeout für
-      //    einen Render-Zyklus nach der DOM-Mutation
+      // 4. Scroll via contentWindow.scrollTo() with setTimeout for
+      //    one render cycle after DOM mutation
       if (firstSpan) {
         setTimeout(function() {
           const rect = firstSpan.getBoundingClientRect();
@@ -375,14 +375,14 @@ html_index_file_with_search_pattern = """
       }
     }
 
-    // Gleiche Datei bereits geladen → direkt ausführen, kein onload nötig
-    // Neue Datei → erst laden, dann in onload ausführen
+    // Same file already loaded -> execute directly, no onload needed
+    // New file -> load first, then execute in onload
     const currentFile = getFilename(iframe.src);
     if (currentFile === file) {
       doHighlightAndScroll();
     } else {
       iframe.onload = function() {
-        iframe.onload = null; // Handler nach einmaligem Aufruf entfernen
+        iframe.onload = null; // remove handler after call
         doHighlightAndScroll();
       };
       iframe.src = file;
@@ -390,10 +390,10 @@ html_index_file_with_search_pattern = """
   }
 
   // -----------------------------------------------------------------------
-  // Enter-Taste im Suchfeld öffnet das erste Suchergebnis
+  // Enter key in search field opens the first search result
   // -----------------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function() {
-    // Dropdown mit Typen befüllen
+    // fill dropdown with types
     populateTypeFilter();
 
     const searchbox = document.getElementById('searchbox');
@@ -410,17 +410,17 @@ html_index_file_with_search_pattern = """
       }
     });
 
-    // Typ-Filter-Änderung löst sofort eine neue Suche aus
+    // Type filter change immediately triggers a new search
     document.getElementById('type-filter').addEventListener('change', searchDocs);
   });
 
   // -----------------------------------------------------------------------
-  // window.onload: Startseite laden + UI-Event-Handler registrieren
+  // window.onload: load start page + register UI-Event-Handler
   // -----------------------------------------------------------------------
   window.onload = function() {
     showFile('###ONLOADFILENAME###', document.getElementById('###ONLOADHTMLID###'));
 
-    // Suchergebnisse ausblenden beim Klick außerhalb
+    // Hide search results when clicking outside
     document.addEventListener('click', function(e) {
       const searchbox  = document.getElementById('searchbox');
       const results    = document.getElementById('searchresults');
@@ -434,13 +434,13 @@ html_index_file_with_search_pattern = """
       }
     });
 
-    // Suchergebnisse wieder einblenden beim Fokus auf das Suchfeld
+    // Show search results again when focusing on the search field
     document.getElementById('searchbox').addEventListener('focus', function() {
       const results = document.getElementById('searchresults');
       if (results.innerHTML.trim() !== '') results.style.display = 'block';
     });
 
-    // Clear-Button: Suchfeld, Filter und Ergebnisse zurücksetzen
+    // Clear-Button: reset search field, filter and results
     document.getElementById('clearsearch').onclick = function() {
       const searchbox  = document.getElementById('searchbox');
       const results    = document.getElementById('searchresults');
@@ -448,11 +448,11 @@ html_index_file_with_search_pattern = """
       const iframe     = document.getElementById('content');
 
       searchbox.value   = "";
-      typeFilter.value  = "";        // Filter auf "All types" zurücksetzen
+      typeFilter.value  = "";        // reset filter to "All types"
       results.innerHTML = "";
       results.style.display = 'none';
 
-      // Entferne alle Hervorhebungen im iframe
+      // Remove all highlights in iframe
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       if (doc) {
         const highlights = doc.querySelectorAll('span.__highlight__');
@@ -480,7 +480,7 @@ html_index_file_with_search_pattern = """
       <select id="type-filter" aria-label="Filter by type">
         <!-- Wird dynamisch per populateTypeFilter() befüllt -->
       </select>
-      <button id="clearsearch" title="Suche zurücksetzen" aria-label="Clear search"
+      <button id="clearsearch" title="Reset search" aria-label="Clear search"
               style="margin-left:4px;padding:0 8px;font-size:1.1em;line-height:1.5em;cursor:pointer;">
         &#x1F5D1;
       </button>
