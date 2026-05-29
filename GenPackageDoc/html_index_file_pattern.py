@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 28.05.2026
+# 29.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ html_index_file_with_search_pattern = """
       border-radius: 4px;
       min-width: 300px;
       max-width: 400px;
-      max-height: 70vh;        /* scrollbar in case of lots of results */
+      max-height: calc(100vh - 3em);  /* Fill available space from top position to bottom (scrollbar in case of lots of results) */
       overflow-y: auto;
       z-index: 1000;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
