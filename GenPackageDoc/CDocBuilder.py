@@ -874,10 +874,10 @@ Creates the corresponding index.html file also.
                 # key exists, is of type list and list is not empty
                 for dictCodeElement in dictHTMLFileInfo['LISTOFDICTCODEELEMENTS']:
                    search_index_row = html_index_file_pattern.search_index_row_pattern
-                   search_index_row = search_index_row.replace("###SITYPE###", dictCodeElement['TYPE'])
-                   search_index_row = search_index_row.replace("###SINAME###", dictCodeElement['NAME'])
-                   search_index_row = search_index_row.replace("###SIFILE###", dictHTMLFileInfo['FILENAME'])
-                   search_index_row = search_index_row.replace("###HTMLID###", dictHTMLFileInfo['HTMLID'])
+                   search_index_row = search_index_row.replace("###SITYPE###", str(dictCodeElement['TYPE']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+                   search_index_row = search_index_row.replace("###SINAME###", str(dictCodeElement['NAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+                   search_index_row = search_index_row.replace("###SIFILE###", str(dictHTMLFileInfo['FILENAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+                   search_index_row = search_index_row.replace("###HTMLID###", str(dictHTMLFileInfo['HTMLID']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
                    list_search_index_rows.append(search_index_row)
 
       SEARCH_INDEX_ROWS = "\n".join(list_search_index_rows)
