@@ -880,9 +880,8 @@ Creates the corresponding index.html file also.
                    search_index_row = search_index_row.replace("###HTMLID###", str(dictHTMLFileInfo['HTMLID']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
                    list_search_index_rows.append(search_index_row)
 
-      SEARCH_INDEX_ROWS = "\n".join(list_search_index_rows)
+      SEARCH_INDEX_ROWS = "\n".join(list_search_index_rows).rstrip(",\n")
       index_file_with_search_code = index_file_with_search_code.replace("###SEARCH_INDEX_ROWS###", SEARCH_INDEX_ROWS)
-
       HTML_FILES_ROWS = "\n".join(list_htmlfiles_rows)
       index_file_with_search_code = index_file_with_search_code.replace("###HTML_FILES_ROWS###", HTML_FILES_ROWS)
 
