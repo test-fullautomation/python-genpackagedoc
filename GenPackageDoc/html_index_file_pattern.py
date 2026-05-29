@@ -292,7 +292,7 @@ html_index_file_with_search_pattern = """
   function showFileWithScroll(file, el, searchText, sidebarId) {
     const iframe = document.getElementById('content');
 
-    // mark acrive link
+    // mark active link
     document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
 
     // activate the corresponding Sidebar-Link
