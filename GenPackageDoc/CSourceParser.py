@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 26.05.2026
+# 29.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -180,8 +180,6 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
          if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             sFunctionName = f"{node.name}"
-            if isinstance(node, ast.AsyncFunctionDef):
-               sFunctionName = f"async {sFunctionName}"
             sFunctionDocString = ast.get_docstring(node)
 
             bTakeIt = True
@@ -195,13 +193,16 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                   # is undocumented
                   bTakeIt = False
             # eof if bIncludeUndocumented is False:
+
+            if isinstance(node, ast.AsyncFunctionDef):
+               sFunctionName = f"async {sFunctionName}"
+
             if bTakeIt is True:
                dictFunction = {}
                dictFunction['sFunctionName']      = sFunctionName
                dictFunction['is_ui']              = self.__is_user_interface_node(node)
                dictFunction['sFunctionDocString'] = sFunctionDocString
                listofdictFunctions.append(dictFunction)
-
             # eof if bTakeIt is True:
          # eof if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
 
@@ -218,17 +219,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
             for subnode in node.body:
                if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
                   sMethodName = f"{subnode.name}"
-                  if isinstance(subnode, ast.AsyncFunctionDef):
-                     sMethodName = f"async {sMethodName}"
                   sMethodDocString = ast.get_docstring(subnode)
-
-                  # is keyword?
-                  bIsKeyword = False
-                  for decorator in subnode.decorator_list:
-                     if hasattr(decorator, 'id'):
-                        if decorator.id == "keyword":
-                           bIsKeyword = True
-                           break
 
                   bTakeIt = True
                   if bIncludePrivate is False:
@@ -241,6 +232,18 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                         # is undocumented
                         bTakeIt = False
                   # eof if bIncludeUndocumented is False:
+
+                  if isinstance(subnode, ast.AsyncFunctionDef):
+                     sMethodName = f"async {sMethodName}"
+
+                  # is keyword?
+                  bIsKeyword = False
+                  for decorator in subnode.decorator_list:
+                     if hasattr(decorator, 'id'):
+                        if decorator.id == "keyword":
+                           bIsKeyword = True
+                           break
+
                   if bTakeIt is True:
                      dictMethod = {}
                      dictMethod['sMethodName']      = sMethodName
@@ -248,8 +251,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                      dictMethod['is_ui']            = self.__is_user_interface_node(subnode)
                      dictMethod['sMethodDocString'] = sMethodDocString
                      listofdictMethods.append(dictMethod)
-
-                  # eof if bTakeIt is True
+                  # eof if bTakeIt is True:
                # eof if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
             # eof for subnode in node.body:
 
