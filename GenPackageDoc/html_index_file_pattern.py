@@ -27,8 +27,7 @@
 """
 File containing a pattern for the index.html file, that is the entry point for the documentation in HTML format.
 
-The index.html file contains a search function. Therefore the file must be opened on a web server
-(otherwise the search results will not be displayed properly).
+The index.html file contains a client-side search and highlighting feature. For highlighting/scrolling to work reliably, open the documentation via a web server (browsers may block iframe DOM access for file:// URLs).
 """
 
 html_index_file_with_search_pattern = """
