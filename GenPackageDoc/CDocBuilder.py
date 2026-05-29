@@ -1277,7 +1277,21 @@ Creates the corresponding index.html file also.
                            'title'           : sFileName
                        })
 
-               listLinesHTML = html_content.decode('utf-8').splitlines()
+               # Decode bytes to string (if necessary)
+               if isinstance(html_content, bytes):
+                   html_content = html_content.decode('utf-8')
+
+               # HTML postprocessing
+               # This can also be done with the Docutils interface. But this solution would depend on the
+               # Docutils version. Whereas the following postprocessing is simple and robust.
+
+               # Add Meta-Tags immediately after <head>
+               meta_tags = """<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">"""
+               html_content = html_content.replace("<head>", f"<head>\n{meta_tags}")
+
+               listLinesHTML = html_content.splitlines()
                # add headline to HTML file
                listLinesHTML = self.__replace_in_array(listLinesHTML, "<main>", f"<main>\n\n<h1>{sFileName}</h1>")
 
@@ -1393,7 +1407,21 @@ Creates the corresponding index.html file also.
                            'title'           : sChaptername
                        })
 
-               listLinesHTML = html_content.decode('utf-8').splitlines()
+               # Decode bytes to string (if necessary)
+               if isinstance(html_content, bytes):
+                   html_content = html_content.decode('utf-8')
+
+               # HTML postprocessing
+               # This can also be done with the Docutils interface. But this solution would depend on the
+               # Docutils version. Whereas the following postprocessing is simple and robust.
+
+               # Add Meta-Tags immediately after <head>
+               meta_tags = """<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">"""
+               html_content = html_content.replace("<head>", f"<head>\n{meta_tags}")
+
+               listLinesHTML = html_content.splitlines()
                # add headline to HTML file
                listLinesHTML = self.__replace_in_array(listLinesHTML, "<main>", f"<main>\n\n<h1>{sChaptername}</h1>")
 

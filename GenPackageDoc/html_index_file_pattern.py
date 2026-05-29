@@ -35,6 +35,9 @@ html_index_file_with_search_pattern = """
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>###COMPONENTNAME### Documentation</title>
   <style>
     body {
@@ -198,7 +201,8 @@ html_index_file_with_search_pattern = """
   function showFile(file, el, searchText) {
     const iframe = document.getElementById('content');
     iframe.onload = null;
-    iframe.src = file;
+    const cacheBuster = '?v=' + Date.now();
+    iframe.src = file + cacheBuster;
     document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
     if (el) el.classList.add('active');
     if (searchText) {
@@ -384,7 +388,9 @@ html_index_file_with_search_pattern = """
         iframe.onload = null; // remove handler after call
         doHighlightAndScroll();
       };
-      iframe.src = file;
+
+      const cacheBuster = '?v=' + Date.now();
+      iframe.src = file + cacheBuster;
     }
   }
 
