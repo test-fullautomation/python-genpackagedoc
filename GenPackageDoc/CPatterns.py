@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 05.01.2026
+# 28.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -170,7 +170,7 @@ within a Python package.
   LaTeX code containing the headline and the input of a single tex file.
       """
 
-      sChapter = """
+      sChapter = r"""
 \chapter{###HEADLINE###}\label{###LABEL###}
 \input{./###DOCUMENTNAME###}
       """

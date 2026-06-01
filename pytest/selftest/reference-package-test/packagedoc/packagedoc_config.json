@@ -170,7 +170,7 @@
 # this key can be removed or set to null.
 
    "JAVA" : {
-             "WINDOWS" : "%PROGRAMFILES%/Java/jre8/bin/java.exe",
+             "WINDOWS" : "%JAVA_HOME%/bin/java.exe",
              "LINUX"   : "${JAVA_HOME}/bin/java"
             },
 

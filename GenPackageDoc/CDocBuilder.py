@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 19.05.2026
+# 29.05.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -130,6 +130,11 @@ Constructor of class :pcode:`CDocBuilder`.
 
       self.__dictScopes = {}
       self.__listHTMLFiles = []
+
+      self.__dictIndexFileHTML = {}
+      self.__dictIndexFileHTML['COMPONENTNAME']           = None
+      self.__dictIndexFileHTML['LISTOFDICTHTMLFILEINFOS'] = []
+      self.__dictIndexFileHTML['ONLOADFILE']              = None
 
    def __del__(self):
       pass
@@ -835,36 +840,55 @@ Creates the corresponding index.html file also.
                     shutil.copy2(src, dst)
                     print(f"* Copied: {src} -> {dst}")
 
-      # Prepare the file list within index.html.
-      #  -Files originally in reST format, have extension .html.
-      # - Interface files have extension .py.html.
-      html_file_list_code = []
+      # Get an index.html file pattern and replace placeholders with values collected in self.__dictIndexFileHTML
+      COMPONENTNAME = self.__dictIndexFileHTML.get('COMPONENTNAME', 'UNKNOWN')
+      ONLOADFILE    = self.__dictIndexFileHTML.get('ONLOADFILE')
+      if not isinstance(ONLOADFILE, dict):
+          ONLOADFILE = {}
+      ONLOADFILENAME = ONLOADFILE.get('ONLOADFILENAME', 'UNKNOWN')
+      ONLOADHTMLID   = ONLOADFILE.get('ONLOADHTMLID', 'UNKNOWN')
+      index_file_with_search_code = html_index_file_pattern.html_index_file_with_search_pattern
+      index_file_with_search_code = index_file_with_search_code.replace("###COMPONENTNAME###", COMPONENTNAME)
+      index_file_with_search_code = index_file_with_search_code.replace("###ONLOADFILENAME###", ONLOADFILENAME)
+      index_file_with_search_code = index_file_with_search_code.replace("###ONLOADHTMLID###", ONLOADHTMLID)
+
+      list_search_index_rows = []
+      list_htmlfiles_rows = []
       prev_is_pyhtml = None
-      for html_file in self.__listHTMLFiles:
-         basename = os.path.basename(html_file)
-         is_pyhtml = basename.lower().endswith('.py.html')
-         if prev_is_pyhtml is not None and is_pyhtml != prev_is_pyhtml:
-            html_file_list_code.append('<hr>')
-         prev_is_pyhtml = is_pyhtml
-         name, _ = os.path.splitext(basename)
-         html_row = html_index_file_pattern.html_list_row
-         file_id_name = self.__filename_to_html_id(basename)
-         html_row = html_row.replace("###FILE_ID_NAME###", file_id_name)
-         html_row = html_row.replace("###FILE_NAME###", basename)
-         html_row = html_row.replace("###FILE_NAME_ONLY###", name) # means: without extension .html
-         html_file_list_code.append(html_row)
+      if isinstance(self.__dictIndexFileHTML.get("LISTOFDICTHTMLFILEINFOS"), list) and self.__dictIndexFileHTML["LISTOFDICTHTMLFILEINFOS"]:
+          # key exists, is of type list and list is not empty
+          for dictHTMLFileInfo in self.__dictIndexFileHTML['LISTOFDICTHTMLFILEINFOS']:
+             basename = os.path.basename(dictHTMLFileInfo['FILENAME'])
+             is_pyhtml = basename.lower().endswith('.py.html')
+             if prev_is_pyhtml is not None and is_pyhtml != prev_is_pyhtml:
+                list_htmlfiles_rows.append('<li><hr></li>')
+             prev_is_pyhtml = is_pyhtml
 
-      index_file_code = html_index_file_pattern.html_index_file_pattern
-      # TODO: check index [0]
-      first_file_name = os.path.basename(self.__listHTMLFiles[0])
-      index_file_code = index_file_code.replace("###ON_OPEN_SHOW_FILE###", first_file_name)
-      index_file_code = index_file_code.replace("###APP_NAME###", self.__dictPackageDocConfig['PACKAGENAME'])
-      index_file_code = index_file_code.replace("###HTML_FILE_LIST###", "\n".join(html_file_list_code))
+             htmlfiles_row = html_index_file_pattern.html_files_row_pattern
+             htmlfiles_row = htmlfiles_row.replace("###HTMLID###", str(dictHTMLFileInfo['HTMLID']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+             htmlfiles_row = htmlfiles_row.replace("###FILENAME###", str(dictHTMLFileInfo['FILENAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+             htmlfiles_row = htmlfiles_row.replace("###FILESHORTNAME###", str(dictHTMLFileInfo['FILESHORTNAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+             list_htmlfiles_rows.append(htmlfiles_row)
 
-      # prepare index.html
+             if isinstance(dictHTMLFileInfo.get("LISTOFDICTCODEELEMENTS"), list) and dictHTMLFileInfo["LISTOFDICTCODEELEMENTS"]:
+                # key exists, is of type list and list is not empty
+                for dictCodeElement in dictHTMLFileInfo['LISTOFDICTCODEELEMENTS']:
+                   search_index_row = html_index_file_pattern.search_index_row_pattern
+                   search_index_row = search_index_row.replace("###SITYPE###", str(dictCodeElement['TYPE']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+                   search_index_row = search_index_row.replace("###SINAME###", str(dictCodeElement['NAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+                   search_index_row = search_index_row.replace("###SIFILE###", str(dictHTMLFileInfo['FILENAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+                   search_index_row = search_index_row.replace("###HTMLID###", str(dictHTMLFileInfo['HTMLID']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+                   list_search_index_rows.append(search_index_row)
+
+      SEARCH_INDEX_ROWS = "\n".join(list_search_index_rows).rstrip(",\n")
+      index_file_with_search_code = index_file_with_search_code.replace("###SEARCH_INDEX_ROWS###", SEARCH_INDEX_ROWS)
+      HTML_FILES_ROWS = "\n".join(list_htmlfiles_rows)
+      index_file_with_search_code = index_file_with_search_code.replace("###HTML_FILES_ROWS###", HTML_FILES_ROWS)
+
+      # Write generated HTML content to file index.html
       index_htmlfile = f"{html_dest}/index.html"
       oHTMLFile = CFile(index_htmlfile)
-      oHTMLFile.Write(index_file_code)
+      oHTMLFile.Write(index_file_with_search_code)
       del oHTMLFile
 
       # Save also the HTML files list in configuration.
@@ -934,6 +958,9 @@ Creates the corresponding index.html file also.
 
       sBuildFolder = self.__dictPackageDocConfig['OUTPUT']
 
+      # Start collecting information about the search index in HTML documentation file index.html
+      self.__dictIndexFileHTML['COMPONENTNAME'] = self.__dictPackageDocConfig.get('PACKAGENAME')
+
       oSourceParser = CSourceParser()
 
       listofdictChapterInfo = [] # needed for TOC of main TeX file
@@ -980,7 +1007,7 @@ Creates the corresponding index.html file also.
          if sDocumentPart.startswith("INTERFACE"):
 
             sRootPath = sDocumentPartPath
-            sSourceFilesRootFolderName = os.path.basename(sRootPath) # should be the package name (the import name)
+            sSourceFilesRootFolderName = os.path.basename(sRootPath) # the import name (sometimes same as package name, sometimes not)
 
             listModules, bSuccess, sResult = self.__GetModulesList(sRootPath)
             if bSuccess is not True:
@@ -991,8 +1018,11 @@ Creates the corresponding index.html file also.
             print()
 
             for sModule in listModules:
+               # Iterate all Python files found in INTERFACE folder
 
                listLinesRST = [] # the module/chapter specific subset
+
+               LISTOFDICTCODEELEMENTS = [] # the search index (functions, classes, methods)
 
                # -- get informations about the source file and derive further information
 
@@ -1049,7 +1079,7 @@ Creates the corresponding index.html file also.
                   listLinesRST.append(sFileDescription)
                   listLinesRST.append("")
 
-               # -- reST content of all functions
+               # -- reST content of docstring of all functions
 
                for dictFunction in listofdictFunctions:
                   sFunctionName  = dictFunction['sFunctionName']
@@ -1057,8 +1087,15 @@ Creates the corresponding index.html file also.
                   sFunctionScope = self.__ConvertToScopeFormat(sFunctionScope)
                   sFunctionHeadline = f"Function: {sFunctionName}"
                   self.__dictScopes[sFunctionScope] = sFunctionHeadline
-
                   sFunctionDocString = dictFunction['sFunctionDocString']
+
+                  # support of search index in index.html
+                  dictCodeElement = {}
+                  dictCodeElement['TYPE'] = "Function"
+                  if dictFunction['is_ui']:
+                      dictCodeElement['TYPE'] = "User Interface Function"
+                  dictCodeElement['NAME'] = sFunctionName
+                  LISTOFDICTCODEELEMENTS.append(dictCodeElement)
 
                   print(f"    > Function : '{sFunctionName}' / scope: '{sFunctionScope}'")
 
@@ -1084,6 +1121,12 @@ Creates the corresponding index.html file also.
 
                   sClassDocString   = dictClass['sClassDocString']
                   listofdictMethods = dictClass['listofdictMethods']
+
+                  # support of search index in index.html
+                  dictCodeElement = {}
+                  dictCodeElement['TYPE'] = "Class"
+                  dictCodeElement['NAME'] = sClassName
+                  LISTOFDICTCODEELEMENTS.append(dictCodeElement)
 
                   print(f"  > Class : '{sClassName}' / scope: '{sClassScope}'")
 
@@ -1119,6 +1162,16 @@ Creates the corresponding index.html file also.
                      sMethodScope    = f"{sModuleFileScope}-{sClassName}-{sMethodName}"
                      sMethodScope    = self.__ConvertToScopeFormat(sMethodScope)
                      self.__dictScopes[sMethodScope] = sMethodHeadline
+
+                     # support of search index in index.html
+                     dictCodeElement = {}
+                     dictCodeElement['TYPE'] = "Method"
+                     if dictMethod['is_ui']:
+                         dictCodeElement['TYPE'] = "User Interface Method"
+                     elif dictMethod['bIsKeyword']:
+                         dictCodeElement['TYPE'] = "Robot Keyword"
+                     dictCodeElement['NAME'] = sMethodName
+                     LISTOFDICTCODEELEMENTS.append(dictCodeElement)
 
                      print(f"    - {sIdentifier} : '{sMethodName}' / scope: '{sMethodScope}'")
 
@@ -1223,7 +1276,21 @@ Creates the corresponding index.html file also.
                            'title'           : sFileName
                        })
 
-               listLinesHTML = html_content.decode('utf-8').splitlines()
+               # Decode bytes to string (if necessary)
+               if isinstance(html_content, bytes):
+                   html_content = html_content.decode('utf-8')
+
+               # HTML postprocessing
+               # This can also be done with the Docutils interface. But this solution would depend on the
+               # Docutils version. Whereas the following postprocessing is simple and robust.
+
+               # Add Meta-Tags immediately after <head>
+               meta_tags = """<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">"""
+               html_content = html_content.replace("<head>", f"<head>\n{meta_tags}")
+
+               listLinesHTML = html_content.splitlines()
                # add headline to HTML file
                listLinesHTML = self.__replace_in_array(listLinesHTML, "<main>", f"<main>\n\n<h1>{sFileName}</h1>")
 
@@ -1234,14 +1301,23 @@ Creates the corresponding index.html file also.
                # -- create the corresponding HTML file for the current source file
 
                sHTMLCodeFileName = os.path.basename(sModule) + ".html"
-               sHTMLCodeFile = f"{sBuildFolder}/{sHTMLCodeFileName}"  # TODO: check for ambiguitvity; full scope in name required? (like in tex files?)
+               sHTMLCodeFile = f"{sBuildFolder}/{sHTMLCodeFileName}"  # TODO: check for ambiguity; full scope in name required? (like in tex files?)
                oHTMLCodeFile = CFile(sHTMLCodeFile)
                oHTMLCodeFile.Write(sHTML)
                del oHTMLCodeFile
+
                self.__listHTMLFiles.append(sHTMLCodeFile)
 
-            # eof for sModule in listModules:
+               # support of search index in index.html
+               dictHTMLFileInfo = {}
+               dictHTMLFileInfo['FILENAME']               = sHTMLCodeFileName
+               dictHTMLFileInfo['FILESHORTNAME']          = os.path.basename(sModule)
+               dictHTMLFileInfo['HTMLID']                 = self.__filename_to_html_id(sHTMLCodeFileName)
+               dictHTMLFileInfo['ISPYTHONSOURCE']         = True
+               dictHTMLFileInfo['LISTOFDICTCODEELEMENTS'] = LISTOFDICTCODEELEMENTS
+               self.__dictIndexFileHTML['LISTOFDICTHTMLFILEINFOS'].append(dictHTMLFileInfo)
 
+            # eof for sModule in listModules:
          # eof if sDocumentPart.startswith("INTERFACE"):
 
          else:
@@ -1283,7 +1359,6 @@ Creates the corresponding index.html file also.
                listLinesTEX = latex_code.splitlines() # ensure proper line endings
 
                # -- tex postprocessing (extended syntax and multiply-defined labels)
-               ####1
                listLinesProcessed = self.__PostprocessTEX(listLinesTEX)
                sTEX = "\n".join(listLinesProcessed)
 
@@ -1331,7 +1406,21 @@ Creates the corresponding index.html file also.
                            'title'           : sChaptername
                        })
 
-               listLinesHTML = html_content.decode('utf-8').splitlines()
+               # Decode bytes to string (if necessary)
+               if isinstance(html_content, bytes):
+                   html_content = html_content.decode('utf-8')
+
+               # HTML postprocessing
+               # This can also be done with the Docutils interface. But this solution would depend on the
+               # Docutils version. Whereas the following postprocessing is simple and robust.
+
+               # Add Meta-Tags immediately after <head>
+               meta_tags = """<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">"""
+               html_content = html_content.replace("<head>", f"<head>\n{meta_tags}")
+
+               listLinesHTML = html_content.splitlines()
                # add headline to HTML file
                listLinesHTML = self.__replace_in_array(listLinesHTML, "<main>", f"<main>\n\n<h1>{sChaptername}</h1>")
 
@@ -1346,7 +1435,17 @@ Creates the corresponding index.html file also.
                oHTMLCodeFile = CFile(sHTMLCodeFile)
                oHTMLCodeFile.Write(sHTML)
                del oHTMLCodeFile
+
                self.__listHTMLFiles.append(sHTMLCodeFile)
+
+               # support of search index in index.html
+               dictHTMLFileInfo = {}
+               dictHTMLFileInfo['FILENAME']               = sHTMLCodeFileName
+               dictHTMLFileInfo['FILESHORTNAME']          = sRSTFileNameOnly
+               dictHTMLFileInfo['HTMLID']                 = self.__filename_to_html_id(sHTMLCodeFileName)
+               dictHTMLFileInfo['ISPYTHONSOURCE']         = False
+               dictHTMLFileInfo['LISTOFDICTCODEELEMENTS'] = None # Python only, not rst files
+               self.__dictIndexFileHTML['LISTOFDICTHTMLFILEINFOS'].append(dictHTMLFileInfo)
 
             # eof if sDocumentPartPath.lower().endswith('rst'):
 
@@ -1374,6 +1473,17 @@ Creates the corresponding index.html file also.
             # eof else - if sDocumentPartPath.lower().endswith('rst'):
          # eof else - if sDocumentPart.startswith("INTERFACE"):
       # eof for sDocumentPart in listDocumentParts:
+
+      # After all files are parsed, we compute the first file in list. This file will be displayed initially
+      # when index.html is opened.
+
+      ONLOADFILENAME = "UNKNOWN"
+      ONLOADHTMLID   = "UNKNOWN"
+      if self.__dictIndexFileHTML['LISTOFDICTHTMLFILEINFOS']:
+         dictHTMLFileInfo = self.__dictIndexFileHTML['LISTOFDICTHTMLFILEINFOS'][0]
+         ONLOADFILENAME = dictHTMLFileInfo.get('FILENAME', 'UNKNOWN')
+         ONLOADHTMLID   = dictHTMLFileInfo.get('HTMLID', 'UNKNOWN')
+      self.__dictIndexFileHTML['ONLOADFILE'] = {"ONLOADFILENAME" : ONLOADFILENAME, "ONLOADHTMLID" : ONLOADHTMLID}
 
       print()
 
@@ -1475,6 +1585,9 @@ Creates the corresponding index.html file also.
       else:
          print(COLBY + sResult)
          print()
+
+      # Also add the HTML search index (index.html) to the GenPackageDoc configuration
+      self.__dictPackageDocConfig['HTMLSEARCHINDEX'] = self.__dictIndexFileHTML
 
       # 6. Dump the complete configuration (in temporary output folder)
       sOutputFolder = self.__dictPackageDocConfig['OUTPUT']

@@ -62,8 +62,9 @@
 * Markdown directives to support listings of file system contents
 * Markdown directives to support a simple highlighting in gray color
 * Syntax extensions for vertical and horizontal distances
-* Support od **async** functions and methods
+* Support of **async** functions and methods
 * Output of documentation in HTML-Format
+* Search function
 
 Details about how to install the component with PIP, can be found in the `README <https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/README.rst>`__
 "
