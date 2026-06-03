@@ -65,6 +65,8 @@
 * Support of **async** functions and methods
 * Output of documentation in HTML-Format
 * Search function
+* GenPackageDoc decorator
+* Tags included in PDF and HTML output
 
 Details about how to install the component with PIP, can be found in the `README <https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/README.rst>`__
 "
