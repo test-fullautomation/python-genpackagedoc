@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 03.06.2026
+# 05.06.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -323,7 +323,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
   Path and name of a single Python module.
 
-* ``include_private`` (currently not active, is ``False``)
+* ``include_private``
 
   / *Condition*: optional / *Type*: bool / *Default*: False /
 
