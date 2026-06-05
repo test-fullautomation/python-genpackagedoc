@@ -278,13 +278,13 @@ Returns:
                                    tags=None,
                                    take_it=None):
        """
-Extracts string values from an ast.List node.
+Formats all node features to a single string.
 
 Parameters:
 - node features
 
 Returns:
-- formated string to pront the node features to screen
+- formatted string to print the node features to screen
        """
        node_feature_info = f"  > Parsed : '{name}'"
        if alias_name:
