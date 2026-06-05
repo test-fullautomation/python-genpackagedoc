@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 04.06.2026
+# 05.06.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -1128,7 +1128,7 @@ Creates the corresponding index.html file also.
                         if not display_name in duplicate_tags_check:
                            dictCodeElement = {}
                            dictCodeElement['TYPE'] = "Tags"
-                           dictCodeElement['NAME'] = tag
+                           dictCodeElement['NAME'] = f"'{tag}'"
                            dictCodeElement['DISPLAYNAME'] = display_name
                            LISTOFDICTCODEELEMENTS.append(dictCodeElement)
                            duplicate_tags_check.append(display_name)
