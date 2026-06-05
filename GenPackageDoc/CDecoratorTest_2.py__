@@ -21,15 +21,8 @@
 # --------------------------------------------------------------------------------------------------------------
 
 """
-Python test module CDecoratorTest.
+This is the Python test module CDecoratorTest_2.
 """
-
-# # # def is_user_interface():
-    # # # """
-# # # [PM2] The user interface decorator.
-    # # # """
-    # # # pass
-
 
 def genpackagedoc(is_ui=None, tags=None):
     """
@@ -42,13 +35,13 @@ def genpackagedoc(is_ui=None, tags=None):
 @genpackagedoc(is_ui=True)
 def function_1():
     """
-[PM2] def function_1() / user interface
+[PM2] docstring of: function_1() / user interface
     """
     pass
 
 def function_2():
     """
-[PM2] def function_2()
+[PM2] docstring of: function_2()
     """
     pass
 
@@ -68,13 +61,13 @@ async def function_4():
 @genpackagedoc(is_ui=True)
 def __function_5():
     """
-[PM2] def __function_5() / user interface
+[PM2] docstring of: __function_5() / user interface
     """
     pass
 
 def __function_6():
     """
-[PM2] def __function_6()
+[PM2] docstring of: __function_6()
     """
     pass
 
@@ -97,28 +90,28 @@ async def __function_8():
 @genpackagedoc
 def test_function_PM2_1():
     """
-[PM2] def test_function_PM2_1(self):
+[PM2] docstring of: test_function_PM2_1(self):
     """
     pass
 
 @genpackagedoc()
 def test_function_PM2_2():
     """
-[PM2] def test_function_PM2_2(self):
+[PM2] docstring of: test_function_PM2_2(self):
     """
     pass
 
 @genpackagedoc(is_ui=False, tags=['communication', 'main'])
 def test_function_PM2_3():
     """
-[PM2] def test_function_PM2_3(self):
+[PM2] docstring of: test_function_PM2_3(self):
     """
     pass
 
 @genpackagedoc(is_ui=True, tags=['gui', 'main'])
 def test_function_PM2_4():
     """
-[PM2] def test_function_PM2_4(self):
+[PM2] docstring of: test_function_PM2_4(self):
     """
     pass
 
@@ -134,13 +127,13 @@ class CDecoratorTest_2():
     @genpackagedoc(is_ui=True)
     def method_PM2_1(self):
         """
-[PM2] def method_PM2_1(self) / user interface
+[PM2] docstring of: method_PM2_1(self) / user interface
         """
         pass
 
     def method_PM2_2(self):
         """
-[PM2] def method_PM2_2(self)
+[PM2] docstring of: method_PM2_2(self)
         """
         pass
 
@@ -160,13 +153,13 @@ class CDecoratorTest_2():
     @genpackagedoc(is_ui=True)
     def __method_PM2_5(self):
         """
-[PM2] def __method_PM2_5(self) / user interface
+[PM2] docstring of: __method_PM2_5(self) / user interface
         """
         pass
 
     def __method_PM2_6(self):
         """
-[PM2] def __method_PM2_6(self)
+[PM2] docstring of: __method_PM2_6(self)
         """
         pass
 
@@ -244,33 +237,39 @@ class CDecoratorTest_2():
     @genpackagedoc
     def test_method_PM2_1(self):
         """
-[PM2] def test_method_PM2_1(self):
+[PM2] docstring of: test_method_PM2_1(self):
         """
         pass
 
     @genpackagedoc()
     def test_method_PM2_2(self):
         """
-[PM2] def test_method_PM2_2(self):
+[PM2] docstring of: test_method_PM2_2(self):
         """
         pass
 
     @genpackagedoc(is_ui=False, tags=['communication', 'main', 'goodcase'])
     def test_method_PM2_3(self):
         """
-[PM2] def test_method_PM2_3(self):
+[PM2] docstring of: test_method_PM2_3(self):
         """
         pass
 
     @genpackagedoc(is_ui=True, tags=['gui', 'main', 'badcase'])
     def test_method_PM2_4(self):
         """
-[PM2] def test_method_PM2_4(self):
+[PM2] docstring of: test_method_PM2_4(self):
         """
         pass
 
 
 
 
+def undocumented_function_PM2_1():
+    pass
+
+@genpackagedoc(tags=['undocumented'])
+def undocumented_function_PM2_2():
+    pass
 
 

@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 03.06.2026
+# 04.06.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -1114,7 +1114,7 @@ Creates the corresponding index.html file also.
                      type = "Robot Keyword"
 
                   file_name = dModuleFileInfo['sFileName']
-                  display_name = f"{name} (of '{file_name}')"
+                  display_name = f"'{name}' -- ('{file_name}')"
                   dictCodeElement = {}
                   dictCodeElement['TYPE']        = type
                   dictCodeElement['NAME']        = name
@@ -1124,7 +1124,7 @@ Creates the corresponding index.html file also.
                   if tags:
                      # every tag becomes a separate element of the search index
                      for tag in tags:
-                        display_name = f"{tag} (of '{file_name}')"
+                        display_name = f"'{tag}' -- ('{file_name}')"
                         if not display_name in duplicate_tags_check:
                            dictCodeElement = {}
                            dictCodeElement['TYPE'] = "Tags"
@@ -1167,7 +1167,7 @@ Creates the corresponding index.html file also.
 
                   # support of search index in index.html
                   file_name = dModuleFileInfo['sFileName']
-                  display_name = f"{class_name} (of '{file_name}')"
+                  display_name = f"'{class_name}' -- ('{file_name}')"
                   dictCodeElement = {}
                   dictCodeElement['TYPE'] = "Class"
                   dictCodeElement['NAME'] = class_name
@@ -1218,7 +1218,7 @@ Creates the corresponding index.html file also.
                         type = "Robot Keyword"
 
                      file_name = dModuleFileInfo['sFileName']
-                     display_name = f"{name} (of '{file_name}')"
+                     display_name = f"'{name}' -- ('{file_name}')"
                      dictCodeElement = {}
                      dictCodeElement['TYPE']        = type
                      dictCodeElement['NAME']        = name
@@ -1228,7 +1228,7 @@ Creates the corresponding index.html file also.
                      if tags:
                         # every tag becomes a separate element of the search index
                         for tag in tags:
-                           display_name = f"{tag} (of '{file_name}')"
+                           display_name = f"'{tag}' -- ('{file_name}')"
                            if not display_name in duplicate_tags_check:
                               dictCodeElement = {}
                               dictCodeElement['TYPE'] = "Tags"

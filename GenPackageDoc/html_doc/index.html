@@ -54,7 +54,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       min-width: 300px;
-      max-width: 900px;
+      max-width: 1000px;
       max-height: calc(100vh - 3em);  /* Fill available space from top position to bottom (scrollbar in case of lots of results) */
       overflow-y: auto;
       z-index: 1000;
@@ -136,22 +136,22 @@
 
 <script>
   const searchIndex = [
-{type: "Class", name: "CDocBuilder", displayName: "CDocBuilder (of 'CDocBuilder.py')", file: "CDocBuilder.py.html", sidebarId: "CDocBuilder_py_html"},
-{type: "Method", name: "Build", displayName: "Build (of 'CDocBuilder.py')", file: "CDocBuilder.py.html", sidebarId: "CDocBuilder_py_html"},
-{type: "Class", name: "CInterface", displayName: "CInterface (of 'CInterface.py')", file: "CInterface.py.html", sidebarId: "CInterface_py_html"},
-{type: "Method", name: "GetLaTeXStyles", displayName: "GetLaTeXStyles (of 'CInterface.py')", file: "CInterface.py.html", sidebarId: "CInterface_py_html"},
-{type: "Class", name: "CPackageDocConfig", displayName: "CPackageDocConfig (of 'CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Method", name: "PrintConfig", displayName: "PrintConfig (of 'CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Method", name: "PrintConfigKeys", displayName: "PrintConfigKeys (of 'CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Method", name: "Get", displayName: "Get (of 'CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Method", name: "GetConfig", displayName: "GetConfig (of 'CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Class", name: "CPatterns", displayName: "CPatterns (of 'CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Method", name: "GetHeader", displayName: "GetHeader (of 'CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Method", name: "GetChapter", displayName: "GetChapter (of 'CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Method", name: "GetFooter", displayName: "GetFooter (of 'CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Method", name: "GetAutodefinedHeader", displayName: "GetAutodefinedHeader (of 'CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Class", name: "CSourceParser", displayName: "CSourceParser (of 'CSourceParser.py')", file: "CSourceParser.py.html", sidebarId: "CSourceParser_py_html"},
-{type: "Method", name: "ParseSourceFile", displayName: "ParseSourceFile (of 'CSourceParser.py')", file: "CSourceParser.py.html", sidebarId: "CSourceParser_py_html"},
+{type: "Class", name: "CDocBuilder", displayName: "'CDocBuilder' -- ('CDocBuilder.py')", file: "CDocBuilder.py.html", sidebarId: "CDocBuilder_py_html"},
+{type: "Method", name: "Build", displayName: "'Build' -- ('CDocBuilder.py')", file: "CDocBuilder.py.html", sidebarId: "CDocBuilder_py_html"},
+{type: "Class", name: "CInterface", displayName: "'CInterface' -- ('CInterface.py')", file: "CInterface.py.html", sidebarId: "CInterface_py_html"},
+{type: "Method", name: "GetLaTeXStyles", displayName: "'GetLaTeXStyles' -- ('CInterface.py')", file: "CInterface.py.html", sidebarId: "CInterface_py_html"},
+{type: "Class", name: "CPackageDocConfig", displayName: "'CPackageDocConfig' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Method", name: "PrintConfig", displayName: "'PrintConfig' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Method", name: "PrintConfigKeys", displayName: "'PrintConfigKeys' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Method", name: "Get", displayName: "'Get' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Method", name: "GetConfig", displayName: "'GetConfig' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Class", name: "CPatterns", displayName: "'CPatterns' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Method", name: "GetHeader", displayName: "'GetHeader' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Method", name: "GetChapter", displayName: "'GetChapter' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Method", name: "GetFooter", displayName: "'GetFooter' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Method", name: "GetAutodefinedHeader", displayName: "'GetAutodefinedHeader' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Class", name: "CSourceParser", displayName: "'CSourceParser' -- ('CSourceParser.py')", file: "CSourceParser.py.html", sidebarId: "CSourceParser_py_html"},
+{type: "Method", name: "ParseSourceFile", displayName: "'ParseSourceFile' -- ('CSourceParser.py')", file: "CSourceParser.py.html", sidebarId: "CSourceParser_py_html"},
   ];
 
   // -----------------------------------------------------------------------

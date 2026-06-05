@@ -13,7 +13,7 @@
    limitations under the License.
 
 
-**Version 0.44.0 (03.06.2026)**
+**Version 0.44.0 (05.06.2026)**
 
     *Added:*
 
