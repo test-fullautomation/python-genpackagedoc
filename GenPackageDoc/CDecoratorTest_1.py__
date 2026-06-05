@@ -268,7 +268,7 @@ def undocumented_function_PM1_1():
     pass
 
 @genpackagedoc(tags=['undocumented'])
-def undocumented_function_PM2_2():
+def undocumented_function_PM1_2():
     pass
 
 
