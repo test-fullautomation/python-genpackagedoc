@@ -13,15 +13,18 @@
    limitations under the License.
 
 
-**Version 0.44.0 (29.05.2026)**
+**Version 0.44.0 (05.06.2026)**
 
     *Added:*
 
     * Search function
+    * GenPackageDoc decorator
+    * Tags included in PDF and HTML output
 
     *Maintenance:*
 
     * LaTeX preamble (``xcolor`` fix)
+    * Robot Framework decorator parsing
 
 **Version 0.43.0 (18.05.2026)**
 

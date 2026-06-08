@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 29.05.2026
+# 05.06.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -876,12 +876,14 @@ Creates the corresponding index.html file also.
                    search_index_row = html_index_file_pattern.search_index_row_pattern
                    search_index_row = search_index_row.replace("###SITYPE###", str(dictCodeElement['TYPE']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
                    search_index_row = search_index_row.replace("###SINAME###", str(dictCodeElement['NAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
+                   search_index_row = search_index_row.replace("###SIDISPLAYNAME###", str(dictCodeElement['DISPLAYNAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
                    search_index_row = search_index_row.replace("###SIFILE###", str(dictHTMLFileInfo['FILENAME']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
                    search_index_row = search_index_row.replace("###HTMLID###", str(dictHTMLFileInfo['HTMLID']).replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"))
                    list_search_index_rows.append(search_index_row)
 
-      SEARCH_INDEX_ROWS = "\n".join(list_search_index_rows).rstrip(",\n")
+      SEARCH_INDEX_ROWS = "\n".join(list_search_index_rows)
       index_file_with_search_code = index_file_with_search_code.replace("###SEARCH_INDEX_ROWS###", SEARCH_INDEX_ROWS)
+
       HTML_FILES_ROWS = "\n".join(list_htmlfiles_rows)
       index_file_with_search_code = index_file_with_search_code.replace("###HTML_FILES_ROWS###", HTML_FILES_ROWS)
 
@@ -1075,36 +1077,77 @@ Creates the corresponding index.html file also.
 
                # -- file description
                if sFileDescription is not None:
-                  print("  file description found")
+                  print("  + file description found")
                   listLinesRST.append(sFileDescription)
                   listLinesRST.append("")
 
                # -- reST content of docstring of all functions
 
+               duplicate_tags_check = []
+
                for dictFunction in listofdictFunctions:
-                  sFunctionName  = dictFunction['sFunctionName']
-                  sFunctionScope = f"{sModuleFileScope}-{sFunctionName}"
-                  sFunctionScope = self.__ConvertToScopeFormat(sFunctionScope)
-                  sFunctionHeadline = f"Function: {sFunctionName}"
-                  self.__dictScopes[sFunctionScope] = sFunctionHeadline
-                  sFunctionDocString = dictFunction['sFunctionDocString']
+                  function_name = dictFunction['function_name']
+                  alias_name    = dictFunction['alias_name']
+                  is_async      = dictFunction['is_async']
+                  is_keyword    = dictFunction['is_keyword']
+                  is_ui  = dictFunction['is_ui']
+                  tags  = dictFunction['tags']
+                  identifier = "Function" # default
+                  if is_keyword is True:
+                     identifier = "Keyword"
+                  name = function_name # default
+                  if alias_name:
+                     name = alias_name
+                  if is_async is True:
+                     name = f"(async) {name}"
+                  headline = f"{identifier}: {name}"
+                  scope = f"{sModuleFileScope}-{name}"
+                  scope = self.__ConvertToScopeFormat(scope)
+                  # for every scope we remember the original headline
+                  self.__dictScopes[scope] = headline
 
                   # support of search index in index.html
+                  type = "Function" # default
+                  if is_ui is True:
+                     type = "User Interface Function"
+                  elif is_keyword is True:
+                     type = "Robot Keyword"
+
+                  file_name = dModuleFileInfo['sFileName']
+                  display_name = f"'{name}' -- ('{file_name}')"
                   dictCodeElement = {}
-                  dictCodeElement['TYPE'] = "Function"
-                  if dictFunction['is_ui']:
-                      dictCodeElement['TYPE'] = "User Interface Function"
-                  dictCodeElement['NAME'] = sFunctionName
+                  dictCodeElement['TYPE']        = type
+                  dictCodeElement['NAME']        = name
+                  dictCodeElement['DISPLAYNAME'] = display_name
                   LISTOFDICTCODEELEMENTS.append(dictCodeElement)
 
-                  print(f"    > Function : '{sFunctionName}' / scope: '{sFunctionScope}'")
+                  if tags:
+                     # every tag becomes a separate element of the search index
+                     for tag in tags:
+                        display_name = f"'{tag}' -- ('{file_name}')"
+                        if not display_name in duplicate_tags_check:
+                           dictCodeElement = {}
+                           dictCodeElement['TYPE'] = "Tags"
+                           dictCodeElement['NAME'] = f"'{tag}'"
+                           dictCodeElement['DISPLAYNAME'] = display_name
+                           LISTOFDICTCODEELEMENTS.append(dictCodeElement)
+                           duplicate_tags_check.append(display_name)
 
-                  listLinesRST.append(sFunctionScope)
-                  sFunctionHeadlineUnderline = len(sFunctionScope)*"="
-                  listLinesRST.append(sFunctionHeadlineUnderline)
+                  print(f"  > Adding {identifier} : '{name}' / scope: '{scope}'")
+
+                  # tmp mapping
+                  headline = scope
+
+                  listLinesRST.append(headline)
+                  headline_underline = len(headline)*"="
+                  listLinesRST.append(headline_underline)
+                  if tags:
+                     listLinesRST.append("")
+                     listLinesRST.append(f":acontent:`Tags: {tags}`")
                   listLinesRST.append("")
-                  if sFunctionDocString is not None:
-                     listLinesRST.append(sFunctionDocString)
+                  function_docstring = dictFunction['function_docstring']
+                  if function_docstring:
+                     listLinesRST.append(function_docstring)
                      listLinesRST.append("")
 
                # eof for dictFunction in listofdictFunctions:
@@ -1113,78 +1156,102 @@ Creates the corresponding index.html file also.
                # -- reST content of all classes and methods
 
                for dictClass in listofdictClasses:
-                  sClassName  = dictClass['sClassName']
-                  sClassScope = f"{sModuleFileScope}-{sClassName}"
+                  class_name  = dictClass['class_name']
+                  sClassScope = f"{sModuleFileScope}-{class_name}"
                   sClassScope = self.__ConvertToScopeFormat(sClassScope)
-                  sClassHeadline = f"Class: {sClassName}"
+                  sClassHeadline = f"Class: {class_name}"
                   self.__dictScopes[sClassScope] = sClassHeadline
 
-                  sClassDocString   = dictClass['sClassDocString']
+                  class_docstring   = dictClass['class_docstring']
                   listofdictMethods = dictClass['listofdictMethods']
 
                   # support of search index in index.html
+                  file_name = dModuleFileInfo['sFileName']
+                  display_name = f"'{class_name}' -- ('{file_name}')"
                   dictCodeElement = {}
                   dictCodeElement['TYPE'] = "Class"
-                  dictCodeElement['NAME'] = sClassName
+                  dictCodeElement['NAME'] = class_name
+                  dictCodeElement['DISPLAYNAME'] = display_name
                   LISTOFDICTCODEELEMENTS.append(dictCodeElement)
 
-                  print(f"  > Class : '{sClassName}' / scope: '{sClassScope}'")
+                  print(f"  + Class : '{class_name}' / scope: '{sClassScope}'")
 
                   # tmp mapping
                   sClassHeadline = sClassScope
 
-                  sPythonModuleImportFull = f"from {sPythonModuleImport} import {sClassName}"
+                  sPythonModuleImportFull = f"from {sPythonModuleImport} import {class_name}"
 
                   listLinesRST.append(sClassHeadline)
                   sClassHeadlineUnderline = len(sClassHeadline)*"="
                   listLinesRST.append(sClassHeadlineUnderline)
                   listLinesRST.append("")
-                  # # Let's skip this. The resulting lines are too long for the width of a DinA4 page.
-                  # # And the information is also not so much important.
-                  # # listLinesRST.append("*Imported by*:")
-                  # # listLinesRST.append("")
-                  # # listLinesRST.append(".. code:: python")
-                  # # listLinesRST.append("")
-                  # # listLinesRST.append(f"    {sPythonModuleImportFull}")
-                  # # listLinesRST.append("")
-                  if sClassDocString is not None:
-                     listLinesRST.append(sClassDocString)
+                  if class_docstring is not None:
+                     listLinesRST.append(class_docstring)
                      listLinesRST.append("")
-
 
                   for dictMethod in listofdictMethods:
-                     sMethodName = dictMethod['sMethodName']
-                     bIsKeyword  = dictMethod['bIsKeyword']
-                     sIdentifier = "Method"
-                     if bIsKeyword is True:
-                        sIdentifier = "Keyword"
-                     sMethodHeadline = f"{sIdentifier}: {sMethodName}"
-                     sMethodScope    = f"{sModuleFileScope}-{sClassName}-{sMethodName}"
-                     sMethodScope    = self.__ConvertToScopeFormat(sMethodScope)
-                     self.__dictScopes[sMethodScope] = sMethodHeadline
+                     method_name = dictMethod['method_name']
+                     alias_name  = dictMethod['alias_name']
+                     is_async    = dictMethod['is_async']
+                     is_keyword  = dictMethod['is_keyword']
+                     is_ui       = dictMethod['is_ui']
+                     tags        = dictMethod['tags']
+                     identifier = "Method" # default
+                     if is_keyword is True:
+                        identifier = "Keyword"
+                     name = method_name # default
+                     if alias_name:
+                        name = alias_name
+                     if is_async is True:
+                        name = f"(async) {name}"
+                     headline = f"{identifier}: {name}"
+                     scope = f"{sModuleFileScope}-{class_name}-{name}"
+                     scope = self.__ConvertToScopeFormat(scope)
+                     # for every scope we remember the original headline
+                     self.__dictScopes[scope] = headline
 
                      # support of search index in index.html
+                     type = "Method" # default
+                     if is_ui is True:
+                        type = "User Interface Method"
+                     elif is_keyword is True:
+                        type = "Robot Keyword"
+
+                     file_name = dModuleFileInfo['sFileName']
+                     display_name = f"'{name}' -- ('{file_name}')"
                      dictCodeElement = {}
-                     dictCodeElement['TYPE'] = "Method"
-                     if dictMethod['is_ui']:
-                         dictCodeElement['TYPE'] = "User Interface Method"
-                     elif dictMethod['bIsKeyword']:
-                         dictCodeElement['TYPE'] = "Robot Keyword"
-                     dictCodeElement['NAME'] = sMethodName
+                     dictCodeElement['TYPE']        = type
+                     dictCodeElement['NAME']        = name
+                     dictCodeElement['DISPLAYNAME'] = display_name
                      LISTOFDICTCODEELEMENTS.append(dictCodeElement)
 
-                     print(f"    - {sIdentifier} : '{sMethodName}' / scope: '{sMethodScope}'")
+                     if tags:
+                        # every tag becomes a separate element of the search index
+                        for tag in tags:
+                           display_name = f"'{tag}' -- ('{file_name}')"
+                           if not display_name in duplicate_tags_check:
+                              dictCodeElement = {}
+                              dictCodeElement['TYPE'] = "Tags"
+                              dictCodeElement['NAME'] = f"'{tag}'"
+                              dictCodeElement['DISPLAYNAME'] = display_name
+                              LISTOFDICTCODEELEMENTS.append(dictCodeElement)
+                              duplicate_tags_check.append(display_name)
+
+                     print(f"    > Adding {identifier} : '{name}' / scope: '{scope}'")
 
                      # tmp mapping
-                     sMethodHeadline = sMethodScope
+                     headline = scope
 
-                     listLinesRST.append(sMethodHeadline)
-                     sMethodHeadlineUnderline = len(sMethodHeadline)*"-"
-                     listLinesRST.append(sMethodHeadlineUnderline)
+                     listLinesRST.append(headline)
+                     headline_underline = len(headline)*"-"
+                     listLinesRST.append(headline_underline)
+                     if tags:
+                        listLinesRST.append("")
+                        listLinesRST.append(f":acontent:`Tags: {tags}`")
                      listLinesRST.append("")
-                     sMethodDocString = dictMethod['sMethodDocString']
-                     if sMethodDocString is not None:
-                        listLinesRST.append(sMethodDocString)
+                     method_docstring = dictMethod['method_docstring']
+                     if method_docstring:
+                        listLinesRST.append(method_docstring)
                         listLinesRST.append("")
 
                # eof for dictClass in listofdictClasses:

@@ -40,7 +40,7 @@
       border-radius: 4px;
       border: 1px solid #ccc;
       font-size: 1em;
-      width: 260px;
+      width: 290px;
       color: #222;
     }
     #searchresults {
@@ -54,7 +54,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       min-width: 300px;
-      max-width: 400px;
+      max-width: 1000px;
       max-height: calc(100vh - 3em);  /* Fill available space from top position to bottom (scrollbar in case of lots of results) */
       overflow-y: auto;
       z-index: 1000;
@@ -136,22 +136,22 @@
 
 <script>
   const searchIndex = [
-{type: "Class", name: "CDocBuilder", file: "CDocBuilder.py.html", sidebarId: "CDocBuilder_py_html"},
-{type: "Method", name: "Build", file: "CDocBuilder.py.html", sidebarId: "CDocBuilder_py_html"},
-{type: "Class", name: "CInterface", file: "CInterface.py.html", sidebarId: "CInterface_py_html"},
-{type: "Method", name: "GetLaTeXStyles", file: "CInterface.py.html", sidebarId: "CInterface_py_html"},
-{type: "Class", name: "CPackageDocConfig", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Method", name: "PrintConfig", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Method", name: "PrintConfigKeys", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Method", name: "Get", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Method", name: "GetConfig", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
-{type: "Class", name: "CPatterns", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Method", name: "GetHeader", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Method", name: "GetChapter", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Method", name: "GetFooter", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Method", name: "GetAutodefinedHeader", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
-{type: "Class", name: "CSourceParser", file: "CSourceParser.py.html", sidebarId: "CSourceParser_py_html"},
-{type: "Method", name: "ParseSourceFile", file: "CSourceParser.py.html", sidebarId: "CSourceParser_py_html"}
+{type: "Class", name: "CDocBuilder", displayName: "'CDocBuilder' -- ('CDocBuilder.py')", file: "CDocBuilder.py.html", sidebarId: "CDocBuilder_py_html"},
+{type: "Method", name: "Build", displayName: "'Build' -- ('CDocBuilder.py')", file: "CDocBuilder.py.html", sidebarId: "CDocBuilder_py_html"},
+{type: "Class", name: "CInterface", displayName: "'CInterface' -- ('CInterface.py')", file: "CInterface.py.html", sidebarId: "CInterface_py_html"},
+{type: "Method", name: "GetLaTeXStyles", displayName: "'GetLaTeXStyles' -- ('CInterface.py')", file: "CInterface.py.html", sidebarId: "CInterface_py_html"},
+{type: "Class", name: "CPackageDocConfig", displayName: "'CPackageDocConfig' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Method", name: "PrintConfig", displayName: "'PrintConfig' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Method", name: "PrintConfigKeys", displayName: "'PrintConfigKeys' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Method", name: "Get", displayName: "'Get' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Method", name: "GetConfig", displayName: "'GetConfig' -- ('CPackageDocConfig.py')", file: "CPackageDocConfig.py.html", sidebarId: "CPackageDocConfig_py_html"},
+{type: "Class", name: "CPatterns", displayName: "'CPatterns' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Method", name: "GetHeader", displayName: "'GetHeader' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Method", name: "GetChapter", displayName: "'GetChapter' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Method", name: "GetFooter", displayName: "'GetFooter' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Method", name: "GetAutodefinedHeader", displayName: "'GetAutodefinedHeader' -- ('CPatterns.py')", file: "CPatterns.py.html", sidebarId: "CPatterns_py_html"},
+{type: "Class", name: "CSourceParser", displayName: "'CSourceParser' -- ('CSourceParser.py')", file: "CSourceParser.py.html", sidebarId: "CSourceParser_py_html"},
+{type: "Method", name: "ParseSourceFile", displayName: "'ParseSourceFile' -- ('CSourceParser.py')", file: "CSourceParser.py.html", sidebarId: "CSourceParser_py_html"},
   ];
 
   // -----------------------------------------------------------------------
@@ -225,14 +225,15 @@
 
     let found = 0;
     for (const entry of searchIndex) {
-      // Filter nach Typ
+      // Filter by type
       if (selectedType && entry.type !== selectedType) continue;
-      // Filter nach Suchbegriff
+
+      // Filter by search term (search in 'name' field only)
       if (query && !entry.name.toLowerCase().includes(query)) continue;
 
       const li = document.createElement('li');
 
-      // Typ-Badge
+      // Type badge
       const badge = document.createElement('span');
       badge.className = 'result-type-badge';
       badge.textContent = entry.type;
@@ -241,14 +242,16 @@
       // Link
       const link = document.createElement('a');
       link.href = '#';
-      link.textContent = entry.name;
 
-      // Daten in data-* Attributen speichern
+      // Use displayName for display, fallback to name
+      link.textContent = entry.displayName || entry.name;
+
+      // Data attributes
       link.dataset.file = entry.file;
-      link.dataset.searchText = entry.name;
+      link.dataset.searchText = entry.name;  // Use name for highlighting
       link.dataset.sidebarId = entry.sidebarId;
 
-      // Event-Handler mit addEventListener (sicher)
+      // Event handler
       link.addEventListener('click', function(e) {
         e.preventDefault();
         showFileWithScroll(
@@ -463,7 +466,7 @@
     <div id="header-search">
       <input id="searchbox" type="text"
              aria-label="Search documentation"
-             placeholder="Search class, method, function..."
+             placeholder="Search class, method, function, tag ..."
              oninput="searchDocs()">
       <select id="type-filter" aria-label="Filter by type">
         <!-- Wird dynamisch per populateTypeFilter() befüllt -->

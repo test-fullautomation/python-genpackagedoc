@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 29.05.2026
+# 04.06.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ html_index_file_with_search_pattern = """
       border-radius: 4px;
       border: 1px solid #ccc;
       font-size: 1em;
-      width: 260px;
+      width: 290px;
       color: #222;
     }
     #searchresults {
@@ -86,7 +86,7 @@ html_index_file_with_search_pattern = """
       border: 1px solid #ccc;
       border-radius: 4px;
       min-width: 300px;
-      max-width: 400px;
+      max-width: 1000px;
       max-height: calc(100vh - 3em);  /* Fill available space from top position to bottom (scrollbar in case of lots of results) */
       overflow-y: auto;
       z-index: 1000;
@@ -242,14 +242,15 @@ html_index_file_with_search_pattern = """
 
     let found = 0;
     for (const entry of searchIndex) {
-      // Filter nach Typ
+      // Filter by type
       if (selectedType && entry.type !== selectedType) continue;
-      // Filter nach Suchbegriff
+
+      // Filter by search term (search in 'name' field only)
       if (query && !entry.name.toLowerCase().includes(query)) continue;
 
       const li = document.createElement('li');
 
-      // Typ-Badge
+      // Type badge
       const badge = document.createElement('span');
       badge.className = 'result-type-badge';
       badge.textContent = entry.type;
@@ -258,14 +259,16 @@ html_index_file_with_search_pattern = """
       // Link
       const link = document.createElement('a');
       link.href = '#';
-      link.textContent = entry.name;
 
-      // Daten in data-* Attributen speichern
+      // Use displayName for display, fallback to name
+      link.textContent = entry.displayName || entry.name;
+
+      // Data attributes
       link.dataset.file = entry.file;
-      link.dataset.searchText = entry.name;
+      link.dataset.searchText = entry.name;  // Use name for highlighting
       link.dataset.sidebarId = entry.sidebarId;
 
-      // Event-Handler mit addEventListener (sicher)
+      // Event handler
       link.addEventListener('click', function(e) {
         e.preventDefault();
         showFileWithScroll(
@@ -480,7 +483,7 @@ html_index_file_with_search_pattern = """
     <div id="header-search">
       <input id="searchbox" type="text"
              aria-label="Search documentation"
-             placeholder="Search class, method, function..."
+             placeholder="Search class, method, function, tag ..."
              oninput="searchDocs()">
       <select id="type-filter" aria-label="Filter by type">
         <!-- Wird dynamisch per populateTypeFilter() befüllt -->
@@ -505,6 +508,6 @@ html_index_file_with_search_pattern = """
 </html>
 """
 
-search_index_row_pattern = """{type: "###SITYPE###", name: "###SINAME###", file: "###SIFILE###", sidebarId: "###HTMLID###"},"""
+search_index_row_pattern = """{type: "###SITYPE###", name: "###SINAME###", displayName: "###SIDISPLAYNAME###", file: "###SIFILE###", sidebarId: "###HTMLID###"},"""
 
 html_files_row_pattern = """<li><a href="#" id="###HTMLID###" onclick="showFile('###FILENAME###', this);return false;">###FILESHORTNAME###</a></li>"""

@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 29.05.2026
+# 05.06.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -52,70 +52,284 @@ The ``CSourceParser`` class provides a method to parse the functions, classes an
 together with the corresponding docstrings out of Python modules. The docstrings have to be written in rst syntax.
    """
 
-   def __is_user_interface_node(self, node: ast.AST) -> bool:
+   def __is_gpd_decorated(self, node):
        """
-Checks whether an AST node is decorated with @is_user_interface.
+       Checks if a function/method has the @genpackagedoc decorator.
 
-Handles all common decorator forms:
-  - @is_user_interface          (simple name)
-  - @module.is_user_interface   (attribute access)
-  - @is_user_interface()        (call without arguments)
-  - @module.is_user_interface() (call on attribute)
+       Parameters:
+       - node: ast.FunctionDef or ast.AsyncFunctionDef
 
-Note: This is a static code check via AST. The attribute set by the
-decorator does not yet exist at analysis time, so we inspect the
-decorator node itself instead of checking the attribute value.
-
-**Arguments:**
-
-* ``node``
-
-  / *Condition*: required / *Type*: AST node /
-
-  An AST node that has a decorator_list (e.g. ``ast.ClassDef``,
-  ``ast.FunctionDef``, ``ast.AsyncFunctionDef``).
-
-**Returns:**
-
-``True`` if the node carries the @is_user_interface decorator, ``False`` otherwise.
+       Returns:
+       - dict: {
+           'is_gpd': bool,           # True if @genpackagedoc decorator is present
+           'is_ui': bool or None,    # is_ui value from is_ui=... parameter
+           'tags': list              # List of tags from tags=[...] parameter
+         }
        """
-       TARGET = 'is_user_interface'
+       # TODO: check if "result['is_gpd']" is really required
+       result = {
+           'is_gpd': False,
+           'is_ui': None,
+           'tags': []
+       }
+
+       if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+           return result
 
        for decorator in node.decorator_list:
-           # @is_user_interface
-           if hasattr(decorator, 'id') and decorator.id == TARGET:
-               return True
-           # @module.is_user_interface
-           if hasattr(decorator, 'attr') and decorator.attr == TARGET:
-               return True
-           # @is_user_interface() or @module.is_user_interface()
+           # Case 1: @genpackagedoc (simple name, without parameters)
+           if isinstance(decorator, ast.Name) and decorator.id == 'genpackagedoc':
+               result['is_gpd'] = True
+               return result
+
+           # Case 2: @genpackagedoc() or @genpackagedoc(is_ui=..., tags=[...])
            if isinstance(decorator, ast.Call):
-               func = decorator.func
-               if (hasattr(func, 'id') and func.id == TARGET) or \
-                  (hasattr(func, 'attr') and func.attr == TARGET):
-                   return True
-       return False
+               # Check if func is 'genpackagedoc'
+               if isinstance(decorator.func, ast.Name) and decorator.func.id == 'genpackagedoc':
+                   result['is_gpd'] = True
+                   # Extract 'is_ui' and 'tags' keyword arguments
+                   for keyword_arg in decorator.keywords:
+                       if keyword_arg.arg == 'is_ui':
+                           # Extract the is_ui boolean value
+                           if isinstance(keyword_arg.value, ast.Constant):
+                               result['is_ui'] = keyword_arg.value.value
+                           elif isinstance(keyword_arg.value, ast.NameConstant):  # Python < 3.8 compatibility
+                               result['is_ui'] = keyword_arg.value.value
+
+                       elif keyword_arg.arg == 'tags':
+                           # Extract tags list
+                           result['tags'] = self._extract_list(keyword_arg.value)
+
+                   return result
+
+               # Check if func is fully qualified (e.g., 'module.genpackagedoc')
+               if isinstance(decorator.func, ast.Attribute):
+                   # Walk through the attribute chain
+                   parts = []
+                   current = decorator.func
+                   while isinstance(current, ast.Attribute):
+                       parts.insert(0, current.attr)
+                       current = current.value
+                   if isinstance(current, ast.Name):
+                       parts.insert(0, current.id)
+
+                   # Check if it ends with 'genpackagedoc' (flexible for different module paths)
+                   if parts[-1] == 'genpackagedoc':
+                       result['is_gpd'] = True
+                       # Extract 'is_ui' and 'tags' keyword arguments
+                       for keyword_arg in decorator.keywords:
+                           if keyword_arg.arg == 'is_ui':
+                               if isinstance(keyword_arg.value, ast.Constant):
+                                   result['is_ui'] = keyword_arg.value.value
+                               elif isinstance(keyword_arg.value, ast.NameConstant):
+                                   result['is_ui'] = keyword_arg.value.value
+
+                           elif keyword_arg.arg == 'tags':
+                               result['tags'] = self._extract_list(keyword_arg.value)
+
+                       return result
+
+           # Case 3: @module.genpackagedoc (attribute chain without call)
+           if isinstance(decorator, ast.Attribute):
+               parts = []
+               current = decorator
+               while isinstance(current, ast.Attribute):
+                   parts.insert(0, current.attr)
+                   current = current.value
+               if isinstance(current, ast.Name):
+                   parts.insert(0, current.id)
+
+               # Check if it ends with 'genpackagedoc'
+               if parts[-1] == 'genpackagedoc':
+                   result['is_gpd'] = True
+                   return result
+
+       return result
+
+   # eof def __is_gpd_decorated(self, node):
 
 
-   def ParseSourceFile(self, sFile=None, bIncludePrivate=False, bIncludeUndocumented=True):
+   def __is_robot_decorated(self, node):
+       """
+Checks if a function/method has the @keyword decorator (Robot Framework).
+
+Parameters:
+- node: ast.FunctionDef or ast.AsyncFunctionDef
+
+Returns:
+- dict: {
+    'is_keyword': bool,         # True if @keyword decorator is present
+    'alias_name': str or None,  # Alias name from name='...' parameter
+    'tags': list                # List of tags from tags=[...] parameter
+  }
+       """
+       result = {
+           'is_keyword': False,
+           'alias_name': None,
+           'tags': []
+       }
+
+       if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+           return result
+
+       for decorator in node.decorator_list:
+           # Case 1: @keyword (simple name)
+           if isinstance(decorator, ast.Name) and decorator.id == 'keyword':
+               result['is_keyword'] = True
+               return result
+
+           # Case 2: @keyword() or @keyword(name='...', tags=[...])
+           if isinstance(decorator, ast.Call):
+               # Check if func is 'keyword'
+               if isinstance(decorator.func, ast.Name) and decorator.func.id == 'keyword':
+                   result['is_keyword'] = True
+                   # Extract 'name' and 'tags' keyword arguments
+                   for keyword_arg in decorator.keywords:
+                       if keyword_arg.arg == 'name':
+                           # Extract the name value
+                           if isinstance(keyword_arg.value, ast.Constant):
+                               result['alias_name'] = keyword_arg.value.value
+                           elif isinstance(keyword_arg.value, ast.Str):  # Python < 3.8 compatibility
+                               result['alias_name'] = keyword_arg.value.s
+
+                       elif keyword_arg.arg == 'tags':
+                           # Extract tags list
+                           result['tags'] = self._extract_list(keyword_arg.value)
+
+                   return result
+
+               # Check if func is 'robot.api.deco.keyword' (full qualified)
+               if isinstance(decorator.func, ast.Attribute):
+                   # Walk through the attribute chain
+                   parts = []
+                   current = decorator.func
+                   while isinstance(current, ast.Attribute):
+                       parts.insert(0, current.attr)
+                       current = current.value
+                   if isinstance(current, ast.Name):
+                       parts.insert(0, current.id)
+
+                   # Check if it matches 'robot.api.deco.keyword'
+                   if parts == ['robot', 'api', 'deco', 'keyword']:
+                       result['is_keyword'] = True
+                       # Extract 'name' and 'tags' keyword arguments
+                       for keyword_arg in decorator.keywords:
+                           if keyword_arg.arg == 'name':
+                               if isinstance(keyword_arg.value, ast.Constant):
+                                   result['alias_name'] = keyword_arg.value.value
+                               elif isinstance(keyword_arg.value, ast.Str):
+                                   result['alias_name'] = keyword_arg.value.s
+
+                           elif keyword_arg.arg == 'tags':
+                               result['tags'] = self._extract_list(keyword_arg.value)
+
+                       return result
+
+           # Case 3: @robot.api.deco.keyword (attribute chain without call)
+           if isinstance(decorator, ast.Attribute):
+               parts = []
+               current = decorator
+               while isinstance(current, ast.Attribute):
+                   parts.insert(0, current.attr)
+                   current = current.value
+               if isinstance(current, ast.Name):
+                   parts.insert(0, current.id)
+
+               if parts == ['robot', 'api', 'deco', 'keyword']:
+                   result['is_keyword'] = True
+                   return result
+
+       return result
+
+   # eof def __is_robot_decorated(self, node):
+
+
+   def _extract_list(self, list_node):
+       """
+Extracts string values from an ast.List node.
+
+Parameters:
+- list_node: ast.List or ast.Constant
+
+Returns:
+- list of str
+       """
+       tags = []
+
+       if isinstance(list_node, ast.List):
+           for element in list_node.elts:
+               if isinstance(element, ast.Constant):
+                   tags.append(element.value)
+               elif isinstance(element, ast.Str):  # Python < 3.8 compatibility
+                   tags.append(element.s)
+
+       return tags
+
+   #eof def _extract_list(self, list_node):
+
+
+   def _format_node_features(self, name=None,
+                                   alias_name=None,
+                                   is_documented=None,
+                                   is_async=None,
+                                   is_private=None,
+                                   is_keyword=None,
+                                   is_ui=None,
+                                   tags=None,
+                                   take_it=None):
+       """
+Formats all node features to a single string.
+
+Parameters:
+- node features
+
+Returns:
+- formatted string to print the node features to screen
+       """
+       node_feature_info = f"  > Parsed : '{name}'"
+       if alias_name:
+          node_feature_info = f"{node_feature_info} (alias: '{alias_name}')"
+       if is_documented:
+          node_feature_info = f"{node_feature_info} / is documented"
+       else:
+          node_feature_info = f"{node_feature_info} / is not documented"
+       if is_async:
+          node_feature_info = f"{node_feature_info} / is async"
+       if is_private:
+          node_feature_info = f"{node_feature_info} / is private"
+       if is_keyword:
+          node_feature_info = f"{node_feature_info} / is keyword"
+       if is_ui:
+          node_feature_info = f"{node_feature_info} / is user interface"
+       if tags:
+          node_feature_info = f"{node_feature_info} / tagged with: '{tags}'"
+       if take_it:
+          node_feature_info = f"{node_feature_info} / take it"
+       else:
+          node_feature_info = f"{node_feature_info} / skip"
+       return node_feature_info
+   # eof def _format_node_features(self, name=None,
+
+
+   def ParseSourceFile(self, source_file=None, include_private=False, include_undocumented=True):
       """
 The method ``ParseSourceFile`` parses the content of a Python module.
 
 **Arguments:**
 
-* ``sFile``
+* ``source_file``
 
   / *Condition*: required / *Type*: str /
 
   Path and name of a single Python module.
 
-* ``bIncludePrivate`` (currently not active, is ``False``)
+* ``include_private``
 
   / *Condition*: optional / *Type*: bool / *Default*: False /
 
   If ``False``: private methods are skipped, otherwise they are included in documentation.
 
-* ``bIncludeUndocumented``
+* ``include_undocumented``
 
   / *Condition*: optional / *Type*: bool / *Default*: True /
 
@@ -128,7 +342,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
   / *Type*: dict /
 
-  A dictionary containing all the information parsed out of ``sFile``.
+  A dictionary containing all the information parsed out of ``source_file``.
 
 * ``bSuccess``
 
@@ -147,17 +361,17 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
       dictContent = {}
 
-      if sFile is None:
+      if source_file is None:
          bSuccess = None
-         sResult  = "sFile is None"
+         sResult  = "'source_file' is None"
          return dictContent, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-      if os.path.isfile(sFile) is False:
+      if os.path.isfile(source_file) is False:
          bSuccess = False
-         sResult  = f"File '{sFile}' does not exist"
+         sResult  = f"File '{source_file}' does not exist"
          return dictContent, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
-      oSourceFile = CFile(sFile)
+      oSourceFile = CFile(source_file)
       listLines, bSuccess, sResult = oSourceFile.ReadLines()
       del oSourceFile
       sContent = "\n".join(listLines)
@@ -179,79 +393,134 @@ The method ``ParseSourceFile`` parses the content of a Python module.
                   sFileDescription = oExpression.value
 
          if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            sFunctionName = f"{node.name}"
-            sFunctionDocString = ast.get_docstring(node)
-
-            bTakeIt = True
-            if bIncludePrivate is False:
-               if sFunctionName.startswith('_'):
-                  # is private
-                  bTakeIt = False
-            # eof if bIncludePrivate is False:
-            if bIncludeUndocumented is False:
-               if sFunctionDocString is None:
-                  # is undocumented
-                  bTakeIt = False
-            # eof if bIncludeUndocumented is False:
-
+#QWERT
+            function_name = f"{node.name}"
+            function_docstring = ast.get_docstring(node)
+            # detect node features
+            is_private = False
+            if function_name.startswith('_'):
+               is_private = True
+            is_documented = False
+            if function_docstring:
+               is_documented = True
+            is_async = False
             if isinstance(node, ast.AsyncFunctionDef):
-               sFunctionName = f"async {sFunctionName}"
+               is_async = True
 
-            if bTakeIt is True:
+            # decide whether to add the node to documentation or not
+            take_it = True
+            if not include_private:
+               if is_private:
+                  take_it = False
+            if not is_documented:
+               if not include_undocumented:
+                  take_it = False
+
+            # Compute further node features
+            # 1. Robot Framework keyword decorator
+            node_features_robot = self.__is_robot_decorated(node)
+            alias_name = node_features_robot.get('alias_name')
+            is_keyword = node_features_robot.get('is_keyword')
+            robot_tags = node_features_robot.get('tags', [])
+            # 2. GenPackageDoc documentation decorator
+            node_features_gpd = self.__is_gpd_decorated(node)
+            is_ui    = node_features_gpd.get('is_ui')
+            gpd_tags = node_features_gpd.get('tags', [])
+            # join tags and remove duplicates
+            tags = list(dict.fromkeys(robot_tags + gpd_tags))
+
+            node_feature_info = self._format_node_features(function_name,
+                                                           alias_name,
+                                                           is_documented,
+                                                           is_async,
+                                                           is_private,
+                                                           is_keyword,
+                                                           is_ui,
+                                                           tags,
+                                                           take_it)
+            print(node_feature_info)
+
+            if take_it is True:
                dictFunction = {}
-               dictFunction['sFunctionName']      = sFunctionName
-               dictFunction['is_ui']              = self.__is_user_interface_node(node)
-               dictFunction['sFunctionDocString'] = sFunctionDocString
+               dictFunction['function_name']      = function_name
+               dictFunction['alias_name']         = alias_name
+               dictFunction['is_async']           = is_async
+               dictFunction['is_keyword']         = is_keyword
+               dictFunction['is_ui']              = is_ui
+               dictFunction['tags']               = tags
+               dictFunction['function_docstring'] = function_docstring
                listofdictFunctions.append(dictFunction)
-            # eof if bTakeIt is True:
+
          # eof if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
 
          if isinstance(node, ast.ClassDef):
-            # is class => bIncludeUndocumented has no relevance
-            sClassName = f"{node.name}"
-            sClassDocString = ast.get_docstring(node)
             dictClass = {}
-            dictClass['sClassName'] = sClassName
-            dictClass['sClassDocString'] = sClassDocString
+            dictClass['class_name']      = f"{node.name}"
+            dictClass['class_docstring'] = ast.get_docstring(node)
 
             listofdictMethods = []
 
             for subnode in node.body:
                if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                  sMethodName = f"{subnode.name}"
-                  sMethodDocString = ast.get_docstring(subnode)
-
-                  bTakeIt = True
-                  if bIncludePrivate is False:
-                     if sMethodName.startswith('_'):
-                        # is private
-                        bTakeIt = False
-                  # eof if bIncludePrivate is False:
-                  if bIncludeUndocumented is False:
-                     if sMethodDocString is None:
-                        # is undocumented
-                        bTakeIt = False
-                  # eof if bIncludeUndocumented is False:
-
+#QWERT
+                  method_name      = f"{subnode.name}"
+                  method_docstring = ast.get_docstring(subnode)
+                  # detect node features
+                  is_private = False
+                  if method_name.startswith('_'):
+                     is_private = True
+                  is_documented = False
+                  if method_docstring:
+                     is_documented = True
+                  is_async = False
                   if isinstance(subnode, ast.AsyncFunctionDef):
-                     sMethodName = f"async {sMethodName}"
+                     is_async = True
 
-                  # is keyword?
-                  bIsKeyword = False
-                  for decorator in subnode.decorator_list:
-                     if hasattr(decorator, 'id'):
-                        if decorator.id == "keyword":
-                           bIsKeyword = True
-                           break
+                  # decide whether to add the subnode to documentation or not
+                  take_it = True
+                  if not include_private:
+                     if is_private:
+                        take_it = False
+                  if not is_documented:
+                     if not include_undocumented:
+                        take_it = False
 
-                  if bTakeIt is True:
+                  # Compute further subnode features
+                  # 1. Robot Framework keyword decorator
+                  node_features_robot = self.__is_robot_decorated(subnode)
+                  alias_name = node_features_robot.get('alias_name')
+                  is_keyword = node_features_robot.get('is_keyword')
+                  robot_tags = node_features_robot.get('tags', [])
+                  # 2. GenPackageDoc documentation decorator
+                  node_features_gpd = self.__is_gpd_decorated(subnode)
+                  is_ui    = node_features_gpd.get('is_ui')
+                  gpd_tags = node_features_gpd.get('tags', [])
+                  # join tags and remove duplicates
+                  tags = list(dict.fromkeys(robot_tags + gpd_tags))
+
+                  node_feature_info = self._format_node_features(method_name,
+                                                                 alias_name,
+                                                                 is_documented,
+                                                                 is_async,
+                                                                 is_private,
+                                                                 is_keyword,
+                                                                 is_ui,
+                                                                 tags,
+                                                                 take_it)
+                  print(node_feature_info)
+
+                  if take_it is True:
+                     # store all node features
                      dictMethod = {}
-                     dictMethod['sMethodName']      = sMethodName
-                     dictMethod['bIsKeyword']       = bIsKeyword
-                     dictMethod['is_ui']            = self.__is_user_interface_node(subnode)
-                     dictMethod['sMethodDocString'] = sMethodDocString
+                     dictMethod['method_name']      = method_name
+                     dictMethod['alias_name']       = alias_name
+                     dictMethod['is_async']         = is_async
+                     dictMethod['is_keyword']       = is_keyword
+                     dictMethod['is_ui']            = is_ui
+                     dictMethod['tags']             = tags
+                     dictMethod['method_docstring'] = method_docstring
                      listofdictMethods.append(dictMethod)
-                  # eof if bTakeIt is True:
+                  # eof if take_it is True:
                # eof if isinstance(subnode, (ast.FunctionDef, ast.AsyncFunctionDef)):
             # eof for subnode in node.body:
 
@@ -274,7 +543,7 @@ The method ``ParseSourceFile`` parses the content of a Python module.
 
       return dictContent, bSuccess, sResult
 
-   # eof def ParseSourceFile(self, sFile=None, bIncludePrivate=False, bIncludeUndocumented=True):
+   # eof def ParseSourceFile(self, source_file=None, include_private=False, include_undocumented=True):
 
 # eof class CSourceParser():
 

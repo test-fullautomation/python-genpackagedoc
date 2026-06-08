@@ -37,15 +37,15 @@ together with the corresponding docstrings out of Python modules. The docstrings
 <p>The method <span class="docutils literal">ParseSourceFile</span> parses the content of a Python module.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
-<li><p><span class="docutils literal">sFile</span></p>
+<li><p><span class="docutils literal">source_file</span></p>
 <p>/ <em>Condition</em>: required / <em>Type</em>: str /</p>
 <p>Path and name of a single Python module.</p>
 </li>
-<li><p><span class="docutils literal">bIncludePrivate</span> (currently not active, is <span class="docutils literal">False</span>)</p>
+<li><p><span class="docutils literal">include_private</span></p>
 <p>/ <em>Condition</em>: optional / <em>Type</em>: bool / <em>Default</em>: False /</p>
 <p>If <span class="docutils literal">False</span>: private methods are skipped, otherwise they are included in documentation.</p>
 </li>
-<li><p><span class="docutils literal">bIncludeUndocumented</span></p>
+<li><p><span class="docutils literal">include_undocumented</span></p>
 <p>/ <em>Condition</em>: optional / <em>Type</em>: bool / <em>Default</em>: True /</p>
 <p>If <span class="docutils literal">True</span>: also classes and methods without docstring are listed in the documentation (together with a hint that information is not available),
 otherwise they are skipped.</p>
@@ -55,7 +55,7 @@ otherwise they are skipped.</p>
 <ul>
 <li><p><span class="docutils literal">dictContent</span></p>
 <p>/ <em>Type</em>: dict /</p>
-<p>A dictionary containing all the information parsed out of <span class="docutils literal">sFile</span>.</p>
+<p>A dictionary containing all the information parsed out of <span class="docutils literal">source_file</span>.</p>
 </li>
 <li><p><span class="docutils literal">bSuccess</span></p>
 <p>/ <em>Type</em>: bool /</p>
